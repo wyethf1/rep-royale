@@ -1,11 +1,9 @@
-// main.js - This file now handles ALL Firebase imports and initialization.
-
-// ALL Firebase imports come from here now
+// ... (Your existing Firebase imports and initialization go here - from the last working main.js)
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
 import {
     getAuth,
     GoogleAuthProvider,
-    EmailAuthProvider, // Keep if you plan to use email link/passwordless auth
+    EmailAuthProvider,
     signInWithPopup,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
@@ -37,17 +35,67 @@ const firebaseConfig = {
   measurementId: "G-JSL641G4SJ"
 };
 
-// Initialize Firebase (these are now constants, available throughout main.js)
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // Get the auth instance
-const db = getFirestore(app); // Get the db instance
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// The rest of your main.js code will go INSIDE this DOMContentLoaded listener
+// --- START OF NEW CODE FOR DAILY QUOTE ---
+
+const dailyBibleQuotes = [
+  "I can do all things through Christ who strengthens me. - Philippians 4:13",
+  "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life. - John 3:16",
+  "The Lord is my shepherd; I shall not want. - Psalm 23:1",
+  "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go. - Joshua 1:9",
+  "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight. - Proverbs 3:5-6",
+  "But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint. - Isaiah 40:31",
+  "For where two or three gather in my name, there am I with them. - Matthew 18:20",
+  "And we know that in all things God works for the good of those who love him, who have been called according to his purpose. - Romans 8:28",
+  "Come to me, all you who are weary and burdened, and I will give you rest. - Matthew 11:28",
+  "The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness. - Lamentations 3:22-23",
+  "Let us not become weary in doing good, for at the proper time we will reap a harvest if we do not give up. - Galatians 6:9"
+];
+
+function displayDailyQuote() {
+  const quoteDisplayElement = document.getElementById('dailyQuote');
+  if (!quoteDisplayElement) {
+    console.error('Daily quote display element not found.');
+    return;
+  }
+
+  const today = new Date();
+  const todayString = today.toDateString(); // e.g., "Mon Jul 21 2025"
+
+  const storedQuoteData = localStorage.getItem('dailyBibleQuote');
+  let currentQuote = null;
+  let lastQuoteDate = null;
+
+  if (storedQuoteData) {
+    const parsedData = JSON.parse(storedQuoteData);
+    currentQuote = parsedData.quote;
+    lastQuoteDate = parsedData.date;
+  }
+
+  // Check if it's a new day or no quote is stored
+  if (!currentQuote || lastQuoteDate !== todayString) {
+    // Pick a new random quote
+    const randomIndex = Math.floor(Math.random() * dailyBibleQuotes.length);
+    currentQuote = dailyBibleQuotes[randomIndex];
+
+    // Store the new quote and today's date
+    localStorage.setItem('dailyBibleQuote', JSON.stringify({
+      quote: currentQuote,
+      date: todayString
+    }));
+  }
+
+  quoteDisplayElement.textContent = currentQuote;
+}
+
+// --- END OF NEW CODE FOR DAILY QUOTE ---
+
+
 window.addEventListener('DOMContentLoaded', () => {
   console.log('main.js loaded at', new Date().toLocaleString());
-
-  // We no longer need the extensive window.check because Firebase is initialized directly in main.js
-  // and we'll use the imported 'auth' and 'db' constants.
 
   const authSection = document.getElementById('authSection');
   const appSection = document.getElementById('appSection');
@@ -69,16 +117,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const log = document.getElementById('log');
   const friendEmailInput = document.getElementById('friendEmailInput');
   const addFriendBtn = document.getElementById('addFriendBtn');
-  const friendsList = document.getElementById('friendsList'); // Corrected typo here
+  const friendsList = document.getElementById('friendsList');
 
-  // Ensure all DOM elements are present (this check is still valid)
   if (!authSection || !appSection || !emailInput || !passwordInput || !loginBtn ||
       !registerBtn || !googleSignInBtn || !logoutBtn || !gainXpBtn || !xpDisplay ||
       !levelDisplay || !authError || !routineName || !routineDetails || !saveRoutineBtn ||
       !routineSelect || !completeRoutineBtn || !log || !friendEmailInput || !addFriendBtn ||
       !friendsList) {
     console.error('One or more DOM elements are missing.');
-    // If authError is missing, this line will also fail, so a general alert might be better
     if (authError) authError.textContent = 'App failed to load: Missing UI elements.';
     else alert('Critical error: App failed to load due to missing UI elements. Check console for details.');
     return;
@@ -97,7 +143,9 @@ window.addEventListener('DOMContentLoaded', () => {
     appSection.classList.add('hidden');
   }
 
-  // Use the imported onAuthStateChanged function, passing the 'auth' instance
+  // --- CALL THE NEW FUNCTION HERE ---
+  displayDailyQuote(); // Display the quote when the DOM is loaded
+
   onAuthStateChanged(auth, user => {
     console.log('Auth state changed:', user ? user.uid : 'No user');
     if (user) {
@@ -120,7 +168,6 @@ window.addEventListener('DOMContentLoaded', () => {
   loginBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      // Use the imported signInWithEmailAndPassword function, passing 'auth'
       await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
       logMessage('Logged in successfully');
     } catch (e) {
@@ -132,7 +179,6 @@ window.addEventListener('DOMContentLoaded', () => {
   registerBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      // Use the imported createUserWithEmailAndPassword function, passing 'auth'
       await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
       logMessage('Registered successfully');
     } catch (e) {
@@ -144,8 +190,7 @@ window.addEventListener('DOMContentLoaded', () => {
   googleSignInBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      const provider = new GoogleAuthProvider(); // GoogleAuthProvider is imported directly
-      // Use the imported signInWithPopup function, passing 'auth'
+      const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       logMessage('Signed in with Google');
     } catch (e) {
@@ -156,7 +201,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   logoutBtn.onclick = async () => {
     try {
-      // Use the imported signOut function, passing 'auth'
       await signOut(auth);
       logMessage('Logged out');
     } catch (e) {
@@ -188,13 +232,11 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
-      // Use imported collection and doc with the 'db' instance
       const routinesCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'routines');
-      // Use imported addDoc
       const routineRef = await addDoc(routinesCollectionRef, {
         name,
         details,
-        createdAt: serverTimestamp() // Use imported serverTimestamp
+        createdAt: serverTimestamp()
       });
       routines.push({ id: routineRef.id, name, details });
       updateRoutineSelect();
@@ -238,7 +280,6 @@ window.addEventListener('DOMContentLoaded', () => {
   async function saveUserData() {
     if (!currentUser) return;
     try {
-      // Use imported doc and setDoc with the 'db' instance
       const userDocRef = doc(collection(db, 'users'), currentUser.uid);
       await setDoc(userDocRef, { xp }, { merge: true });
     } catch (e) {
@@ -250,9 +291,8 @@ window.addEventListener('DOMContentLoaded', () => {
   async function loadUserData() {
     if (!currentUser) return;
     try {
-      // Use imported doc and getDoc with the 'db' instance
       const userDocRef = doc(collection(db, 'users'), currentUser.uid);
-      const docSnapshot = await getDoc(userDocRef); // Renamed 'doc' to 'docSnapshot' to avoid conflict with imported 'doc' function
+      const docSnapshot = await getDoc(userDocRef);
       if (docSnapshot.exists()) {
         xp = docSnapshot.data().xp || 0;
         updateXpDisplay();
@@ -270,11 +310,10 @@ window.addEventListener('DOMContentLoaded', () => {
   async function loadRoutines() {
     if (!currentUser) return;
     try {
-      // Use imported collection, doc, query, orderBy, getDocs with the 'db' instance
       const routinesCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'routines');
       const q = query(routinesCollectionRef, orderBy('createdAt', 'desc'));
       const querySnapshot = await getDocs(q);
-      routines = querySnapshot.docs.map(docSnapshot => ({ id: docSnapshot.id, ...docSnapshot.data() })); // Renamed 'doc' to 'docSnapshot'
+      routines = querySnapshot.docs.map(docSnapshot => ({ id: docSnapshot.id, ...docSnapshot.data() }));
       updateRoutineSelect();
     } catch (e) {
       console.error('Error loading routines:', e);
@@ -295,11 +334,10 @@ window.addEventListener('DOMContentLoaded', () => {
   async function loadFriends() {
     if (!currentUser) return;
     try {
-      // Use imported collection, doc, getDocs with the 'db' instance
       const friendsCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'friends');
       const querySnapshot = await getDocs(friendsCollectionRef);
       friendsList.innerHTML = '';
-      querySnapshot.forEach(docSnapshot => { // Renamed 'doc' to 'docSnapshot'
+      querySnapshot.forEach(docSnapshot => {
         const friend = docSnapshot.data();
         const div = document.createElement('div');
         div.className = 'friend';
@@ -310,7 +348,7 @@ window.addEventListener('DOMContentLoaded', () => {
       console.error('Error loading friends:', e);
       logMessage('Error loading friends.');
     }
-  }
+  };
 
   addFriendBtn.onclick = async () => {
     if (!currentUser) {
@@ -323,7 +361,6 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
-      // Use imported collection, query, where, getDocs with the 'db' instance
       const usersCollectionRef = collection(db, 'users');
       const q = query(usersCollectionRef, where('email', '==', friendEmail));
       const usersSnapshot = await getDocs(q);
@@ -332,14 +369,13 @@ window.addEventListener('DOMContentLoaded', () => {
         logMessage('No user found with that email.');
         return;
       }
-      const friend = usersSnapshot.docs[0]; // Get the first matching user
+      const friend = usersSnapshot.docs[0];
 
-      // Use imported collection, doc, setDoc with the 'db' instance
       const friendsSubCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'friends');
-      const friendDocRef = doc(friendsSubCollectionRef, friend.id); // Reference to the friend's document
+      const friendDocRef = doc(friendsSubCollectionRef, friend.id);
       await setDoc(friendDocRef, {
         email: friendEmail,
-        addedAt: serverTimestamp() // Use imported serverTimestamp
+        addedAt: serverTimestamp()
       });
       loadFriends();
       friendEmailInput.value = '';
