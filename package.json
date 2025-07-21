@@ -4,7 +4,8 @@
   "description": "my firebase app",
   "main": "firebase-init.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo 'Building static content...'"   
   },
   "repository": {
     "type": "git",
