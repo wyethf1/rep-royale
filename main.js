@@ -1,19 +1,53 @@
-// main.js - This file should NOT have Firebase imports or initialization at the top.
-// It should rely on firebase-init.js to set up window.auth, window.db, etc.
+// main.js
 
+// ALL Firebase imports come from here now
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
+import {
+    getAuth,
+    GoogleAuthProvider,
+    EmailAuthProvider,
+    signInWithPopup,        // <--- IMPORT THESE FUNCTIONS DIRECTLY
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged      // <--- IMPORT onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
+import {
+    getFirestore,
+    collection,             // <--- IMPORT THESE FUNCTIONS DIRECTLY
+    doc,
+    setDoc,
+    getDoc,
+    addDoc,
+    query,
+    where,
+    getDocs,
+    orderBy,
+    serverTimestamp         // <--- IMPORT serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB8bHVud00N-H4VBgwsag4oRHBYVvf4q4Q",
+  authDomain: "rep-royale.firebaseapp.com",
+  databaseURL: "https://rep-royale-default-rtdb.firebaseio.com",
+  projectId: "rep-royale",
+  storageBucket: "rep-royale.firebasestorage.app",
+  messagingSenderId: "842201057109",
+  appId: "1:842201057109:web:f2bb869900048bf84751dc",
+  measurementId: "G-JSL641G4SJ"
+};
+
+// Initialize Firebase (these are now constants, not on window)
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app); // Get the auth instance
+const db = getFirestore(app); // Get the db instance
+
+// The rest of your main.js code will go INSIDE this DOMContentLoaded listener
 window.addEventListener('DOMContentLoaded', () => {
   console.log('main.js loaded at', new Date().toLocaleString());
 
-  // Ensure Firebase auth and db are available from firebase-init.js
-  // Now, we'll check for the specific functions that firebase-init.js should expose
-  if (!window.auth || !window.db || !window.signInWithEmailAndPassword ||
-      !window.createUserWithEmailAndPassword || !window.signInWithPopup ||
-      !window.signOut || !window.onAuthStateChanged || !window.dbFunctions) {
-    console.error('Firebase functions or instances not fully initialized. Check firebase-init.js and its exposure of functions to window.');
-    const errorDiv = document.getElementById('authError');
-    if (errorDiv) errorDiv.textContent = 'App initialization failed. Please try again later.';
-    return;
-  }
+  // We no longer need the extensive window.check because Firebase is initialized directly in main.js
+  // and we'll use the imported 'auth' and 'db' constants.
 
   const authSection = document.getElementById('authSection');
   const appSection = document.getElementById('appSection');
@@ -35,7 +69,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const log = document.getElementById('log');
   const friendEmailInput = document.getElementById('friendEmailInput');
   const addFriendBtn = document.getElementById('addFriendBtn');
-  const friendsList = document('friendsList'); // Typo here - should be getElementById
+  const friendsList = document.getElementById('friendsList'); // Corrected typo here
 
   if (!authSection || !appSection || !emailInput || !passwordInput || !loginBtn ||
       !registerBtn || !googleSignInBtn || !logoutBtn || !gainXpBtn || !xpDisplay ||
@@ -60,8 +94,8 @@ window.addEventListener('DOMContentLoaded', () => {
     appSection.classList.add('hidden');
   }
 
-  // Use the global onAuthStateChanged function
-  window.onAuthStateChanged(window.auth, user => { // Pass window.auth as the first argument
+  // Use the imported onAuthStateChanged function
+  onAuthStateChanged(auth, user => { // Pass the 'auth' instance directly
     console.log('Auth state changed:', user ? user.uid : 'No user');
     if (user) {
       currentUser = user;
@@ -83,8 +117,8 @@ window.addEventListener('DOMContentLoaded', () => {
   loginBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      // Use the global signInWithEmailAndPassword function
-      await window.signInWithEmailAndPassword(window.auth, emailInput.value, passwordInput.value);
+      // Use the imported signInWithEmailAndPassword function
+      await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
       logMessage('Logged in successfully');
     } catch (e) {
       console.error('Login error:', e);
@@ -95,8 +129,8 @@ window.addEventListener('DOMContentLoaded', () => {
   registerBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      // Use the global createUserWithEmailAndPassword function
-      await window.createUserWithEmailAndPassword(window.auth, emailInput.value, passwordInput.value);
+      // Use the imported createUserWithEmailAndPassword function
+      await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
       logMessage('Registered successfully');
     } catch (e) {
       console.error('Register error:', e);
@@ -107,9 +141,9 @@ window.addEventListener('DOMContentLoaded', () => {
   googleSignInBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      const provider = new window.GoogleAuthProvider();
-      // Use the global signInWithPopup function
-      await window.signInWithPopup(window.auth, provider);
+      const provider = new GoogleAuthProvider(); // GoogleAuthProvider is imported directly
+      // Use the imported signInWithPopup function
+      await signInWithPopup(auth, provider);
       logMessage('Signed in with Google');
     } catch (e) {
       console.error('Google Sign-In error:', e);
@@ -119,8 +153,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   logoutBtn.onclick = async () => {
     try {
-      // Use the global signOut function
-      await window.signOut(window.auth);
+      // Use the imported signOut function
+      await signOut(auth);
       logMessage('Logged out');
     } catch (e) {
       console.error('Logout error:', e);
@@ -151,15 +185,12 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
-      // Use dbFunctions
-      const routinesCollectionRef = window.dbFunctions.collection(
-        window.dbFunctions.doc(window.dbFunctions.collection(window.db, 'users'), currentUser.uid),
-        'routines'
-      );
-      const routineRef = await window.dbFunctions.addDoc(routinesCollectionRef, {
+      // Use imported collection and doc
+      const routinesCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'routines');
+      const routineRef = await addDoc(routinesCollectionRef, { // Use imported addDoc
         name,
         details,
-        createdAt: window.dbFunctions.serverTimestamp() // Use serverTimestamp from dbFunctions
+        createdAt: serverTimestamp() // Use imported serverTimestamp
       });
       routines.push({ id: routineRef.id, name, details });
       updateRoutineSelect();
@@ -203,8 +234,9 @@ window.addEventListener('DOMContentLoaded', () => {
   async function saveUserData() {
     if (!currentUser) return;
     try {
-      const userDocRef = window.dbFunctions.doc(window.dbFunctions.collection(window.db, 'users'), currentUser.uid);
-      await window.dbFunctions.setDoc(userDocRef, { xp }, { merge: true });
+      // Use imported doc and setDoc
+      const userDocRef = doc(collection(db, 'users'), currentUser.uid);
+      await setDoc(userDocRef, { xp }, { merge: true });
     } catch (e) {
       console.error('Error saving user data:', e);
       logMessage('Error saving XP.');
@@ -214,10 +246,11 @@ window.addEventListener('DOMContentLoaded', () => {
   async function loadUserData() {
     if (!currentUser) return;
     try {
-      const userDocRef = window.dbFunctions.doc(window.dbFunctions.collection(window.db, 'users'), currentUser.uid);
-      const doc = await window.dbFunctions.getDoc(userDocRef);
-      if (doc.exists()) { // Call .exists() as a function
-        xp = doc.data().xp || 0;
+      // Use imported doc and getDoc
+      const userDocRef = doc(collection(db, 'users'), currentUser.uid);
+      const docSnapshot = await getDoc(userDocRef); // Renamed 'doc' to 'docSnapshot' to avoid conflict
+      if (docSnapshot.exists()) {
+        xp = docSnapshot.data().xp || 0;
         updateXpDisplay();
       } else {
         xp = 0;
@@ -233,13 +266,11 @@ window.addEventListener('DOMContentLoaded', () => {
   async function loadRoutines() {
     if (!currentUser) return;
     try {
-      const routinesCollectionRef = window.dbFunctions.collection(
-        window.dbFunctions.doc(window.dbFunctions.collection(window.db, 'users'), currentUser.uid),
-        'routines'
-      );
-      const q = window.dbFunctions.query(routinesCollectionRef, window.dbFunctions.orderBy('createdAt', 'desc'));
-      const querySnapshot = await window.dbFunctions.getDocs(q);
-      routines = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Use imported collection, doc, query, orderBy, getDocs
+      const routinesCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'routines');
+      const q = query(routinesCollectionRef, orderBy('createdAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+      routines = querySnapshot.docs.map(docSnapshot => ({ id: docSnapshot.id, ...docSnapshot.data() })); // Renamed 'doc' to 'docSnapshot'
       updateRoutineSelect();
     } catch (e) {
       console.error('Error loading routines:', e);
@@ -260,14 +291,12 @@ window.addEventListener('DOMContentLoaded', () => {
   async function loadFriends() {
     if (!currentUser) return;
     try {
-      const friendsCollectionRef = window.dbFunctions.collection(
-        window.dbFunctions.doc(window.dbFunctions.collection(window.db, 'users'), currentUser.uid),
-        'friends'
-      );
-      const querySnapshot = await window.dbFunctions.getDocs(friendsCollectionRef); // getDocs can take a collection ref directly
+      // Use imported collection, doc, getDocs
+      const friendsCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'friends');
+      const querySnapshot = await getDocs(friendsCollectionRef);
       friendsList.innerHTML = '';
-      querySnapshot.forEach(doc => {
-        const friend = doc.data();
+      querySnapshot.forEach(docSnapshot => { // Renamed 'doc' to 'docSnapshot'
+        const friend = docSnapshot.data();
         const div = document.createElement('div');
         div.className = 'friend';
         div.innerHTML = `<span>${friend.email}</span>`;
@@ -290,9 +319,10 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
-      const usersCollectionRef = window.dbFunctions.collection(window.db, 'users');
-      const q = window.dbFunctions.query(usersCollectionRef, window.dbFunctions.where('email', '==', friendEmail));
-      const usersSnapshot = await window.dbFunctions.getDocs(q);
+      // Use imported collection, query, where, getDocs
+      const usersCollectionRef = collection(db, 'users');
+      const q = query(usersCollectionRef, where('email', '==', friendEmail));
+      const usersSnapshot = await getDocs(q);
 
       if (usersSnapshot.empty) {
         logMessage('No user found with that email.');
@@ -300,14 +330,12 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       const friend = usersSnapshot.docs[0]; // Get the first matching user
 
-      const friendsSubCollectionRef = window.dbFunctions.collection(
-        window.dbFunctions.doc(window.dbFunctions.collection(window.db, 'users'), currentUser.uid),
-        'friends'
-      );
-      const friendDocRef = window.dbFunctions.doc(friendsSubCollectionRef, friend.id); // Reference to the friend's document
-      await window.dbFunctions.setDoc(friendDocRef, {
+      // Use imported collection, doc, setDoc
+      const friendsSubCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'friends');
+      const friendDocRef = doc(friendsSubCollectionRef, friend.id); // Reference to the friend's document
+      await setDoc(friendDocRef, {
         email: friendEmail,
-        addedAt: window.dbFunctions.serverTimestamp()
+        addedAt: serverTimestamp() // Use imported serverTimestamp
       });
       loadFriends();
       friendEmailInput.value = '';
@@ -324,4 +352,4 @@ window.addEventListener('DOMContentLoaded', () => {
     log.appendChild(p);
     log.scrollTop = log.scrollHeight;
   }
-});
+}); // End of DOMContentLoaded
