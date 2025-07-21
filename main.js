@@ -1,5 +1,12 @@
 window.addEventListener('DOMContentLoaded', () => {
-  // DOM elements
+  console.log('main.js loaded at', new Date().toLocaleString());
+  if (!window.auth || !window.db) {
+    console.error('Firebase auth or db not initialized. Check firebase-init.js.');
+    const errorDiv = document.getElementById('authError');
+    if (errorDiv) errorDiv.textContent = 'App initialization failed. Please try again later.';
+    return;
+  }
+
   const authSection = document.getElementById('authSection');
   const appSection = document.getElementById('appSection');
   const emailInput = document.getElementById('emailInput');
@@ -22,22 +29,20 @@ window.addEventListener('DOMContentLoaded', () => {
   const addFriendBtn = document.getElementById('addFriendBtn');
   const friendsList = document.getElementById('friendsList');
 
-  // Validate DOM elements
   if (!authSection || !appSection || !emailInput || !passwordInput || !loginBtn ||
       !registerBtn || !googleSignInBtn || !logoutBtn || !gainXpBtn || !xpDisplay ||
       !levelDisplay || !authError || !routineName || !routineDetails || !saveRoutineBtn ||
       !routineSelect || !completeRoutineBtn || !log || !friendEmailInput || !addFriendBtn ||
       !friendsList) {
     console.error('One or more DOM elements are missing.');
+    authError.textContent = 'App failed to load: Missing UI elements.';
     return;
   }
 
-  // State
   let currentUser = null;
   let xp = 0;
   let routines = [];
 
-  // Show/hide sections
   function showApp() {
     authSection.classList.add('hidden');
     appSection.classList.remove('hidden');
@@ -47,8 +52,8 @@ window.addEventListener('DOMContentLoaded', () => {
     appSection.classList.add('hidden');
   }
 
-  // Auth state listener
-  firebase.auth().onAuthStateChanged(user => {
+  window.auth.onAuthStateChanged(user => {
+    console.log('Auth state changed:', user ? user.uid : 'No user');
     if (user) {
       currentUser = user;
       showApp();
@@ -66,12 +71,13 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Authentication
   loginBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      await firebase.auth().signInWithEmailAndPassword(emailInput.value, passwordInput.value);
+      await window.auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value);
+      logMessage('Logged in successfully');
     } catch (e) {
+      console.error('Login error:', e);
       authError.textContent = e.message;
     }
   };
@@ -79,30 +85,36 @@ window.addEventListener('DOMContentLoaded', () => {
   registerBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      await firebase.auth().createUserWithEmailAndPassword(emailInput.value, passwordInput.value);
+      await window.auth.createUserWithEmailAndPassword(emailInput.value, passwordInput.value);
+      logMessage('Registered successfully');
     } catch (e) {
+      console.error('Register error:', e);
       authError.textContent = e.message;
     }
   };
 
   googleSignInBtn.onclick = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    authError.textContent = '';
     try {
-      await firebase.auth().signInWithPopup(provider);
+      const provider = new window.auth.GoogleAuthProvider();
+      await window.auth.signInWithPopup(provider);
+      logMessage('Signed in with Google');
     } catch (e) {
+      console.error('Google Sign-In error:', e);
       authError.textContent = e.message;
     }
   };
 
   logoutBtn.onclick = async () => {
     try {
-      await firebase.auth().signOut();
+      await window.auth.signOut();
+      logMessage('Logged out');
     } catch (e) {
+      console.error('Logout error:', e);
       authError.textContent = e.message;
     }
   };
 
-  // XP and Levels
   gainXpBtn.onclick = () => {
     if (!currentUser) {
       authError.textContent = 'Please log in to gain XP.';
@@ -114,42 +126,6 @@ window.addEventListener('DOMContentLoaded', () => {
     logMessage('Gained 10 XP from workout!');
   };
 
-  function updateXpDisplay() {
-    xpDisplay.textContent = `XP: ${xp}`;
-    const level = Math.floor(xp / 100) + 1;
-    const titles = ["Novice", "Rookie", "Warrior", "Veteran", "Beast", "Legend"];
-    levelDisplay.textContent = `Level: ${level} — ${titles[Math.min(level - 1, titles.length - 1)]}`;
-  }
-
-  async function saveUserData() {
-    if (!currentUser) return;
-    try {
-      await firebase.firestore().collection('users').doc(currentUser.uid).set({ xp }, { merge: true });
-    } catch (e) {
-      console.error('Error saving user data:', e);
-      logMessage('Error saving XP.');
-    }
-  }
-
-  async function loadUserData() {
-    if (!currentUser) return;
-    try {
-      const doc = await firebase.firestore().collection('users').doc(currentUser.uid).get();
-      if (doc.exists) {
-        xp = doc.data().xp || 0;
-        updateXpDisplay();
-      } else {
-        xp = 0;
-        updateXpDisplay();
-        saveUserData();
-      }
-    } catch (e) {
-      console.error('Error loading user data:', e);
-      logMessage('Error loading XP.');
-    }
-  }
-
-  // Routines
   saveRoutineBtn.onclick = async () => {
     if (!currentUser) {
       authError.textContent = 'Please log in to save routines.';
@@ -162,8 +138,8 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
     try {
-      const routineRef = await firebase.firestore().collection('users').doc(currentUser.uid)
-        .collection('routines').add({ name, details, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      const routineRef = await window.db.collection('users').doc(currentUser.uid)
+        .collection('routines').add({ name, details, createdAt: window.db.FieldValue.serverTimestamp() });
       routines.push({ id: routineRef.id, name, details });
       updateRoutineSelect();
       routineName.value = '';
@@ -190,16 +166,51 @@ window.addEventListener('DOMContentLoaded', () => {
       logMessage('Selected routine not found.');
       return;
     }
-    xp += 50; // Award more XP for completing a routine
+    xp += 50;
     updateXpDisplay();
     saveUserData();
     logMessage(`Completed routine "${routine.name}"! Gained 50 XP.`);
   };
 
+  function updateXpDisplay() {
+    xpDisplay.textContent = `XP: ${xp}`;
+    const level = Math.floor(xp / 100) + 1;
+    const titles = ["Novice", "Rookie", "Warrior", "Veteran", "Beast", "Legend"];
+    levelDisplay.textContent = `Level: ${level} — ${titles[Math.min(level - 1, titles.length - 1)]}`;
+  }
+
+  async function saveUserData() {
+    if (!currentUser) return;
+    try {
+      await window.db.collection('users').doc(currentUser.uid).set({ xp }, { merge: true });
+    } catch (e) {
+      console.error('Error saving user data:', e);
+      logMessage('Error saving XP.');
+    }
+  }
+
+  async function loadUserData() {
+    if (!currentUser) return;
+    try {
+      const doc = await window.db.collection('users').doc(currentUser.uid).get();
+      if (doc.exists) {
+        xp = doc.data().xp || 0;
+        updateXpDisplay();
+      } else {
+        xp = 0;
+        updateXpDisplay();
+        saveUserData();
+      }
+    } catch (e) {
+      console.error('Error loading user data:', e);
+      logMessage('Error loading XP.');
+    }
+  }
+
   async function loadRoutines() {
     if (!currentUser) return;
     try {
-      const querySnapshot = await firebase.firestore().collection('users').doc(currentUser.uid)
+      const querySnapshot = await window.db.collection('users').doc(currentUser.uid)
         .collection('routines').orderBy('createdAt', 'desc').get();
       routines = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       updateRoutineSelect();
@@ -219,43 +230,10 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Friends
-  addFriendBtn.onclick = async () => {
-    if (!currentUser) {
-      authError.textContent = 'Please log in to add friends.';
-      return;
-    }
-    const friendEmail = friendEmailInput.value.trim();
-    if (!friendEmail) {
-      logMessage('Please enter a friend’s email.');
-      return;
-    }
-    try {
-      const usersSnapshot = await firebase.firestore().collection('users')
-        .where('email', '==', friendEmail).get();
-      if (usersSnapshot.empty) {
-        logMessage('No user found with that email.');
-        return;
-      }
-      const friend = usersSnapshot.docs[0];
-      await firebase.firestore().collection('users').doc(currentUser.uid)
-        .collection('friends').doc(friend.id).set({
-          email: friendEmail,
-          addedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      loadFriends();
-      friendEmailInput.value = '';
-      logMessage(`Added friend: ${friendEmail}`);
-    } catch (e) {
-      console.error('Error adding friend:', e);
-      logMessage('Error adding friend.');
-    }
-  };
-
   async function loadFriends() {
     if (!currentUser) return;
     try {
-      const querySnapshot = await firebase.firestore().collection('users').doc(currentUser.uid)
+      const querySnapshot = await window.db.collection('users').doc(currentUser.uid)
         .collection('friends').get();
       friendsList.innerHTML = '';
       querySnapshot.forEach(doc => {
@@ -271,7 +249,38 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Logging
+  addFriendBtn.onclick = async () => {
+    if (!currentUser) {
+      authError.textContent = 'Please log in to add friends.';
+      return;
+    }
+    const friendEmail = friendEmailInput.value.trim();
+    if (!friendEmail) {
+      logMessage('Please enter a friend’s email.');
+      return;
+    }
+    try {
+      const usersSnapshot = await window.db.collection('users')
+        .where('email', '==', friendEmail).get();
+      if (usersSnapshot.empty) {
+        logMessage('No user found with that email.');
+        return;
+      }
+      const friend = usersSnapshot.docs[0];
+      await window.db.collection('users').doc(currentUser.uid)
+        .collection('friends').doc(friend.id).set({
+          email: friendEmail,
+          addedAt: window.db.FieldValue.serverTimestamp()
+        });
+      loadFriends();
+      friendEmailInput.value = '';
+      logMessage(`Added friend: ${friendEmail}`);
+    } catch (e) {
+      console.error('Error adding friend:', e);
+      logMessage('Error adding friend.');
+    }
+  };
+
   function logMessage(message) {
     const p = document.createElement('p');
     p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;

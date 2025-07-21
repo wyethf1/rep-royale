@@ -6,24 +6,6 @@
   <title>Rep Royale Web App</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
-    /* Your existing styles */
-    body {
-      margin: 0; padding: 20px; background: #000; color: #eee;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    /* ... rest of your styles ... */
-  </style>
-  <!-- Firebase SDK 12.0.0 (updated to match package-lock.json) -->
-  <script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"></script>
-  <script src="/firebase-init.js" defer></script>
-  <script src="/main.js" defer></script>
-</head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rep Royale Web App</title>
-  <style>
     body {
       margin: 0; padding: 20px; background: #000; color: #eee;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -75,7 +57,6 @@
       font-style: italic;
     }
   </style>
-  <!-- Firebase SDK 12.0.0 -->
   <script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"></script>
@@ -90,4 +71,38 @@
       <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" />
       <button id="loginBtn">Login</button>
       <button id="registerBtn">Register</button>
-      <button id="googleSignInBtn" style="background:
+      <button id="googleSignInBtn" style="background: #4285F4; color: white; margin-top: 10px;">Sign in with Google</button>
+      <div id="authError" class="error"></div>
+    </section>
+    <section id="appSection" class="section hidden">
+      <div>
+        <button id="logoutBtn" style="background: #AA5959; margin-bottom: 20px;">Logout</button>
+      </div>
+      <div>
+        <h2>Your XP & Level</h2>
+        <div id="xpDisplay">XP: 0</div>
+        <div id="levelDisplay">Level: 1 — Novice</div>
+        <button id="gainXpBtn">Gain 10 XP (Simulate Workout)</button>
+      </div>
+      <div style="margin-top: 2rem;">
+        <h2>Routines</h2>
+        <label for="routineName">Routine Name</label>
+        <input type="text" id="routineName" placeholder="e.g. Push Day" />
+        <label for="routineDetails">Exercises (e.g. Bench Press - 3x8)</label>
+        <textarea id="routineDetails" rows="4" placeholder="Enter exercises with sets & reps"></textarea>
+        <button id="saveRoutineBtn">Save Routine</button>
+        <label for="routineSelect">Select Routine</label>
+        <select id="routineSelect"><option value="">-- Select Routine --</option></select>
+        <button id="completeRoutineBtn">Complete Routine (+XP)</button>
+        <div id="log" style="margin-top: 1rem; max-height: 150px; overflow-y: auto; background: #111; padding: 10px; border-radius: 6px;"></div>
+      </div>
+      <div style="margin-top: 2rem;">
+        <h2>Friends</h2>
+        <input type="email" id="friendEmailInput" placeholder="Friend's Email" />
+        <button id="addFriendBtn">Add Friend</button>
+        <div id="friendsList" style="margin-top: 1rem;"></div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
