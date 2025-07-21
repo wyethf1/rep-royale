@@ -263,3 +263,65 @@ window.addEventListener('DOMContentLoaded', () => {
       const friendsCollectionRef = window.dbFunctions.collection(
         window.dbFunctions.doc(window.dbFunctions.collection(window.db, 'users'), currentUser.uid),
         'friends'
+      );
+      const querySnapshot = await window.dbFunctions.getDocs(friendsCollectionRef); // getDocs can take a collection ref directly
+      friendsList.innerHTML = '';
+      querySnapshot.forEach(doc => {
+        const friend = doc.data();
+        const div = document.createElement('div');
+        div.className = 'friend';
+        div.innerHTML = `<span>${friend.email}</span>`;
+        friendsList.appendChild(div);
+      });
+    } catch (e) {
+      console.error('Error loading friends:', e);
+      logMessage('Error loading friends.');
+    }
+  }
+
+  addFriendBtn.onclick = async () => {
+    if (!currentUser) {
+      authError.textContent = 'Please log in to add friends.';
+      return;
+    }
+    const friendEmail = friendEmailInput.value.trim();
+    if (!friendEmail) {
+      logMessage('Please enter a friend’s email.');
+      return;
+    }
+    try {
+      const usersCollectionRef = window.dbFunctions.collection(window.db, 'users');
+      const q = window.dbFunctions.query(usersCollectionRef, window.dbFunctions.where('email', '==', friendEmail));
+      const usersSnapshot = await window.dbFunctions.getDocs(q);
+
+      if (usersSnapshot.empty) {
+        logMessage('No user found with that email.');
+        return;
+      }
+      const friend = usersSnapshot.docs[0]; // Get the first matching user
+
+      const friendsSubCollectionRef = window.dbFunctions.collection(
+        window.dbFunctions.doc(window.dbFunctions.collection(window.db, 'users'), currentUser.uid),
+        'friends'
+      );
+      const friendDocRef = window.dbFunctions.doc(friendsSubCollectionRef, friend.id); // Reference to the friend's document
+      await window.dbFunctions.setDoc(friendDocRef, {
+        email: friendEmail,
+        addedAt: window.dbFunctions.serverTimestamp()
+      });
+      loadFriends();
+      friendEmailInput.value = '';
+      logMessage(`Added friend: ${friendEmail}`);
+    } catch (e) {
+      console.error('Error adding friend:', e);
+      logMessage('Error adding friend.');
+    }
+  };
+
+  function logMessage(message) {
+    const p = document.createElement('p');
+    p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+    log.appendChild(p);
+    log.scrollTop = log.scrollHeight;
+  }
+});
