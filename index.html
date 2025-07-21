@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +60,6 @@
 </style>
 
 <!-- Firebase SDK -->
-<!-- Using compat versions (v9.23.0) which match the 'firebase.initializeApp' syntax -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -75,7 +75,6 @@
     <button id="loginBtn">Login</button>
     <button id="registerBtn">Register</button>
     
-    <!-- NEW: Google Sign-In Button -->
     <button id="googleSignInBtn" style="background: #000000; color: white; margin-top: 10px;">Sign in with Google</button>
     
     <div id="authError" class="error"></div>
@@ -119,12 +118,18 @@
   </section>
 </div>
 
-<script src="firebase-init.js"></script> 
+<!-- Your Firebase config & initialization -->
+<script src="firebase-init.js"></script>
 
-  // Initialize Firebase using the compat syntax (matches the SDKs loaded in the <head>)
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+<!-- Your main JavaScript -->
+<script>
+  // Use firebaseConfig etc. from firebase-init.js, which should have:
+  // firebase.initializeApp(firebaseConfig);
+  // window.auth = firebase.auth();
+  // window.db = firebase.firestore();
+
+  const auth = window.auth;
+  const db = window.db;
 
   // Elements
   const authSection = document.getElementById('authSection');
@@ -134,9 +139,7 @@
   const loginBtn = document.getElementById('loginBtn');
   const registerBtn = document.getElementById('registerBtn');
   const authError = document.getElementById('authError');
-  // NEW: Reference to the Google Sign-In button
   const googleSignInBtn = document.getElementById('googleSignInBtn');
-
 
   const logoutBtn = document.getElementById('logoutBtn');
   const xpDisplay = document.getElementById('xpDisplay');
@@ -201,15 +204,13 @@
     auth.signOut();
   };
 
-  // NEW: Google Sign-In Handler
+  // Google Sign-In Handler
   googleSignInBtn.onclick = async () => {
-    authError.textContent = ''; // Clear any previous errors
+    authError.textContent = '';
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
-      await auth.signInWithPopup(provider); // This will open a popup for Google authentication
-      // The onAuthStateChanged listener below will handle UI updates on successful login
+      await auth.signInWithPopup(provider);
     } catch (error) {
-      // Handle errors during sign-in
       authError.textContent = error.message;
       console.error("Google Sign-In Error:", error);
     }
@@ -229,25 +230,24 @@
       totalXP = 0;
       friends = [];
       friendsData = {};
-      updateUI(); // Ensure UI is reset for logged out state
+      updateUI();
     }
   });
 
   // Load user data from Firestore
   function loadUserData() {
-    // Set user's email if it's a new user or just ensure it's there
     const userDocRef = db.collection('users').doc(currentUser.uid);
-    userDocRef.set({ email: currentUser.email }, { merge: true }); // Use merge:true to not overwrite existing data
+    userDocRef.set({ email: currentUser.email }, { merge: true });
 
     userDocRef.onSnapshot(doc => {
       const data = doc.data() || {};
       totalXP = data.xp || 0;
       routines = data.routines || [];
       friends = data.friends || [];
-      updateUI(); // Updates general UI elements
-      loadFriendsData(); // Explicitly load friends data
-      updateRoutineSelect(); // Explicitly update routines dropdown
-      updateXPDisplay(); // Explicitly update XP and level
+      updateUI();
+      loadFriendsData();
+      updateRoutineSelect();
+      updateXPDisplay();
     });
   }
 
@@ -260,9 +260,7 @@
 
   // Save routines back to Firestore
   function saveRoutines() {
-    db.collection('users').doc(currentUser.uid).update({
-      routines
-    });
+    db.collection('users').doc(currentUser.uid).update({ routines });
   }
 
   // Save routine button
@@ -299,7 +297,7 @@
       return;
     }
     const routine = routines[idx];
-    const xpEarned = 10; // Hardcoded XP for now
+    const xpEarned = 10;
     gainXP(xpEarned);
     logRoutine(routine.name, routine.details, xpEarned);
   };
@@ -308,7 +306,7 @@
   function gainXP(amount) {
     const userDocRef = db.collection('users').doc(currentUser.uid);
     userDocRef.update({
-      xp: firebase.firestore.FieldValue.increment(amount) // Atomically increment XP
+      xp: firebase.firestore.FieldValue.increment(amount)
     });
   }
 
@@ -318,7 +316,7 @@
     logEntry.style.borderBottom = '1px solid #222';
     logEntry.style.padding = '8px 0';
     logEntry.innerHTML = `<strong>${name}</strong><br>${details.replace(/\n/g,'<br>')}<br>⭐ XP Earned: ${xp}<br><small>${new Date().toLocaleString()}</small>`;
-    logDiv.prepend(logEntry); // Add to the top
+    logDiv.prepend(logEntry);
   }
 
   // Gain XP button (simulate workout)
@@ -340,7 +338,6 @@
       return;
     }
 
-    // Find friend by email in users collection
     db.collection('users').where('email', '==', friendEmail).get()
       .then(snapshot => {
         if (snapshot.empty) {
@@ -355,26 +352,22 @@
           return;
         }
 
-        // Add friend to user's friend list
         friends.push(friendId);
-        db.collection('users').doc(currentUser.uid).update({
-          friends
-        });
+        db.collection('users').doc(currentUser.uid).update({ friends });
         friendEmailInput.value = '';
-        loadFriendsData(); // Reload friends data to show the new friend
+        loadFriendsData();
       })
       .catch(err => alert('Error: ' + err.message));
   };
 
   // Load friends data and display
   function loadFriendsData() {
-    friendsListDiv.innerHTML = ''; // Clear current list
+    friendsListDiv.innerHTML = '';
     if (friends.length === 0) {
       friendsListDiv.innerHTML = '<p>No friends added yet.</p>';
       return;
     }
     friends.forEach(fid => {
-      // Fetch friend's data
       db.collection('users').doc(fid).get().then(doc => {
         if (!doc.exists) {
           console.warn(`Friend with ID ${fid} not found.`);
@@ -391,15 +384,11 @@
     });
   }
 
-  // Initial UI update (useful for when the page loads and no user is signed in yet)
+  // Initial UI update
   function updateUI() {
-    // This function can be expanded to update other parts of the UI that depend on current user state
-    updateXPDisplay(); // Ensure XP is shown, even if 0 initially
+    updateXPDisplay();
   }
-  updateUI(); // Call once on page load
-
+  updateUI();
 </script>
 </body>
 </html>
-// this is a test to see if it updates
-// test 2
