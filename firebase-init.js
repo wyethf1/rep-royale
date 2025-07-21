@@ -1,5 +1,4 @@
 // firebase-init.js
-
 const firebaseConfig = {
   apiKey: "AIzaSyB8bHVnt00N-H4VBgwsag4oRHBYVvf4q4Q",
   authDomain: "rep-royale.firebaseapp.com",
@@ -10,9 +9,6 @@ const firebaseConfig = {
   measurementId: "G-JSL641G4SJ"
 };
 
-// Initialize Firebase using the compat version
 firebase.initializeApp(firebaseConfig);
-
-// Expose auth and firestore globally
 window.auth = firebase.auth();
 window.db = firebase.firestore();
