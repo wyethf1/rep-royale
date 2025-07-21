@@ -1,3 +1,7 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
+
 const firebaseConfig = {
   apiKey: "AIzaSyB8bHVnt00N-H4VBgwsag4oRHBYVvf4q4Q",
   authDomain: "rep-royale.firebaseapp.com",
@@ -8,6 +12,11 @@ const firebaseConfig = {
   measurementId: "G-JSL641G4SJ"
 };
 
-firebase.initializeApp(firebaseConfig);
-window.auth = firebase.auth();
-window.db = firebase.firestore();
+try {
+  const app = initializeApp(firebaseConfig);
+  window.auth = getAuth(app);
+  window.db = getFirestore(app);
+  console.log('Firebase initialized successfully');
+} catch (e) {
+  console.error('Firebase initialization failed:', e);
+}
