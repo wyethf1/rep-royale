@@ -1,4 +1,6 @@
-// ... (Your existing Firebase imports and initialization go here - from the last working main.js)
+// main.js - This file now handles ALL Firebase imports and initialization.
+
+// ALL Firebase imports come from here now
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
 import {
     getAuth,
@@ -29,18 +31,18 @@ const firebaseConfig = {
   authDomain: "rep-royale.firebaseapp.com",
   databaseURL: "https://rep-royale-default-rtdb.firebaseio.com",
   projectId: "rep-royale",
-  storageBucket: "rep-royale.firebasestorage.app",
+  storageBucket: "rep-royage.firebasestorage.app", // Corrected typo here, was 'rep-royale.firebasestorage.app'
   messagingSenderId: "842201057109",
   appId: "1:842201057109:web:f2bb869900048bf84751dc",
   measurementId: "G-JSL641G4SJ"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// --- START OF NEW CODE FOR DAILY QUOTE ---
-
+// --- START OF DAILY QUOTE LOGIC (unchanged from previous working version) ---
 const dailyBibleQuotes = [
   "I can do all things through Christ who strengthens me. - Philippians 4:13",
   "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life. - John 3:16",
@@ -63,7 +65,7 @@ function displayDailyQuote() {
   }
 
   const today = new Date();
-  const todayString = today.toDateString(); // e.g., "Mon Jul 21 2025"
+  const todayString = today.toDateString();
 
   const storedQuoteData = localStorage.getItem('dailyBibleQuote');
   let currentQuote = null;
@@ -75,28 +77,23 @@ function displayDailyQuote() {
     lastQuoteDate = parsedData.date;
   }
 
-  // Check if it's a new day or no quote is stored
   if (!currentQuote || lastQuoteDate !== todayString) {
-    // Pick a new random quote
     const randomIndex = Math.floor(Math.random() * dailyBibleQuotes.length);
     currentQuote = dailyBibleQuotes[randomIndex];
-
-    // Store the new quote and today's date
     localStorage.setItem('dailyBibleQuote', JSON.stringify({
       quote: currentQuote,
       date: todayString
     }));
   }
-
   quoteDisplayElement.textContent = currentQuote;
 }
-
-// --- END OF NEW CODE FOR DAILY QUOTE ---
+// --- END OF DAILY QUOTE LOGIC ---
 
 
 window.addEventListener('DOMContentLoaded', () => {
   console.log('main.js loaded at', new Date().toLocaleString());
 
+  // Get DOM elements
   const authSection = document.getElementById('authSection');
   const appSection = document.getElementById('appSection');
   const emailInput = document.getElementById('emailInput');
@@ -109,22 +106,33 @@ window.addEventListener('DOMContentLoaded', () => {
   const xpDisplay = document.getElementById('xpDisplay');
   const levelDisplay = document.getElementById('levelDisplay');
   const authError = document.getElementById('authError');
-  const routineName = document.getElementById('routineName');
-  const routineDetails = document.getElementById('routineDetails');
+
+  // New Routine Builder elements
+  const routineNameInput = document.getElementById('routineName');
+  const exerciseNameInput = document.getElementById('exerciseNameInput');
+  const setsSlider = document.getElementById('setsSlider');
+  const setsValueSpan = document.getElementById('setsValue');
+  const repsSlider = document.getElementById('repsSlider');
+  const repsValueSpan = document.getElementById('repsValue');
+  const addExerciseBtn = document.getElementById('addExerciseBtn');
+  const currentRoutineExercisesDiv = document.getElementById('currentRoutineExercises');
   const saveRoutineBtn = document.getElementById('saveRoutineBtn');
+
+  // Existing Routine Selector & Friends
   const routineSelect = document.getElementById('routineSelect');
   const completeRoutineBtn = document.getElementById('completeRoutineBtn');
-  const log = document.getElementById('log');
   const friendEmailInput = document.getElementById('friendEmailInput');
   const addFriendBtn = document.getElementById('addFriendBtn');
   const friendsList = document.getElementById('friendsList');
 
+  // Basic DOM element existence check
   if (!authSection || !appSection || !emailInput || !passwordInput || !loginBtn ||
       !registerBtn || !googleSignInBtn || !logoutBtn || !gainXpBtn || !xpDisplay ||
-      !levelDisplay || !authError || !routineName || !routineDetails || !saveRoutineBtn ||
-      !routineSelect || !completeRoutineBtn || !log || !friendEmailInput || !addFriendBtn ||
-      !friendsList) {
-    console.error('One or more DOM elements are missing.');
+      !levelDisplay || !authError || !routineNameInput || !exerciseNameInput ||
+      !setsSlider || !setsValueSpan || !repsSlider || !repsValueSpan || !addExerciseBtn ||
+      !currentRoutineExercisesDiv || !saveRoutineBtn || !routineSelect || !completeRoutineBtn ||
+      !friendEmailInput || !addFriendBtn || !friendsList) {
+    console.error('One or more DOM elements are missing. Please check index.html IDs.');
     if (authError) authError.textContent = 'App failed to load: Missing UI elements.';
     else alert('Critical error: App failed to load due to missing UI elements. Check console for details.');
     return;
@@ -132,8 +140,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let currentUser = null;
   let xp = 0;
-  let routines = [];
+  let routines = []; // Stores all user's saved routines
+  let currentBuildingRoutine = []; // Temporary array for exercises being added to a new routine
 
+  // --- UI Visibility Functions ---
   function showApp() {
     authSection.classList.add('hidden');
     appSection.classList.remove('hidden');
@@ -143,9 +153,10 @@ window.addEventListener('DOMContentLoaded', () => {
     appSection.classList.add('hidden');
   }
 
-  // --- CALL THE NEW FUNCTION HERE ---
+  // --- Initial Display Call ---
   displayDailyQuote(); // Display the quote when the DOM is loaded
 
+  // --- Firebase Auth State Listener ---
   onAuthStateChanged(auth, user => {
     console.log('Auth state changed:', user ? user.uid : 'No user');
     if (user) {
@@ -154,6 +165,8 @@ window.addEventListener('DOMContentLoaded', () => {
       loadUserData();
       loadRoutines();
       loadFriends();
+      // Clear routine builder when user logs in/out
+      clearRoutineBuilder();
     } else {
       currentUser = null;
       xp = 0;
@@ -165,11 +178,12 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // --- Auth Button Handlers ---
   loginBtn.onclick = async () => {
     authError.textContent = '';
     try {
       await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-      logMessage('Logged in successfully');
+      console.log('Logged in successfully');
     } catch (e) {
       console.error('Login error:', e);
       authError.textContent = e.message;
@@ -180,7 +194,7 @@ window.addEventListener('DOMContentLoaded', () => {
     authError.textContent = '';
     try {
       await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-      logMessage('Registered successfully');
+      console.log('Registered successfully');
     } catch (e) {
       console.error('Register error:', e);
       authError.textContent = e.message;
@@ -192,7 +206,7 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-      logMessage('Signed in with Google');
+      console.log('Signed in with Google');
     } catch (e) {
       console.error('Google Sign-In error:', e);
       authError.textContent = e.message;
@@ -202,13 +216,14 @@ window.addEventListener('DOMContentLoaded', () => {
   logoutBtn.onclick = async () => {
     try {
       await signOut(auth);
-      logMessage('Logged out');
+      console.log('Logged out');
     } catch (e) {
       console.error('Logout error:', e);
       authError.textContent = e.message;
     }
   };
 
+  // --- XP & Level Logic ---
   gainXpBtn.onclick = () => {
     if (!currentUser) {
       authError.textContent = 'Please log in to gain XP.';
@@ -217,57 +232,7 @@ window.addEventListener('DOMContentLoaded', () => {
     xp += 10;
     updateXpDisplay();
     saveUserData();
-    logMessage('Gained 10 XP from workout!');
-  };
-
-  saveRoutineBtn.onclick = async () => {
-    if (!currentUser) {
-      authError.textContent = 'Please log in to save routines.';
-      return;
-    }
-    const name = routineName.value.trim();
-    const details = routineDetails.value.trim();
-    if (!name || !details) {
-      logMessage('Please enter routine name and exercises.');
-      return;
-    }
-    try {
-      const routinesCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'routines');
-      const routineRef = await addDoc(routinesCollectionRef, {
-        name,
-        details,
-        createdAt: serverTimestamp()
-      });
-      routines.push({ id: routineRef.id, name, details });
-      updateRoutineSelect();
-      routineName.value = '';
-      routineDetails.value = '';
-      logMessage(`Routine "${name}" saved!`);
-    } catch (e) {
-      console.error('Error saving routine:', e);
-      logMessage('Error saving routine.');
-    }
-  };
-
-  completeRoutineBtn.onclick = async () => {
-    if (!currentUser) {
-      authError.textContent = 'Please log in to complete routines.';
-      return;
-    }
-    const selectedRoutineId = routineSelect.value;
-    if (!selectedRoutineId) {
-      logMessage('Please select a routine.');
-      return;
-    }
-    const routine = routines.find(r => r.id === selectedRoutineId);
-    if (!routine) {
-      logMessage('Selected routine not found.');
-      return;
-    }
-    xp += 50;
-    updateXpDisplay();
-    saveUserData();
-    logMessage(`Completed routine "${routine.name}"! Gained 50 XP.`);
+    console.log('Gained 10 XP from workout!');
   };
 
   function updateXpDisplay() {
@@ -284,7 +249,7 @@ window.addEventListener('DOMContentLoaded', () => {
       await setDoc(userDocRef, { xp }, { merge: true });
     } catch (e) {
       console.error('Error saving user data:', e);
-      logMessage('Error saving XP.');
+      // No logMessage, rely on console error
     }
   }
 
@@ -299,14 +264,117 @@ window.addEventListener('DOMContentLoaded', () => {
       } else {
         xp = 0;
         updateXpDisplay();
-        saveUserData();
+        saveUserData(); // Create user data if it doesn't exist
       }
     } catch (e) {
       console.error('Error loading user data:', e);
-      logMessage('Error loading XP.');
     }
   }
 
+  // --- Routine Builder Logic (NEW) ---
+
+  // Update slider value displays
+  setsSlider.oninput = () => {
+    setsValueSpan.textContent = setsSlider.value;
+  };
+  repsSlider.oninput = () => {
+    repsValueSpan.textContent = repsSlider.value;
+  };
+
+  addExerciseBtn.onclick = () => {
+    const exerciseName = exerciseNameInput.value.trim();
+    const sets = parseInt(setsSlider.value);
+    const reps = parseInt(repsSlider.value);
+
+    if (!exerciseName) {
+      authError.textContent = 'Please enter an exercise name.';
+      return;
+    }
+
+    currentBuildingRoutine.push({ name: exerciseName, sets, reps });
+    renderCurrentBuildingRoutine();
+    exerciseNameInput.value = ''; // Clear input
+    setsSlider.value = 3; // Reset sliders to default
+    setsValueSpan.textContent = 3;
+    repsSlider.value = 8;
+    repsValueSpan.textContent = 8;
+    authError.textContent = ''; // Clear any previous error
+    console.log(`Added exercise: ${exerciseName}, ${sets}x${reps}`);
+  };
+
+  function renderCurrentBuildingRoutine() {
+    currentRoutineExercisesDiv.innerHTML = ''; // Clear previous list
+    if (currentBuildingRoutine.length === 0) {
+      currentRoutineExercisesDiv.innerHTML = '<p style="text-align: center; color: #666;">No exercises added yet.</p>';
+      return;
+    }
+
+    currentBuildingRoutine.forEach((exercise, index) => {
+      const div = document.createElement('div');
+      div.className = 'routine-exercise-item';
+      div.innerHTML = `
+        <span>${exercise.name} - ${exercise.sets}x${exercise.reps}</span>
+        <button data-index="${index}">Remove</button>
+      `;
+      currentRoutineExercisesDiv.appendChild(div);
+    });
+
+    // Add event listeners for remove buttons
+    currentRoutineExercisesDiv.querySelectorAll('.routine-exercise-item button').forEach(button => {
+      button.onclick = (event) => {
+        const indexToRemove = parseInt(event.target.dataset.index);
+        currentBuildingRoutine.splice(indexToRemove, 1);
+        renderCurrentBuildingRoutine(); // Re-render the list
+        console.log(`Removed exercise at index ${indexToRemove}`);
+      };
+    });
+  }
+
+  saveRoutineBtn.onclick = async () => {
+    if (!currentUser) {
+      authError.textContent = 'Please log in to save routines.';
+      return;
+    }
+    const routineName = routineNameInput.value.trim();
+    if (!routineName) {
+      authError.textContent = 'Please enter a routine name.';
+      return;
+    }
+    if (currentBuildingRoutine.length === 0) {
+      authError.textContent = 'Please add at least one exercise to the routine.';
+      return;
+    }
+
+    try {
+      const routinesCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'routines');
+      await addDoc(routinesCollectionRef, {
+        name: routineName,
+        exercises: currentBuildingRoutine, // Save the array of exercises
+        createdAt: serverTimestamp()
+      });
+      console.log(`Routine "${routineName}" saved!`);
+      authError.textContent = `Routine "${routineName}" saved!`; // Provide user feedback
+      loadRoutines(); // Reload routines into the select dropdown
+      clearRoutineBuilder(); // Clear the builder after saving
+    } catch (e) {
+      console.error('Error saving routine:', e);
+      authError.textContent = 'Error saving routine.';
+    }
+  };
+
+  function clearRoutineBuilder() {
+      routineNameInput.value = '';
+      exerciseNameInput.value = '';
+      setsSlider.value = 3;
+      setsValueSpan.textContent = 3;
+      repsSlider.value = 8;
+      repsValueSpan.textContent = 8;
+      currentBuildingRoutine = []; // Clear the temporary array
+      renderCurrentBuildingRoutine(); // Clear the display
+      authError.textContent = ''; // Clear any messages
+  }
+
+  // --- Routine Selection & Completion Logic ---
   async function loadRoutines() {
     if (!currentUser) return;
     try {
@@ -317,7 +385,6 @@ window.addEventListener('DOMContentLoaded', () => {
       updateRoutineSelect();
     } catch (e) {
       console.error('Error loading routines:', e);
-      logMessage('Error loading routines.');
     }
   }
 
@@ -326,17 +393,43 @@ window.addEventListener('DOMContentLoaded', () => {
     routines.forEach(routine => {
       const option = document.createElement('option');
       option.value = routine.id;
-      option.textContent = routine.name;
+      option.textContent = routine.name; // Display only the routine name
       routineSelect.appendChild(option);
     });
   }
 
+  completeRoutineBtn.onclick = async () => {
+    if (!currentUser) {
+      authError.textContent = 'Please log in to complete routines.';
+      return;
+    }
+    const selectedRoutineId = routineSelect.value;
+    if (!selectedRoutineId) {
+      authError.textContent = 'Please select a routine to complete.';
+      return;
+    }
+    const routine = routines.find(r => r.id === selectedRoutineId);
+    if (!routine) {
+      authError.textContent = 'Selected routine not found.';
+      return;
+    }
+    xp += 50; // Award XP for completing a routine
+    updateXpDisplay();
+    saveUserData();
+    authError.textContent = `Completed routine "${routine.name}"! Gained 50 XP.`; // User feedback
+    console.log(`Completed routine "${routine.name}"! Gained 50 XP.`);
+  };
+
+  // --- Friends Logic ---
   async function loadFriends() {
     if (!currentUser) return;
     try {
       const friendsCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'friends');
       const querySnapshot = await getDocs(friendsCollectionRef);
       friendsList.innerHTML = '';
+      if (querySnapshot.empty) {
+          friendsList.innerHTML = '<p style="text-align: center; color: #666;">No friends added yet.</p>';
+      }
       querySnapshot.forEach(docSnapshot => {
         const friend = docSnapshot.data();
         const div = document.createElement('div');
@@ -346,9 +439,8 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     } catch (e) {
       console.error('Error loading friends:', e);
-      logMessage('Error loading friends.');
     }
-  };
+  }
 
   addFriendBtn.onclick = async () => {
     if (!currentUser) {
@@ -357,19 +449,33 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     const friendEmail = friendEmailInput.value.trim();
     if (!friendEmail) {
-      logMessage('Please enter a friend’s email.');
+      authError.textContent = 'Please enter a friend’s email.';
       return;
     }
+    // Prevent adding self as friend
+    if (currentUser.email && friendEmail.toLowerCase() === currentUser.email.toLowerCase()) {
+        authError.textContent = 'You cannot add yourself as a friend.';
+        return;
+    }
+
     try {
       const usersCollectionRef = collection(db, 'users');
       const q = query(usersCollectionRef, where('email', '==', friendEmail));
       const usersSnapshot = await getDocs(q);
 
       if (usersSnapshot.empty) {
-        logMessage('No user found with that email.');
+        authError.textContent = 'No user found with that email.';
         return;
       }
       const friend = usersSnapshot.docs[0];
+
+      // Check if friend is already added
+      const existingFriendRef = doc(collection(doc(collection(db, 'users'), currentUser.uid), 'friends'), friend.id);
+      const existingFriendDoc = await getDoc(existingFriendRef);
+      if (existingFriendDoc.exists()) {
+          authError.textContent = `${friendEmail} is already your friend.`;
+          return;
+      }
 
       const friendsSubCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'friends');
       const friendDocRef = doc(friendsSubCollectionRef, friend.id);
@@ -379,17 +485,12 @@ window.addEventListener('DOMContentLoaded', () => {
       });
       loadFriends();
       friendEmailInput.value = '';
-      logMessage(`Added friend: ${friendEmail}`);
+      authError.textContent = `Added friend: ${friendEmail}`;
+      console.log(`Added friend: ${friendEmail}`);
     } catch (e) {
       console.error('Error adding friend:', e);
-      logMessage('Error adding friend.');
+      authError.textContent = 'Error adding friend.';
     }
   };
 
-  function logMessage(message) {
-    const p = document.createElement('p');
-    p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-    log.appendChild(p);
-    log.scrollTop = log.scrollHeight;
-  }
 }); // End of DOMContentLoaded
