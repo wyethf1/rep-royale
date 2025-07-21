@@ -6,27 +6,35 @@
   <title>Rep Royale Web App</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
+    /* Global Styles for Donda Theme */
     body {
       margin: 0; padding: 20px; background: #000; color: #eee;
-      font-family: 'Arial Black', sans-serif; /* Changed font for bold impact */
-      display: flex; /* Use flexbox for centering */
+      font-family: 'Arial Black', sans-serif; /* Bold, minimal font */
+      display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh; /* Ensure it takes full viewport height */
-      box-sizing: border-box; /* Include padding in element's total width and height */
+      min-height: 100vh;
+      box-sizing: border-box;
     }
     h1 {
       font-weight: 900; letter-spacing: 5px; text-align: center;
-      text-transform: uppercase; /* Donda-like: All caps */
-      color: #fff; /* Ensure h1 is stark white */
-      margin-bottom: 10px; /* Space below title */
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-weight: 900; letter-spacing: 3px; text-align: center;
+      text-transform: uppercase;
+      color: #fff;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
     }
     #dailyQuote {
-      font-family: 'Georgia', serif; /* A contrasting, classic font for quotes */
+      font-family: 'Georgia', serif;
       font-style: italic;
       text-align: center;
-      color: #bbb; /* Slightly softer color for quotes */
-      margin-bottom: 30px; /* Space below quote */
+      color: #bbb;
+      margin-bottom: 30px;
       font-size: 0.9em;
       line-height: 1.5;
       max-width: 400px;
@@ -34,57 +42,57 @@
       margin-right: auto;
     }
     input, button, textarea, select {
-      font-size: 1rem; border-radius: 0; /* Minimal: no border-radius */
-      border: 1px solid #333; /* Subtle border */
+      font-size: 1rem; border-radius: 0;
+      border: 1px solid #333;
       padding: 12px; margin: 8px 0; background: #111; color: #eee;
       width: 100%;
-      box-sizing: border-box; /* Crucial for full width with padding */
-      font-family: 'Arial', sans-serif; /* Consistent simple font */
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
     }
     button {
-      cursor: pointer; font-weight: bold; /* Bold text for buttons */
+      cursor: pointer; font-weight: bold;
       letter-spacing: 2px;
-      background: #222; /* Solid, dark background */
-      color: #fff; /* White text */
+      background: #222;
+      color: #fff;
       transition: background 0.3s ease, color 0.3s ease;
-      text-transform: uppercase; /* All caps for buttons */
+      text-transform: uppercase;
     }
     button:hover {
-      background: #444; /* Slightly lighter on hover */
+      background: #444;
       color: #fff;
     }
     .container {
       max-width: 450px; margin: auto;
-      padding: 30px; /* More padding for spacious feel */
-      background: #000; /* Ensure container matches body for seamless look */
-      box-shadow: none; /* Minimal: no shadows */
-      border: none; /* No border */
-      flex-grow: 1; /* Allow container to grow within flex context */
+      padding: 30px;
+      background: #000;
+      box-shadow: none;
+      border: none;
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center; /* Center content vertically if space allows */
+      justify-content: center;
     }
     .hidden {
       display: none;
     }
     .section {
-      margin-bottom: 2.5rem; /* Increased margin between sections */
+      margin-bottom: 2.5rem;
     }
     .friend {
       padding: 10px; border-bottom: 1px solid #222;
     }
     .friend > span {
-      display: block; font-weight: bold; /* Bold friend name */
+      display: block; font-weight: bold;
       font-size: 1.1em;
     }
     textarea {
       resize: vertical;
     }
     label {
-      font-weight: bold; /* Bold labels */
+      font-weight: bold;
       margin-bottom: 5px;
       display: block;
-      text-transform: uppercase; /* All caps for labels */
+      text-transform: uppercase;
     }
     .error {
       color: #f33;
@@ -95,23 +103,124 @@
       color: #666;
       font-style: italic;
     }
-    /* Specific button styling for Google Sign-In */
+    /* Specific button styling */
     #googleSignInBtn {
-        background: #4285F4; /* Google Blue */
+        background: #4285F4;
         color: white;
-        text-transform: none; /* Not all caps for Google button */
+        text-transform: none;
         font-weight: normal;
         letter-spacing: normal;
     }
     #googleSignInBtn:hover {
-        background: #3367D6; /* Darker Google Blue on hover */
+        background: #3367D6;
     }
     #logoutBtn {
-        background: #883333; /* Darker red for logout */
+        background: #883333;
     }
     #logoutBtn:hover {
-        background: #AA5959; /* Lighter red on hover */
+        background: #AA5959;
     }
+
+    /* New Styles for Routine Builder */
+    .exercise-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Space between input elements */
+        margin-bottom: 15px;
+        padding: 15px;
+        border: 1px solid #333;
+        background: #0a0a0a;
+    }
+    .slider-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 5px;
+    }
+    .slider-group label {
+        flex-shrink: 0;
+        width: 60px; /* Fixed width for labels */
+        text-align: right;
+        margin-bottom: 0; /* Override default label margin */
+    }
+    .slider-group input[type="range"] {
+        flex-grow: 1; /* Slider takes remaining space */
+        margin: 0;
+        padding: 0;
+        -webkit-appearance: none; /* Remove default slider styles */
+        appearance: none;
+        height: 8px; /* Height of the slider track */
+        background: #333; /* Track color */
+        outline: none;
+        opacity: 0.7;
+        transition: opacity .2s;
+    }
+    .slider-group input[type="range"]:hover {
+        opacity: 1;
+    }
+    .slider-group input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px; /* Size of the slider handle */
+        height: 20px;
+        border-radius: 50%; /* Round handle */
+        background: #fff; /* Handle color */
+        cursor: pointer;
+        border: 1px solid #555;
+    }
+    .slider-group input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #fff;
+        cursor: pointer;
+        border: 1px solid #555;
+    }
+    .slider-group span {
+        flex-shrink: 0;
+        width: 30px; /* Space for current value */
+        text-align: center;
+        font-weight: bold;
+        color: #fff;
+    }
+    #addExerciseBtn {
+        background: #3a3a3a; /* Different shade for add exercise */
+    }
+    #addExerciseBtn:hover {
+        background: #5a5a5a;
+    }
+    #currentRoutineExercises {
+        margin-top: 15px;
+        border: 1px solid #333;
+        background: #0a0a0a;
+        padding: 15px;
+        min-height: 50px; /* Ensure visibility even when empty */
+    }
+    .routine-exercise-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px dashed #222;
+    }
+    .routine-exercise-item:last-child {
+        border-bottom: none;
+    }
+    .routine-exercise-item span {
+        font-weight: bold;
+        color: #fff;
+    }
+    .routine-exercise-item button {
+        width: auto;
+        padding: 5px 10px;
+        font-size: 0.8em;
+        background: #883333;
+        margin: 0;
+    }
+    .routine-exercise-item button:hover {
+        background: #AA5959;
+    }
+    /* Removed #log styling as the element is removed */
   </style>
 
   <script type="module" src="main.js"></script>
@@ -120,7 +229,9 @@
 <body>
   <div class="container">
     <h1>Rep Royale</h1>
-    <div id="dailyQuote"></div> <section id="authSection" class="section">
+    <div id="dailyQuote"></div>
+
+    <section id="authSection" class="section">
       <input type="email" id="emailInput" placeholder="Email" autocomplete="username" />
       <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" />
       <button id="loginBtn">Login</button>
@@ -128,28 +239,58 @@
       <button id="googleSignInBtn">Sign in with Google</button>
       <div id="authError" class="error"></div>
     </section>
+
     <section id="appSection" class="section hidden">
       <div>
         <button id="logoutBtn">Logout</button>
       </div>
+
       <div>
         <h2>Your XP & Level</h2>
         <div id="xpDisplay">XP: 0</div>
         <div id="levelDisplay">Level: 1 — Novice</div>
         <button id="gainXpBtn">Gain 10 XP (Simulate Workout)</button>
       </div>
+
       <div style="margin-top: 2rem;">
-        <h2>Routines</h2>
+        <h2>Create Routine</h2>
         <label for="routineName">Routine Name</label>
         <input type="text" id="routineName" placeholder="e.g. Push Day" />
-        <label for="routineDetails">Exercises (e.g. Bench Press - 3x8)</label>
-        <textarea id="routineDetails" rows="4" placeholder="Enter exercises with sets & reps"></textarea>
+
+        <div class="exercise-input-group">
+            <label for="exerciseNameInput">Exercise Name</label>
+            <input type="text" id="exerciseNameInput" placeholder="e.g. Bench Press" />
+
+            <div class="slider-group">
+                <label for="setsSlider">Sets:</label>
+                <input type="range" id="setsSlider" min="1" max="10" value="3">
+                <span id="setsValue">3</span>
+            </div>
+
+            <div class="slider-group">
+                <label for="repsSlider">Reps:</label>
+                <input type="range" id="repsSlider" min="1" max="30" value="8">
+                <span id="repsValue">8</span>
+            </div>
+
+            <button id="addExerciseBtn">Add Exercise</button>
+        </div>
+
+        <div id="currentRoutineExercises">
+            <!-- Exercises added dynamically here -->
+            <p style="text-align: center; color: #666;">No exercises added yet.</p>
+        </div>
+
         <button id="saveRoutineBtn">Save Routine</button>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <h2>Routines</h2>
         <label for="routineSelect">Select Routine</label>
         <select id="routineSelect"><option value="">-- Select Routine --</option></select>
         <button id="completeRoutineBtn">Complete Routine (+XP)</button>
-        <div id="log" style="margin-top: 1rem; max-height: 150px; overflow-y: auto; background: #111; padding: 10px; border-radius: 0;"></div>
       </div>
+
       <div style="margin-top: 2rem;">
         <h2>Friends</h2>
         <input type="email" id="friendEmailInput" placeholder="Friend's Email" />
