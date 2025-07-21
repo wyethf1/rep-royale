@@ -1,355 +1,105 @@
-// main.js
-
-// ALL Firebase imports come from here now
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
-import {
-    getAuth,
-    GoogleAuthProvider,
-    EmailAuthProvider,
-    signInWithPopup,        // <--- IMPORT THESE FUNCTIONS DIRECTLY
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged      // <--- IMPORT onAuthStateChanged
-} from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
-import {
-    getFirestore,
-    collection,             // <--- IMPORT THESE FUNCTIONS DIRECTLY
-    doc,
-    setDoc,
-    getDoc,
-    addDoc,
-    query,
-    where,
-    getDocs,
-    orderBy,
-    serverTimestamp         // <--- IMPORT serverTimestamp
-} from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyB8bHVud00N-H4VBgwsag4oRHBYVvf4q4Q",
-  authDomain: "rep-royale.firebaseapp.com",
-  databaseURL: "https://rep-royale-default-rtdb.firebaseio.com",
-  projectId: "rep-royale",
-  storageBucket: "rep-royale.firebasestorage.app",
-  messagingSenderId: "842201057109",
-  appId: "1:842201057109:web:f2bb869900048bf84751dc",
-  measurementId: "G-JSL641G4SJ"
-};
-
-// Initialize Firebase (these are now constants, not on window)
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // Get the auth instance
-const db = getFirestore(app); // Get the db instance
-
-// The rest of your main.js code will go INSIDE this DOMContentLoaded listener
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('main.js loaded at', new Date().toLocaleString());
-
-  // We no longer need the extensive window.check because Firebase is initialized directly in main.js
-  // and we'll use the imported 'auth' and 'db' constants.
-
-  const authSection = document.getElementById('authSection');
-  const appSection = document.getElementById('appSection');
-  const emailInput = document.getElementById('emailInput');
-  const passwordInput = document.getElementById('passwordInput');
-  const loginBtn = document.getElementById('loginBtn');
-  const registerBtn = document.getElementById('registerBtn');
-  const googleSignInBtn = document.getElementById('googleSignInBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const gainXpBtn = document.getElementById('gainXpBtn');
-  const xpDisplay = document.getElementById('xpDisplay');
-  const levelDisplay = document.getElementById('levelDisplay');
-  const authError = document.getElementById('authError');
-  const routineName = document.getElementById('routineName');
-  const routineDetails = document.getElementById('routineDetails');
-  const saveRoutineBtn = document.getElementById('saveRoutineBtn');
-  const routineSelect = document.getElementById('routineSelect');
-  const completeRoutineBtn = document.getElementById('completeRoutineBtn');
-  const log = document.getElementById('log');
-  const friendEmailInput = document.getElementById('friendEmailInput');
-  const addFriendBtn = document.getElementById('addFriendBtn');
-  const friendsList = document.getElementById('friendsList'); // Corrected typo here
-
-  if (!authSection || !appSection || !emailInput || !passwordInput || !loginBtn ||
-      !registerBtn || !googleSignInBtn || !logoutBtn || !gainXpBtn || !xpDisplay ||
-      !levelDisplay || !authError || !routineName || !routineDetails || !saveRoutineBtn ||
-      !routineSelect || !completeRoutineBtn || !log || !friendEmailInput || !addFriendBtn ||
-      !friendsList) {
-    console.error('One or more DOM elements are missing.');
-    authError.textContent = 'App failed to load: Missing UI elements.';
-    return;
-  }
-
-  let currentUser = null;
-  let xp = 0;
-  let routines = [];
-
-  function showApp() {
-    authSection.classList.add('hidden');
-    appSection.classList.remove('hidden');
-  }
-  function showAuth() {
-    authSection.classList.remove('hidden');
-    appSection.classList.add('hidden');
-  }
-
-  // Use the imported onAuthStateChanged function
-  onAuthStateChanged(auth, user => { // Pass the 'auth' instance directly
-    console.log('Auth state changed:', user ? user.uid : 'No user');
-    if (user) {
-      currentUser = user;
-      showApp();
-      loadUserData();
-      loadRoutines();
-      loadFriends();
-    } else {
-      currentUser = null;
-      xp = 0;
-      routines = [];
-      updateXpDisplay();
-      updateRoutineSelect();
-      friendsList.innerHTML = '';
-      showAuth();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rep Royale Web App</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    body {
+      margin: 0; padding: 20px; background: #000; color: #eee;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-  });
+    h1 {
+      font-weight: 900; letter-spacing: 3px; text-align: center;
+    }
+    input, button, textarea, select {
+      font-size: 1rem; border-radius: 6px; border: none;
+      padding: 10px; margin: 5px 0; background: #111; color: #eee;
+      width: 100%;
+    }
+    button {
+      cursor: pointer; font-weight: 900; letter-spacing: 2px;
+      background: linear-gradient(45deg, #333, #555);
+      color: #fff;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: linear-gradient(45deg, #555, #777);
+    }
+    .container {
+      max-width: 450px; margin: auto;
+    }
+    .hidden {
+      display: none;
+    }
+    .section {
+      margin-bottom: 2rem;
+    }
+    .friend {
+      padding: 8px; border-bottom: 1px solid #222;
+    }
+    .friend > span {
+      display: block; font-weight: 600;
+    }
+    textarea {
+      resize: vertical;
+    }
+    label {
+      font-weight: 600;
+    }
+    .error {
+      color: #f33;
+      margin: 8px 0;
+    }
+    small {
+      color: #666;
+      font-style: italic;
+    }
+  </style>
 
-  loginBtn.onclick = async () => {
-    authError.textContent = '';
-    try {
-      // Use the imported signInWithEmailAndPassword function
-      await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-      logMessage('Logged in successfully');
-    } catch (e) {
-      console.error('Login error:', e);
-      authError.textContent = e.message;
-    }
-  };
+  <script type="module" src="main.js"></script>
 
-  registerBtn.onclick = async () => {
-    authError.textContent = '';
-    try {
-      // Use the imported createUserWithEmailAndPassword function
-      await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-      logMessage('Registered successfully');
-    } catch (e) {
-      console.error('Register error:', e);
-      authError.textContent = e.message;
-    }
-  };
-
-  googleSignInBtn.onclick = async () => {
-    authError.textContent = '';
-    try {
-      const provider = new GoogleAuthProvider(); // GoogleAuthProvider is imported directly
-      // Use the imported signInWithPopup function
-      await signInWithPopup(auth, provider);
-      logMessage('Signed in with Google');
-    } catch (e) {
-      console.error('Google Sign-In error:', e);
-      authError.textContent = e.message;
-    }
-  };
-
-  logoutBtn.onclick = async () => {
-    try {
-      // Use the imported signOut function
-      await signOut(auth);
-      logMessage('Logged out');
-    } catch (e) {
-      console.error('Logout error:', e);
-      authError.textContent = e.message;
-    }
-  };
-
-  gainXpBtn.onclick = () => {
-    if (!currentUser) {
-      authError.textContent = 'Please log in to gain XP.';
-      return;
-    }
-    xp += 10;
-    updateXpDisplay();
-    saveUserData();
-    logMessage('Gained 10 XP from workout!');
-  };
-
-  saveRoutineBtn.onclick = async () => {
-    if (!currentUser) {
-      authError.textContent = 'Please log in to save routines.';
-      return;
-    }
-    const name = routineName.value.trim();
-    const details = routineDetails.value.trim();
-    if (!name || !details) {
-      logMessage('Please enter routine name and exercises.');
-      return;
-    }
-    try {
-      // Use imported collection and doc
-      const routinesCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'routines');
-      const routineRef = await addDoc(routinesCollectionRef, { // Use imported addDoc
-        name,
-        details,
-        createdAt: serverTimestamp() // Use imported serverTimestamp
-      });
-      routines.push({ id: routineRef.id, name, details });
-      updateRoutineSelect();
-      routineName.value = '';
-      routineDetails.value = '';
-      logMessage(`Routine "${name}" saved!`);
-    } catch (e) {
-      console.error('Error saving routine:', e);
-      logMessage('Error saving routine.');
-    }
-  };
-
-  completeRoutineBtn.onclick = async () => {
-    if (!currentUser) {
-      authError.textContent = 'Please log in to complete routines.';
-      return;
-    }
-    const selectedRoutineId = routineSelect.value;
-    if (!selectedRoutineId) {
-      logMessage('Please select a routine.');
-      return;
-    }
-    const routine = routines.find(r => r.id === selectedRoutineId);
-    if (!routine) {
-      logMessage('Selected routine not found.');
-      return;
-    }
-    xp += 50;
-    updateXpDisplay();
-    saveUserData();
-    logMessage(`Completed routine "${routine.name}"! Gained 50 XP.`);
-  };
-
-  function updateXpDisplay() {
-    xpDisplay.textContent = `XP: ${xp}`;
-    const level = Math.floor(xp / 100) + 1;
-    const titles = ["Novice", "Rookie", "Warrior", "Veteran", "Beast", "Legend"];
-    levelDisplay.textContent = `Level: ${level} — ${titles[Math.min(level - 1, titles.length - 1)]}`;
-  }
-
-  async function saveUserData() {
-    if (!currentUser) return;
-    try {
-      // Use imported doc and setDoc
-      const userDocRef = doc(collection(db, 'users'), currentUser.uid);
-      await setDoc(userDocRef, { xp }, { merge: true });
-    } catch (e) {
-      console.error('Error saving user data:', e);
-      logMessage('Error saving XP.');
-    }
-  }
-
-  async function loadUserData() {
-    if (!currentUser) return;
-    try {
-      // Use imported doc and getDoc
-      const userDocRef = doc(collection(db, 'users'), currentUser.uid);
-      const docSnapshot = await getDoc(userDocRef); // Renamed 'doc' to 'docSnapshot' to avoid conflict
-      if (docSnapshot.exists()) {
-        xp = docSnapshot.data().xp || 0;
-        updateXpDisplay();
-      } else {
-        xp = 0;
-        updateXpDisplay();
-        saveUserData();
-      }
-    } catch (e) {
-      console.error('Error loading user data:', e);
-      logMessage('Error loading XP.');
-    }
-  }
-
-  async function loadRoutines() {
-    if (!currentUser) return;
-    try {
-      // Use imported collection, doc, query, orderBy, getDocs
-      const routinesCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'routines');
-      const q = query(routinesCollectionRef, orderBy('createdAt', 'desc'));
-      const querySnapshot = await getDocs(q);
-      routines = querySnapshot.docs.map(docSnapshot => ({ id: docSnapshot.id, ...docSnapshot.data() })); // Renamed 'doc' to 'docSnapshot'
-      updateRoutineSelect();
-    } catch (e) {
-      console.error('Error loading routines:', e);
-      logMessage('Error loading routines.');
-    }
-  }
-
-  function updateRoutineSelect() {
-    routineSelect.innerHTML = '<option value="">-- Select Routine --</option>';
-    routines.forEach(routine => {
-      const option = document.createElement('option');
-      option.value = routine.id;
-      option.textContent = routine.name;
-      routineSelect.appendChild(option);
-    });
-  }
-
-  async function loadFriends() {
-    if (!currentUser) return;
-    try {
-      // Use imported collection, doc, getDocs
-      const friendsCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'friends');
-      const querySnapshot = await getDocs(friendsCollectionRef);
-      friendsList.innerHTML = '';
-      querySnapshot.forEach(docSnapshot => { // Renamed 'doc' to 'docSnapshot'
-        const friend = docSnapshot.data();
-        const div = document.createElement('div');
-        div.className = 'friend';
-        div.innerHTML = `<span>${friend.email}</span>`;
-        friendsList.appendChild(div);
-      });
-    } catch (e) {
-      console.error('Error loading friends:', e);
-      logMessage('Error loading friends.');
-    }
-  }
-
-  addFriendBtn.onclick = async () => {
-    if (!currentUser) {
-      authError.textContent = 'Please log in to add friends.';
-      return;
-    }
-    const friendEmail = friendEmailInput.value.trim();
-    if (!friendEmail) {
-      logMessage('Please enter a friend’s email.');
-      return;
-    }
-    try {
-      // Use imported collection, query, where, getDocs
-      const usersCollectionRef = collection(db, 'users');
-      const q = query(usersCollectionRef, where('email', '==', friendEmail));
-      const usersSnapshot = await getDocs(q);
-
-      if (usersSnapshot.empty) {
-        logMessage('No user found with that email.');
-        return;
-      }
-      const friend = usersSnapshot.docs[0]; // Get the first matching user
-
-      // Use imported collection, doc, setDoc
-      const friendsSubCollectionRef = collection(doc(collection(db, 'users'), currentUser.uid), 'friends');
-      const friendDocRef = doc(friendsSubCollectionRef, friend.id); // Reference to the friend's document
-      await setDoc(friendDocRef, {
-        email: friendEmail,
-        addedAt: serverTimestamp() // Use imported serverTimestamp
-      });
-      loadFriends();
-      friendEmailInput.value = '';
-      logMessage(`Added friend: ${friendEmail}`);
-    } catch (e) {
-      console.error('Error adding friend:', e);
-      logMessage('Error adding friend.');
-    }
-  };
-
-  function logMessage(message) {
-    const p = document.createElement('p');
-    p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-    log.appendChild(p);
-    log.scrollTop = log.scrollHeight;
-  }
-}); // End of DOMContentLoaded
+</head>
+<body>
+  <div class="container">
+    <h1>Rep Royale</h1>
+    <section id="authSection" class="section">
+      <input type="email" id="emailInput" placeholder="Email" autocomplete="username" />
+      <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" />
+      <button id="loginBtn">Login</button>
+      <button id="registerBtn">Register</button>
+      <button id="googleSignInBtn" style="background: #4285F4; color: white; margin-top: 10px;">Sign in with Google</button>
+      <div id="authError" class="error"></div>
+    </section>
+    <section id="appSection" class="section hidden">
+      <div>
+        <button id="logoutBtn" style="background: #AA5959; margin-bottom: 20px;">Logout</button>
+      </div>
+      <div>
+        <h2>Your XP & Level</h2>
+        <div id="xpDisplay">XP: 0</div>
+        <div id="levelDisplay">Level: 1 — Novice</div>
+        <button id="gainXpBtn">Gain 10 XP (Simulate Workout)</button>
+      </div>
+      <div style="margin-top: 2rem;">
+        <h2>Routines</h2>
+        <label for="routineName">Routine Name</label>
+        <input type="text" id="routineName" placeholder="e.g. Push Day" />
+        <label for="routineDetails">Exercises (e.g. Bench Press - 3x8)</label>
+        <textarea id="routineDetails" rows="4" placeholder="Enter exercises with sets & reps"></textarea>
+        <button id="saveRoutineBtn">Save Routine</button>
+        <label for="routineSelect">Select Routine</label>
+        <select id="routineSelect"><option value="">-- Select Routine --</option></select>
+        <button id="completeRoutineBtn">Complete Routine (+XP)</button>
+        <div id="log" style="margin-top: 1rem; max-height: 150px; overflow-y: auto; background: #111; padding: 10px; border-radius: 6px;"></div>
+      </div>
+      <div style="margin-top: 2rem;">
+        <h2>Friends</h2>
+        <input type="email" id="friendEmailInput" placeholder="Friend's Email" />
+        <button id="addFriendBtn">Add Friend</button>
+        <div id="friendsList" style="margin-top: 1rem;"></div>
+      </section>
+  </div>
+</body>
+</html>
