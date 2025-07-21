@@ -96,7 +96,7 @@ window.addEventListener('DOMContentLoaded', () => {
   googleSignInBtn.onclick = async () => {
     authError.textContent = '';
     try {
-      const provider = new window.auth.GoogleAuthProvider();
+      const provider = new window.GoogleAuthProvider();
       await window.auth.signInWithPopup(provider);
       logMessage('Signed in with Google');
     } catch (e) {
