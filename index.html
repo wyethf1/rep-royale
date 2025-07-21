@@ -118,18 +118,44 @@
   </section>
 </div>
 
-<!-- Your Firebase config & initialization -->
+
+<!-- Firebase config -->
 <script src="firebase-init.js"></script>
 
-<!-- Your main JavaScript -->
 <script>
-  // Use firebaseConfig etc. from firebase-init.js, which should have:
-  // firebase.initializeApp(firebaseConfig);
-  // window.auth = firebase.auth();
-  // window.db = firebase.firestore();
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.firebase || !window.auth || !window.db) {
+      console.error("Firebase failed to initialize properly.");
+      return;
+    }
 
-  const auth = window.auth;
-  const db = window.db;
+    const auth = window.auth;
+    const db = window.db;
+
+    // ✅ Your app logic goes here
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        console.log("User is signed in:", user);
+        // Load user data or update UI
+      } else {
+        console.log("No user signed in.");
+        // Show login screen or default UI
+      }
+    });
+
+    const googleSignInBtn = document.getElementById("google-signin");
+    if (googleSignInBtn) {
+      googleSignInBtn.onclick = () => {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider).catch(error => {
+          console.error("Google Sign-In Error:", error);
+        });
+      };
+    }
+
+    // Add more logic here...
+  });
+</script>
 
   // Elements
   const authSection = document.getElementById('authSection');
