@@ -1,6 +1,28 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, EmailAuthProvider } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
-import { getFirestore, collection, doc, setDoc, getDoc, addDoc, query, where, getDocs, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
+import {
+    getAuth,
+    GoogleAuthProvider,
+    EmailAuthProvider,
+    signInWithPopup,       // <-- Add this
+    signInWithEmailAndPassword, // <-- Add this
+    createUserWithEmailAndPassword, // <-- Add this
+    signOut,                // <-- Add this
+    onAuthStateChanged      // <-- Add this for the listener
+} from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
+import {
+    getFirestore,
+    collection,
+    doc,
+    setDoc,
+    getDoc,
+    addDoc,
+    query,
+    where,
+    getDocs,
+    orderBy,
+    serverTimestamp, // <-- Add this
+    FieldValue      // <-- FieldValue is the class, serverTimestamp is a method of it
+} from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyB8bHVud00N-H4VBgwsag4oRHBYVvf4q4Q",
@@ -15,16 +37,22 @@ const firebaseConfig = {
 
 try {
   const app = initializeApp(firebaseConfig);
+
   // Assigning the modular auth and db instances directly
   window.auth = getAuth(app);
   window.db = getFirestore(app);
 
-  // We need to make these modular functions available globally as well,
-  // or refactor main.js to import them. For now, we'll keep the global approach
-  // as main.js expects it.
+  // Expose the auth functions on the window object as well
   window.GoogleAuthProvider = GoogleAuthProvider;
-  window.EmailAuthProvider = EmailAuthProvider; // Good to have for email/password auth
-  window.dbFunctions = { // Group Firestore functions
+  window.EmailAuthProvider = EmailAuthProvider;
+  window.signInWithPopup = signInWithPopup; // Crucial for your error
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.signOut = signOut;
+  window.onAuthStateChanged = onAuthStateChanged; // Expose this for the auth state listener
+
+  // Group Firestore functions for main.js to use
+  window.dbFunctions = {
       collection,
       doc,
       setDoc,
@@ -34,7 +62,7 @@ try {
       where,
       getDocs,
       orderBy,
-      serverTimestamp
+      serverTimestamp // No longer need FieldValue directly, use this
   };
 
   console.log('Firebase initialized successfully');
