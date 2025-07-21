@@ -8,53 +8,109 @@
   <style>
     body {
       margin: 0; padding: 20px; background: #000; color: #eee;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Arial Black', sans-serif; /* Changed font for bold impact */
+      display: flex; /* Use flexbox for centering */
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh; /* Ensure it takes full viewport height */
+      box-sizing: border-box; /* Include padding in element's total width and height */
     }
     h1 {
-      font-weight: 900; letter-spacing: 3px; text-align: center;
+      font-weight: 900; letter-spacing: 5px; text-align: center;
+      text-transform: uppercase; /* Donda-like: All caps */
+      color: #fff; /* Ensure h1 is stark white */
+      margin-bottom: 10px; /* Space below title */
+    }
+    #dailyQuote {
+      font-family: 'Georgia', serif; /* A contrasting, classic font for quotes */
+      font-style: italic;
+      text-align: center;
+      color: #bbb; /* Slightly softer color for quotes */
+      margin-bottom: 30px; /* Space below quote */
+      font-size: 0.9em;
+      line-height: 1.5;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
     }
     input, button, textarea, select {
-      font-size: 1rem; border-radius: 6px; border: none;
-      padding: 10px; margin: 5px 0; background: #111; color: #eee;
+      font-size: 1rem; border-radius: 0; /* Minimal: no border-radius */
+      border: 1px solid #333; /* Subtle border */
+      padding: 12px; margin: 8px 0; background: #111; color: #eee;
       width: 100%;
+      box-sizing: border-box; /* Crucial for full width with padding */
+      font-family: 'Arial', sans-serif; /* Consistent simple font */
     }
     button {
-      cursor: pointer; font-weight: 900; letter-spacing: 2px;
-      background: linear-gradient(45deg, #333, #555);
-      color: #fff;
-      transition: background 0.3s ease;
+      cursor: pointer; font-weight: bold; /* Bold text for buttons */
+      letter-spacing: 2px;
+      background: #222; /* Solid, dark background */
+      color: #fff; /* White text */
+      transition: background 0.3s ease, color 0.3s ease;
+      text-transform: uppercase; /* All caps for buttons */
     }
     button:hover {
-      background: linear-gradient(45deg, #555, #777);
+      background: #444; /* Slightly lighter on hover */
+      color: #fff;
     }
     .container {
       max-width: 450px; margin: auto;
+      padding: 30px; /* More padding for spacious feel */
+      background: #000; /* Ensure container matches body for seamless look */
+      box-shadow: none; /* Minimal: no shadows */
+      border: none; /* No border */
+      flex-grow: 1; /* Allow container to grow within flex context */
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Center content vertically if space allows */
     }
     .hidden {
       display: none;
     }
     .section {
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem; /* Increased margin between sections */
     }
     .friend {
-      padding: 8px; border-bottom: 1px solid #222;
+      padding: 10px; border-bottom: 1px solid #222;
     }
     .friend > span {
-      display: block; font-weight: 600;
+      display: block; font-weight: bold; /* Bold friend name */
+      font-size: 1.1em;
     }
     textarea {
       resize: vertical;
     }
     label {
-      font-weight: 600;
+      font-weight: bold; /* Bold labels */
+      margin-bottom: 5px;
+      display: block;
+      text-transform: uppercase; /* All caps for labels */
     }
     .error {
       color: #f33;
       margin: 8px 0;
+      font-weight: bold;
     }
     small {
       color: #666;
       font-style: italic;
+    }
+    /* Specific button styling for Google Sign-In */
+    #googleSignInBtn {
+        background: #4285F4; /* Google Blue */
+        color: white;
+        text-transform: none; /* Not all caps for Google button */
+        font-weight: normal;
+        letter-spacing: normal;
+    }
+    #googleSignInBtn:hover {
+        background: #3367D6; /* Darker Google Blue on hover */
+    }
+    #logoutBtn {
+        background: #883333; /* Darker red for logout */
+    }
+    #logoutBtn:hover {
+        background: #AA5959; /* Lighter red on hover */
     }
   </style>
 
@@ -64,17 +120,17 @@
 <body>
   <div class="container">
     <h1>Rep Royale</h1>
-    <section id="authSection" class="section">
+    <div id="dailyQuote"></div> <section id="authSection" class="section">
       <input type="email" id="emailInput" placeholder="Email" autocomplete="username" />
       <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" />
       <button id="loginBtn">Login</button>
       <button id="registerBtn">Register</button>
-      <button id="googleSignInBtn" style="background: #4285F4; color: white; margin-top: 10px;">Sign in with Google</button>
+      <button id="googleSignInBtn">Sign in with Google</button>
       <div id="authError" class="error"></div>
     </section>
     <section id="appSection" class="section hidden">
       <div>
-        <button id="logoutBtn" style="background: #AA5959; margin-bottom: 20px;">Logout</button>
+        <button id="logoutBtn">Logout</button>
       </div>
       <div>
         <h2>Your XP & Level</h2>
@@ -92,14 +148,15 @@
         <label for="routineSelect">Select Routine</label>
         <select id="routineSelect"><option value="">-- Select Routine --</option></select>
         <button id="completeRoutineBtn">Complete Routine (+XP)</button>
-        <div id="log" style="margin-top: 1rem; max-height: 150px; overflow-y: auto; background: #111; padding: 10px; border-radius: 6px;"></div>
+        <div id="log" style="margin-top: 1rem; max-height: 150px; overflow-y: auto; background: #111; padding: 10px; border-radius: 0;"></div>
       </div>
       <div style="margin-top: 2rem;">
         <h2>Friends</h2>
         <input type="email" id="friendEmailInput" placeholder="Friend's Email" />
         <button id="addFriendBtn">Add Friend</button>
         <div id="friendsList" style="margin-top: 1rem;"></div>
-      </section>
+      </div>
+    </section>
   </div>
 </body>
 </html>
