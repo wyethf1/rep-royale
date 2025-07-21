@@ -2,7 +2,8 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebas
 import { getAuth, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js';
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js';
 
-const firebaseConfig = { apiKey: "AIzaSyB8bHVud00N-H4VBgwsag4oRHBYVvf4q4Q",
+const firebaseConfig = { 
+  apiKey: "AIzaSyB8bHVud00N-H4VBgwsag4oRHBYVvf4q4Q",
   authDomain: "rep-royale.firebaseapp.com",
   databaseURL: "https://rep-royale-default-rtdb.firebaseio.com",
   projectId: "rep-royale",
