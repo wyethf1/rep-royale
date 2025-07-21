@@ -1,0 +1,22 @@
+{
+  "name": "rep-royale",
+  "version": "1.0.0",
+  "description": "my firebase app",
+  "main": "firebase-init.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wyethf1/rep-royale.git"
+  },
+  "author": "william fink",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wyethf1/rep-royale/issues"
+  },
+  "homepage": "https://github.com/wyethf1/rep-royale#readme",
+  "dependencies": {
+    "firebase": "^12.0.0"
+  }
+}
