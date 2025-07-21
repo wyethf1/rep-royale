@@ -1,4 +1,4 @@
-#this is for my code
+//this is for my code
   const firebaseConfig = {
     apiKey: "AIzaSyB8bHVud00N-H4VBgwsag4oRHBYVvf4q4Q", // THIS IS YOUR ACTUAL API KEY
     authDomain: "rep-royale.firebaseapp.com",
