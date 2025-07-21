@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rep Royale Web App</title>
+<style>
+  /* Minimal dark Kanye-style */
+  body {
+    margin: 0; padding: 20px; background: #000; color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  h1 {
+    font-weight: 900; letter-spacing: 3px; text-align: center;
+  }
+  input, button, textarea, select {
+    font-size: 1rem; border-radius: 6px; border: none;
+    padding: 10px; margin: 5px 0; background: #111; color: #eee;
+    width: 100%;
+  }
+  button {
+    cursor: pointer; font-weight: 900; letter-spacing: 2px;
+    background: linear-gradient(45deg, #ffd700, #fcb900);
+    color: #111;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: linear-gradient(45deg, #e6c200, #e5a900);
+  }
+  .container {
+    max-width: 450px; margin: auto;
+  }
+  .hidden {
+    display: none;
+  }
+  .section {
+    margin-bottom: 2rem;
+  }
+  .friend {
+    padding: 8px; border-bottom: 1px solid #222;
+  }
+  .friend > span {
+    display: block; font-weight: 600;
+  }
+  textarea {
+    resize: vertical;
+  }
+  label {
+    font-weight: 600;
+  }
+  .error {
+    color: #f33;
+    margin: 8px 0;
+  }
+  small {
+    color: #666;
+    font-style: italic;
+  }
+</style>
+
+<!-- Firebase SDK -->
+<!-- Using compat versions (v9.23.0) which match the 'firebase.initializeApp' syntax -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>Rep Royale</h1>
+
+  <!-- Auth Section -->
+  <section id="authSection" class="section">
+    <input type="email" id="emailInput" placeholder="Email" autocomplete="username" />
+    <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" />
+    <button id="loginBtn">Login</button>
+    <button id="registerBtn">Register</button>
+    
+    <!-- NEW: Google Sign-In Button -->
+    <button id="googleSignInBtn" style="background: #4285F4; color: white; margin-top: 10px;">Sign in with Google</button>
+    
+    <div id="authError" class="error"></div>
+  </section>
+
+  <!-- Main App Section -->
+  <section id="appSection" class="section hidden">
+
+    <div>
+      <button id="logoutBtn" style="background:#f33; margin-bottom: 20px;">Logout</button>
+    </div>
+
+    <div>
+      <h2>Your XP & Level</h2>
+      <div id="xpDisplay">XP: 0</div>
+      <div id="levelDisplay">Level: 1 — Novice</div>
+      <button id="gainXpBtn">Gain 10 XP (Simulate Workout)</button>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <h2>Routines</h2>
+      <label for="routineName">Routine Name</label>
+      <input type="text" id="routineName" placeholder="e.g. Push Day" />
+      <label for="routineDetails">Exercises (e.g. Bench Press - 3x8)</label>
+      <textarea id="routineDetails" rows="4" placeholder="Enter exercises with sets & reps"></textarea>
+      <button id="saveRoutineBtn">Save Routine</button>
+
+      <label for="routineSelect">Select Routine</label>
+      <select id="routineSelect"><option value="">-- Select Routine --</option></select>
+      <button id="completeRoutineBtn">Complete Routine (+XP)</button>
+
+      <div id="log" style="margin-top: 1rem; max-height: 150px; overflow-y: auto; background:#111; padding: 10px; border-radius: 6px;"></div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <h2>Friends</h2>
+      <input type="email" id="friendEmailInput" placeholder="Friend's Email" />
+      <button id="addFriendBtn">Add Friend</button>
+      <div id="friendsList" style="margin-top: 1rem;"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // ========================================================================
+  // >>>>> THIS IS YOUR CORRECT AND ONLY FIREBASE CONFIGURATION <<<<<
+  // This uses the values you previously shared.
+  // It is essential that these values are exactly as provided by your
+  // Firebase project settings (gear icon) -> "Your apps" section -> Web app.
+  // DO NOT introduce any extra characters, spaces, or other text here.
+  // ========================================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyB8bHVud00N-H4VBgwsag4oRHBYVvf4q4Q", // THIS IS YOUR ACTUAL API KEY
+    authDomain: "rep-royale.firebaseapp.com",
+    projectId: "rep-royale",
+    storageBucket: "rep-royale.firebasestorage.app",
+    messagingSenderId: "842201057109",
+    appId: "1:842201057109:web:f2bb869900048bf84751dc",
+    measurementId: "G-JSL641G4SJ" // This is for Google Analytics, leave if you want it
+  };
+
+  // Initialize Firebase using the compat syntax (matches the SDKs loaded in the <head>)
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // Elements
+  const authSection = document.getElementById('authSection');
+  const appSection = document.getElementById('appSection');
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const loginBtn = document.getElementById('loginBtn');
+  const registerBtn = document.getElementById('registerBtn');
+  const authError = document.getElementById('authError');
+  // NEW: Reference to the Google Sign-In button
+  const googleSignInBtn = document.getElementById('googleSignInBtn');
+
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  const xpDisplay = document.getElementById('xpDisplay');
+  const levelDisplay = document.getElementById('levelDisplay');
+  const gainXpBtn = document.getElementById('gainXpBtn');
+
+  const routineNameInput = document.getElementById('routineName');
+  const routineDetailsInput = document.getElementById('routineDetails');
+  const saveRoutineBtn = document.getElementById('saveRoutineBtn');
+  const routineSelect = document.getElementById('routineSelect');
+  const completeRoutineBtn = document.getElementById('completeRoutineBtn');
+  const logDiv = document.getElementById('log');
+
+  const friendEmailInput = document.getElementById('friendEmailInput');
+  const addFriendBtn = document.getElementById('addFriendBtn');
+  const friendsListDiv = document.getElementById('friendsList');
+
+  // State
+  let currentUser = null;
+  let routines = [];
+  let totalXP = 0;
+  let friends = [];
+  let friendsData = {};
+
+  // XP to level calculation
+  function xpToNextLevel(level) {
+    return 50 + (level - 1) * 30;
+  }
+  function calcLevelFromXP(xp) {
+    let level = 1;
+    let xpLeft = xp;
+    while (xpLeft >= xpToNextLevel(level)) {
+      xpLeft -= xpToNextLevel(level);
+      level++;
+    }
+    return level;
+  }
+  function getLevelTitle(level) {
+    if (level >= 20) return 'Legend';
+    if (level >= 15) return 'Champion';
+    if (level >= 10) return 'Warrior';
+    if (level >= 5) return 'Apprentice';
+    return 'Novice';
+  }
+
+  // Auth handlers
+  registerBtn.onclick = () => {
+    authError.textContent = '';
+    auth.createUserWithEmailAndPassword(emailInput.value.trim(), passwordInput.value.trim())
+      .then(() => {
+        emailInput.value = '';
+        passwordInput.value = '';
+      })
+      .catch(e => authError.textContent = e.message);
+  };
+  loginBtn.onclick = () => {
+    authError.textContent = '';
+    auth.signInWithEmailAndPassword(emailInput.value.trim(), passwordInput.value.trim())
+      .catch(e => authError.textContent = e.message);
+  };
+  logoutBtn.onclick = () => {
+    auth.signOut();
+  };
+
+  // NEW: Google Sign-In Handler
+  googleSignInBtn.onclick = async () => {
+    authError.textContent = ''; // Clear any previous errors
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try {
+      await auth.signInWithPopup(provider); // This will open a popup for Google authentication
+      // The onAuthStateChanged listener below will handle UI updates on successful login
+    } catch (error) {
+      // Handle errors during sign-in
+      authError.textContent = error.message;
+      console.error("Google Sign-In Error:", error);
+    }
+  };
+
+  // On auth state change
+  auth.onAuthStateChanged(user => {
+    currentUser = user;
+    if (user) {
+      authSection.classList.add('hidden');
+      appSection.classList.remove('hidden');
+      loadUserData();
+    } else {
+      authSection.classList.remove('hidden');
+      appSection.classList.add('hidden');
+      routines = [];
+      totalXP = 0;
+      friends = [];
+      friendsData = {};
+      updateUI(); // Ensure UI is reset for logged out state
+    }
+  });
+
+  // Load user data from Firestore
+  function loadUserData() {
+    // Set user's email if it's a new user or just ensure it's there
+    const userDocRef = db.collection('users').doc(currentUser.uid);
+    userDocRef.set({ email: currentUser.email }, { merge: true }); // Use merge:true to not overwrite existing data
+
+    userDocRef.onSnapshot(doc => {
+      const data = doc.data() || {};
+      totalXP = data.xp || 0;
+      routines = data.routines || [];
+      friends = data.friends || [];
+      updateUI(); // Updates general UI elements
+      loadFriendsData(); // Explicitly load friends data
+      updateRoutineSelect(); // Explicitly update routines dropdown
+      updateXPDisplay(); // Explicitly update XP and level
+    });
+  }
+
+  // Update XP display & level
+  function updateXPDisplay() {
+    xpDisplay.textContent = `XP: ${totalXP}`;
+    const lvl = calcLevelFromXP(totalXP);
+    levelDisplay.textContent = `Level: ${lvl} — ${getLevelTitle(lvl)}`;
+  }
+
+  // Save routines back to Firestore
+  function saveRoutines() {
+    db.collection('users').doc(currentUser.uid).update({
+      routines
+    });
+  }
+
+  // Save routine button
+  saveRoutineBtn.onclick = () => {
+    const name = routineNameInput.value.trim();
+    const details = routineDetailsInput.value.trim();
+    if (!name || !details) {
+      alert('Please enter routine name and exercises');
+      return;
+    }
+    routines.push({ name, details });
+    saveRoutines();
+    updateRoutineSelect();
+    routineNameInput.value = '';
+    routineDetailsInput.value = '';
+  };
+
+  // Update routine select options
+  function updateRoutineSelect() {
+    routineSelect.innerHTML = '<option value="">-- Select Routine --</option>';
+    routines.forEach((r, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = r.name;
+      routineSelect.appendChild(opt);
+    });
+  }
+
+  // Complete routine, gain XP, and log it
+  completeRoutineBtn.onclick = () => {
+    const idx = routineSelect.value;
+    if (idx === '') {
+      alert('Select a routine');
+      return;
+    }
+    const routine = routines[idx];
+    const xpEarned = 10; // Hardcoded XP for now
+    gainXP(xpEarned);
+    logRoutine(routine.name, routine.details, xpEarned);
+  };
+
+  // Gain XP helper
+  function gainXP(amount) {
+    const userDocRef = db.collection('users').doc(currentUser.uid);
+    userDocRef.update({
+      xp: firebase.firestore.FieldValue.increment(amount) // Atomically increment XP
+    });
+  }
+
+  // Log completed routine
+  function logRoutine(name, details, xp) {
+    const logEntry = document.createElement('div');
+    logEntry.style.borderBottom = '1px solid #222';
+    logEntry.style.padding = '8px 0';
+    logEntry.innerHTML = `<strong>${name}</strong><br>${details.replace(/\n/g,'<br>')}<br>⭐ XP Earned: ${xp}<br><small>${new Date().toLocaleString()}</small>`;
+    logDiv.prepend(logEntry); // Add to the top
+  }
+
+  // Gain XP button (simulate workout)
+  gainXpBtn.onclick = () => {
+    gainXP(10);
+  };
+
+  // FRIENDS MANAGEMENT
+
+  // Add friend by email
+  addFriendBtn.onclick = () => {
+    const friendEmail = friendEmailInput.value.trim();
+    if (!friendEmail) {
+      alert('Enter friend\'s email');
+      return;
+    }
+    if (friendEmail === currentUser.email) {
+      alert('Cannot add yourself as a friend!');
+      return;
+    }
+
+    // Find friend by email in users collection
+    db.collection('users').where('email', '==', friendEmail).get()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          alert('No user found with that email');
+          return;
+        }
+        const friendDoc = snapshot.docs[0];
+        const friendId = friendDoc.id;
+
+        if (friends.includes(friendId)) {
+          alert('Friend already added');
+          return;
+        }
+
+        // Add friend to user's friend list
+        friends.push(friendId);
+        db.collection('users').doc(currentUser.uid).update({
+          friends
+        });
+        friendEmailInput.value = '';
+        loadFriendsData(); // Reload friends data to show the new friend
+      })
+      .catch(err => alert('Error: ' + err.message));
+  };
+
+  // Load friends data and display
+  function loadFriendsData() {
+    friendsListDiv.innerHTML = ''; // Clear current list
+    if (friends.length === 0) {
+      friendsListDiv.innerHTML = '<p>No friends added yet.</p>';
+      return;
+    }
+    friends.forEach(fid => {
+      // Fetch friend's data
+      db.collection('users').doc(fid).get().then(doc => {
+        if (!doc.exists) {
+          console.warn(`Friend with ID ${fid} not found.`);
+          return;
+        }
+        const f = doc.data();
+        const lvl = calcLevelFromXP(f.xp || 0);
+        const title = getLevelTitle(lvl);
+        const div = document.createElement('div');
+        div.className = 'friend';
+        div.innerHTML = `<span>${f.email || 'Friend'}</span>Level ${lvl} — ${title} — XP: ${f.xp || 0}`;
+        friendsListDiv.appendChild(div);
+      }).catch(err => console.error("Error fetching friend data:", err));
+    });
+  }
+
+  // Initial UI update (useful for when the page loads and no user is signed in yet)
+  function updateUI() {
+    // This function can be expanded to update other parts of the UI that depend on current user state
+    updateXPDisplay(); // Ensure XP is shown, even if 0 initially
+  }
+  updateUI(); // Call once on page load
+
+</script>
+</body>
+</html>
+
