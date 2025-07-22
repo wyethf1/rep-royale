@@ -2,7 +2,7 @@
 html, body {
     height: 100%;
     margin: 0;
-    padding: 0; /* REMOVED: Initial padding to allow app to go edge-to-edge */
+    padding: 0;
 }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,7 +12,6 @@ body {
     justify-content: center;
     align-items: stretch;
     min-height: 100vh;
-    /* padding: 20px; */ /* REMOVED THIS LINE */
     box-sizing: border-box;
     color: #eee;
     padding-bottom: 70px; /* IMPORTANT: Add padding to account for the fixed bottom-nav height */
@@ -42,7 +41,7 @@ body {
 .container {
     background-color: rgba(0, 0, 0, 0.9);
     padding: 25px;
-    border-radius: 0; /* Ensure no border-radius for true fullscreen corners */
+    border-radius: 0;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
     width: 100%;
     max-width: 500px; /* Default max-width for smaller screens */
@@ -154,7 +153,7 @@ h2, h3, h4 {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    gap: 10px; /* Increased gap for better spacing between buttons */
+    gap: 10px; /* Gap between buttons */
     margin-top: auto;
     padding-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -182,18 +181,18 @@ input::placeholder {
     color: #777;
 }
 
-/* --- BUTTON STYLES (No changes in this section from last update) --- */
+/* --- General Button Styles --- */
 button {
-    padding: 10px 15px;
+    padding: 10px 15px; /* Default larger padding */
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0;
-    font-size: 0.85rem;
+    font-size: 0.85rem; /* Default larger font size */
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease, border-color 0.3s ease;
     width: auto;
-    flex-grow: 1;
-    min-width: 90px;
-    max-width: 49%; /* Allows two buttons per line with gap */
+    flex-grow: 1; /* Allows general buttons to grow */
+    min-width: 90px; /* Default min-width */
+    max-width: 49%; /* Default max-width (for 2-column or wrapping) */
     box-sizing: border-box;
     background-color: #0d0d0d;
     color: #fff;
@@ -209,7 +208,7 @@ button:hover {
     border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Specific Button Styles - Adjusting for consistency */
+/* Primary button specific styles */
 #loginBtn, #registerBtn, .primary-button {
     background-color: #000;
     color: #fff;
@@ -221,11 +220,9 @@ button:hover {
     box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
 }
 
+/* Action button now inherits primarily from general button */
 .action-button {
-    /* These styles are now largely covered by the base 'button' style above. */
-}
-.action-button:hover {
-    /* Also inherits from the base 'button:hover' */
+    /* No specific overrides here unless needed */
 }
 
 .google-btn {
@@ -247,7 +244,28 @@ button:hover {
     background-color: #222;
     border-color: #999;
 }
-/* --- END BUTTON STYLES --- */
+
+/* --- NEW / MODIFIED: Specific styles for buttons inside .dashboard-actions --- */
+.dashboard-actions button {
+    padding: 6px 8px; /* Significantly smaller padding */
+    font-size: 0.7rem; /* Smaller font size */
+    min-width: unset; /* Allow buttons to shrink as much as needed */
+    flex-basis: calc(33.33% - 7px); /* Aim for 3 columns, factoring in gap */
+    max-width: calc(33.33% - 7px); /* Max width to ensure 3 per row */
+    flex-grow: 0; /* Prevent unnecessary growth */
+    text-align: center; /* Ensure text is centered */
+    white-space: normal; /* Allow text to wrap if long */
+    word-break: break-word; /* Break long words */
+    line-height: 1.2; /* Tighter line height for smaller buttons */
+}
+
+/* Adjust hover for these smaller buttons */
+.dashboard-actions button:hover {
+    transform: translateY(-1px); /* Less dramatic lift for smaller buttons */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* Smaller shadow */
+}
+/* --- END NEW / MODIFIED --- */
+
 
 /* Input and Slider Group Styling */
 .input-group {
@@ -432,7 +450,6 @@ button:hover {
 /* Responsive Adjustments & Widescreen */
 @media (max-width: 500px) {
     body {
-        /* No padding on body, it will be truly edge-to-edge on small screens */
         padding: 0; /* Ensure it's 0 on small screens too */
         padding-bottom: 70px; /* Ensure this remains for fixed nav on mobile */
     }
@@ -447,8 +464,6 @@ button:hover {
 @media (min-width: 768px) {
     .container {
         max-width: 700px; /* Wider for tablets/desktops */
-        /* You might want a slight border-radius here if you like on desktop */
-        /* border-radius: 8px; */
     }
     body {
         padding-top: 20px; /* Add some top padding back for desktop for better aesthetics */
