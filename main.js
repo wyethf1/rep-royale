@@ -30,6 +30,7 @@ const googleProvider = new GoogleAuthProvider();
 // General App Sections
 const authSection = document.getElementById('authSection');
 const appSection = document.getElementById('appSection');
+const bottomNav = document.getElementById('bottomNav'); // NEW: Get reference to the bottom navigation
 
 // Header Elements
 const quoteText = document.getElementById('quoteText');
@@ -471,6 +472,7 @@ onAuthStateChanged(auth, async (user) => {
         userDocRef = doc(db, "users", user.uid); // Reference to the user's document in Firestore
         authSection.classList.add('hidden');
         appSection.classList.remove('hidden');
+        bottomNav.classList.remove('hidden'); // NEW: Show bottom navigation when logged in
         await getUserData(); // Fetch user data and populate UI
         showView('routineDashboardView'); // Default to dashboard after login
     } else {
@@ -478,6 +480,7 @@ onAuthStateChanged(auth, async (user) => {
         userDocRef = null;
         authSection.classList.remove('hidden');
         appSection.classList.add('hidden');
+        bottomNav.classList.add('hidden'); // NEW: Hide bottom navigation when logged out
         // Clear any app data displays on logout
         xpDisplay.textContent = 'XP: 0';
         levelDisplay.textContent = 'Level: 1 — Novice';
