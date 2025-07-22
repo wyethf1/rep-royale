@@ -1,54 +1,63 @@
+/* General Body and Container Styling */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
+    background: url('https://images.unsplash.com/photo-1519681393782-ad6fe6a03dd2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc5MzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwd2F0ZXIlMjBhYnN0cmFjdHxlbnwwfHx8fDE3MjE1MjcwNjV8MA&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center center fixed;
+    background-size: cover;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Align to top for mobile scrolling if needed for content */
-    min-height: 100vh; /* Ensure it takes full viewport height */
+    align-items: flex-start;
+    min-height: 100vh;
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
+    color: #eee; /* Light text for dark background */
 }
 
 .container {
-    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent dark background */
     padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 0; /* Sharp corners, no bubbly feel */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Stronger, darker shadow */
     width: 100%;
-    max-width: 400px; /* Max width for phone screens */
+    max-width: 400px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow: hidden; /* Important for no scrolling */
-    max-height: calc(100vh - 40px); /* Adjust max height for mobile viewport */
+    overflow: hidden;
+    max-height: calc(100vh - 40px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
 }
 
 h1 {
     text-align: center;
-    color: #333;
+    color: #fff; /* Pure white for main title */
     margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 h2, h3, h4 {
-    color: #444;
-    border-bottom: 1px solid #eee;
+    color: #ddd; /* Slightly off-white for headers */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
     padding-bottom: 8px;
     margin-top: 20px;
     margin-bottom: 15px;
 }
 
+/* Daily Quote Styling */
 .daily-quote {
     font-style: italic;
     text-align: center;
-    color: #666;
+    color: #bbb; /* Lighter gray for quotes */
     margin-bottom: 20px;
     padding: 10px;
-    background-color: #e9f5ee;
-    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.05); /* Very subtle light background */
+    border-radius: 0; /* No rounded corners */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border */
 }
 
+/* Section Hiding */
 .auth-section, .app-section {
     display: flex;
     flex-direction: column;
@@ -59,99 +68,121 @@ h2, h3, h4 {
     display: none !important;
 }
 
+/* Input Fields */
 input[type="email"],
 input[type="password"],
 input[type="text"],
 select {
     padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid #555; /* Darker border for inputs */
+    background-color: #222; /* Dark input background */
+    color: #eee; /* Light text in inputs */
+    border-radius: 0; /* No rounded corners */
     font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box; /* Include padding in width */
-}
-
-button {
-    padding: 12px 18px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
     width: 100%;
     box-sizing: border-box;
+}
+input::placeholder {
+    color: #888; /* Dim placeholder text */
+}
+
+/* Buttons */
+button {
+    padding: 12px 18px;
+    border: 1px solid #777; /* Subtle border for buttons */
+    border-radius: 0; /* No rounded corners */
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #333; /* Dark button background */
+    color: #fff; /* White text on buttons */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 button:hover {
     transform: translateY(-1px);
+    background-color: #555; /* Lighter on hover */
+    color: #fff;
 }
 
+/* Specific Button Styles */
 #loginBtn, #registerBtn {
-    background-color: #007bff;
-    color: white;
+    background-color: #000; /* Pure black for auth buttons */
+    color: #fff;
+    border-color: #fff; /* White border */
 }
 #loginBtn:hover, #registerBtn:hover {
-    background-color: #0056b3;
+    background-color: #222;
 }
 
 .google-btn {
-    background-color: #db4437; /* Google red */
+    background-color: #111; /* Darker background for Google */
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    border-color: #888;
 }
 .google-btn i {
     font-size: 1.2rem;
+    color: #fff;
 }
 .google-btn:hover {
-    background-color: #c0362c;
+    background-color: #333;
 }
 
 .logout-btn {
-    background-color: #dc3545;
+    background-color: #555; /* Dark gray for logout */
     color: white;
-    width: auto; /* Allow it to size naturally */
-    align-self: flex-end; /* Align to the right in header-info */
+    width: auto;
+    align-self: flex-end;
+    border-color: #777;
 }
 .logout-btn:hover {
-    background-color: #a71d2a;
+    background-color: #777;
 }
 
 .action-button {
-    background-color: #17a2b8;
+    background-color: #444; /* Medium gray for action buttons */
     color: white;
+    border-color: #666;
 }
 .action-button:hover {
-    background-color: #117a8b;
+    background-color: #666;
 }
 
 .primary-button {
-    background-color: #28a745;
+    background-color: #000; /* Primary action is stark black */
     color: white;
+    border-color: #fff;
 }
 .primary-button:hover {
-    background-color: #1e7e34;
+    background-color: #222;
 }
 
+/* Header Info (XP/Level) */
 .header-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    flex-wrap: wrap; /* Allow wrapping on very small screens */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
     gap: 10px;
 }
 
 .header-info span {
     font-weight: bold;
-    color: #555;
+    color: #fff; /* Pure white for important info */
 }
 
+/* Error Message */
 .error-message {
-    color: #dc3545;
+    color: #ff8888; /* Soft red for errors */
     font-size: 0.9em;
     margin-top: -10px;
     margin-bottom: 10px;
@@ -162,17 +193,18 @@ button:hover {
 .tab-nav {
     display: flex;
     justify-content: space-around;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    background-color: #111; /* Darker background for tab nav */
+    border-radius: 0;
     overflow: hidden;
     margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tab-button {
     flex-grow: 1;
-    background-color: #e9ecef;
-    color: #495057;
-    border-radius: 0; /* Remove individual button radius */
+    background-color: #222; /* Dark gray for inactive tabs */
+    color: #bbb; /* Light gray for inactive tab text */
+    border-radius: 0;
     padding: 15px 10px;
     font-weight: bold;
     font-size: 0.95rem;
@@ -180,18 +212,18 @@ button:hover {
     flex-direction: column;
     align-items: center;
     gap: 5px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    border: none; /* No individual button borders within tab nav */
 }
 
 .tab-button.active {
-    background-color: #007bff;
-    color: white;
-    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    background-color: #000; /* Active tab is pure black */
+    color: #fff; /* Active tab text is pure white */
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1); /* Subtle inner glow */
 }
 
 .tab-button:hover:not(.active) {
-    background-color: #dde0e3;
-    color: #212529;
+    background-color: #333; /* Lighter on hover for inactive */
+    color: #fff;
 }
 
 .tab-button i {
@@ -199,18 +231,16 @@ button:hover {
     margin-bottom: 5px;
 }
 
-
 /* Tab Content Styling */
 .tab-content {
-    flex-grow: 1; /* Allow content to take available space */
-    padding: 5px 0; /* Adjust padding if needed */
-    overflow-y: auto; /* Enable vertical scrolling ONLY for content if it overflows */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    max-height: calc(100vh - 280px); /* Approximate available height for content */
-    /* Adjust 280px based on header/footer/tab-nav height to avoid double scrollbars */
+    flex-grow: 1;
+    padding: 5px 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: calc(100vh - 280px); /* Adjust based on header/footer/tab-nav height */
 }
 
-/* Specific input and slider group styling */
+/* Input and Slider Group Styling */
 .input-group {
     margin-bottom: 15px;
 }
@@ -218,7 +248,7 @@ button:hover {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #555;
+    color: #ddd;
     font-size: 0.95rem;
 }
 
@@ -230,17 +260,17 @@ button:hover {
 }
 .slider-group label {
     font-weight: bold;
-    color: #555;
+    color: #ddd;
     font-size: 0.95rem;
 }
 .slider-group input[type="range"] {
     width: 100%;
     -webkit-appearance: none;
     height: 8px;
-    background: #e0e0e0;
+    background: #555; /* Darker track for slider */
     border-radius: 5px;
     outline: none;
-    opacity: 0.7;
+    opacity: 0.9;
     transition: opacity .2s;
 }
 .slider-group input[type="range"]::-webkit-slider-thumb {
@@ -249,26 +279,27 @@ button:hover {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #007bff;
+    background: #fff; /* White thumb */
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 0 5px rgba(255,255,255,0.3); /* Subtle glow */
 }
 .slider-group input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #007bff;
+    background: #fff;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 0 5px rgba(255,255,255,0.3);
 }
 
+/* List Styles (Exercises, Friends) */
 .exercise-list, .friends-list {
-    background-color: #fdfdfd;
-    border: 1px solid #eee;
-    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent dark list background */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
     padding: 10px;
-    max-height: 200px; /* Limit height of lists to avoid scrolling main content */
-    overflow-y: auto; /* Enable internal scrolling if items overflow */
+    max-height: 200px;
+    overflow-y: auto;
     margin-bottom: 15px;
 }
 
@@ -277,8 +308,8 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px dashed #eee;
-    color: #333;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08); /* Subtle dashed separator */
+    color: #ccc; /* Lighter text for list items */
     font-size: 0.95rem;
 }
 
@@ -287,23 +318,29 @@ button:hover {
 }
 
 .routine-exercise-item button {
-    background-color: #ffc107;
-    color: #333;
+    background-color: #666; /* Darker remove button */
+    color: #eee;
     padding: 6px 10px;
     font-size: 0.8em;
     width: auto;
-    flex-shrink: 0; /* Prevent button from shrinking */
+    flex-shrink: 0;
+    border-color: #888;
 }
 .routine-exercise-item button:hover {
-    background-color: #e0a800;
+    background-color: #888;
 }
 
 .friend-item {
     font-weight: bold;
-    color: #007bff;
+    color: #fff; /* White for friend email */
 }
 
 .friend-item span {
-    color: #555;
+    color: #ccc; /* Lighter for XP value */
     font-weight: normal;
+}
+
+/* Placeholder text for empty lists */
+.exercise-list p, .friends-list p {
+    color: #888; /* Dim for placeholder text */
 }
