@@ -6,92 +6,115 @@
     <title>Rep Royale</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Rep Royale">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
     <div class="container">
-        <header class="app-header">
-            <div id="dailyQuote" class="daily-quote">
-                <p id="quoteText"></p>
-                <p id="quoteReference" class="quote-reference"></p>
-            </div>
-            </header>
-
         <div id="authSection" class="auth-section">
-            <h2>Login</h2>
+            <h1>REP ROYALE</h1>
+            <input type="email" id="emailInput" placeholder="Email (Google Sign-In Only)" disabled>
+            <input type="password" id="passwordInput" placeholder="Password (Google Sign-In Only)" disabled>
             <p id="authError" class="error-message"></p>
-            <button id="googleSignInBtn" class="google-btn"><i class="fab fa-google"></i> Sign In with Google</button>
+            <button id="googleSignInBtn" class="google-btn"><i class="fab fa-google"></i> Sign in with Google</button>
         </div>
 
         <div id="appSection" class="app-section hidden">
+            <div class="app-header">
+                <div class="daily-quote">
+                    <span id="quoteText">"Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect."</span>
+                    <span id="quoteReference" class="quote-reference">- Romans 12:2</span>
+                </div>
+            </div>
 
             <div id="routineDashboardView" class="app-view">
-                <div class="input-group">
-                    <label for="routineSelect">Select/Create Routine:</label>
-                    <select id="routineSelect">
-                        <option value="">-- Select Routine --</option>
-                    </select>
-                </div>
-                <h3 id="dashboardRoutineName" class="current-routine-name">No Routine Loaded</h3>
+                <h2>Your Routines</h2>
+                <select id="routineSelect">
+                    <option value="">-- Select Routine --</option>
+                </select>
+                <h3 id="dashboardRoutineName" class="current-routine-name">No Routine Selected</h3>
                 <div id="dashboardExercises" class="exercise-list">
                     <p style="text-align: center; color: #777;">Select or create a routine to see exercises.</p>
                 </div>
                 <div class="dashboard-actions">
-                    <button id="completeRoutineBtn" class="primary-button" disabled>Complete Routine (Gain 50 XP)</button>
+                    <button id="completeRoutineBtn" class="action-button">Complete Routine (Gain 50 XP)</button>
                     <button id="editRoutineBtn" class="action-button">Edit Selected Routine</button>
                     <button id="createRoutineBtn" class="action-button">Create New Routine</button>
                 </div>
             </div>
 
             <div id="routineBuilderView" class="app-view hidden">
-                <h3>Build/Edit Routine</h3>
+                <h2>Build/Edit Routine</h2>
                 <div class="input-group">
                     <label for="builderRoutineName">Routine Name:</label>
                     <input type="text" id="builderRoutineName" placeholder="e.g., Upper Body Blast">
                 </div>
-                <h4>Add Exercise</h4>
+
+                <h3>Add Exercise</h3>
                 <div class="input-group">
-                    <input type="text" id="exerciseNameInput" placeholder="Exercise Name">
+                    <label for="exerciseNameInput">Exercise Name:</label>
+                    <input type="text" id="exerciseNameInput" placeholder="e.g., Bench Press">
                 </div>
+
                 <div class="slider-group">
                     <label for="setsSlider">Sets: <span id="setsValue">3</span></label>
                     <input type="range" id="setsSlider" min="1" max="10" value="3">
                 </div>
+
                 <div class="slider-group">
                     <label for="repsSlider">Reps: <span id="repsValue">10</span></label>
                     <input type="range" id="repsSlider" min="1" max="30" value="10">
                 </div>
+
                 <button id="addExerciseBtn" class="action-button">Add Exercise to Routine</button>
-                <h4>Current Routine Exercises</h4>
+
+                <h3>Current Routine Exercises</h3>
                 <div id="currentRoutineExercises" class="exercise-list">
                     <p style="text-align: center; color: #777;">No exercises added yet.</p>
                 </div>
-                <button id="saveRoutineBtn" class="primary-button">Save Routine</button>
-                <button id="backToDashboardBtn" class="action-button">Back to Dashboard</button>
+
+                <div class="dashboard-actions"> <button id="saveRoutineBtn" class="primary-button">Save Routine</button>
+                    <button id="backToDashboardBtn" class="action-button">Back to Dashboard</button>
+                </div>
             </div>
 
             <div id="friendsView" class="app-view hidden">
-                <h3>Add Friend</h3>
+                <h2>Friends</h2>
                 <div class="input-group">
-                    <input type="email" id="friendEmailInput" placeholder="Friend's Email">
+                    <label for="friendEmailInput">Add Friend (Email):</label>
+                    <input type="email" id="friendEmailInput" placeholder="friend@example.com">
                 </div>
                 <button id="addFriendBtn" class="action-button">Add Friend</button>
-                <h3>Your Friends</h3>
+
+                <h3>My Friends</h3>
                 <div id="friendsList" class="friends-list">
                     <p style="text-align: center; color: #777;">No friends added yet.</p>
                 </div>
             </div>
 
-            <footer class="footer-nav">
-                <div class="xp-level-display">
-                    <span id="xpDisplay">XP: 0</span>
-                    <span id="levelDisplay">Level: 1 — Novice</span>
-                </div>
-                <button id="showFriendsBtn" class="action-button footer-btn"><i class="fas fa-users"></i> Friends</button>
-                <button id="showRoutinesBtn" class="action-button footer-btn"><i class="fas fa-list"></i> Routines</button>
-                <button id="logoutBtn" class="action-button footer-btn logout-btn-footer"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </footer>
-        </div>
-    </div>
+            <div class="xp-level-display-bottom-fixed">
+                <span id="xpDisplay">XP: 0</span>
+                <span id="levelDisplay">Level: 1 — Novice</span>
+            </div>
+
+        </div> </div> <nav class="bottom-nav">
+        <button id="showFriendsBtn" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Friends</span>
+        </button>
+        <button id="showRoutinesBtn" class="nav-item">
+            <i class="fas fa-list"></i>
+            <span>Routines</span>
+        </button>
+        <button id="logoutBtn" class="nav-item logout-nav-item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </button>
+    </nav>
 
     <script src="main.js" type="module"></script>
 </body>
