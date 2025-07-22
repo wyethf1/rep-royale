@@ -40,7 +40,7 @@ body {
 
 .container {
     background-color: rgba(0, 0, 0, 0.9);
-    padding: 25px; /* Adjusted padding for new header/footer */
+    padding: 25px;
     border-radius: 0;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
     width: 100%;
@@ -48,22 +48,22 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Adjusted gap between sections */
-    height: 100%; /* Make container fill available height */
-    overflow: hidden; /* Prevent container itself from causing scrollbar */
+    gap: 20px;
+    height: 100%;
+    overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* NEW: App Header Styling */
+/* App Header Styling */
 .app-header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px; /* Space between quote and mini title */
-    margin-bottom: 20px; /* Space below header */
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-h1 { /* This H1 is no longer in HTML, but kept for general styling if needed elsewhere */
+h1 {
     text-align: center;
     color: #fff;
     margin-bottom: 25px;
@@ -99,10 +99,12 @@ h2, h3, h4 {
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 0;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 1.1em;
-    line-height: 1.5;
-    width: 100%; /* Ensure quote takes full width */
+    font-size: 1em; /* Adjusted font size */
+    line-height: 1.4; /* Adjusted line height for compactness */
+    width: 100%;
     box-sizing: border-box;
+    word-wrap: break-word; /* Ensure long words break and wrap */
+    overflow-wrap: break-word; /* For broader browser compatibility */
 }
 .daily-quote .quote-reference {
     display: block;
@@ -117,8 +119,8 @@ h2, h3, h4 {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    flex-grow: 1; /* Allow sections to grow to fill available space */
-    min-height: 0; /* Important for flex items with overflow */
+    flex-grow: 1;
+    min-height: 0;
     background-color: #000;
     padding: 25px;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -126,34 +128,34 @@ h2, h3, h4 {
     box-sizing: border-box;
 }
 
-/* NEW: App View Styling (for dashboard, builder, friends views) */
+/* App View Styling (for dashboard, builder, friends views) */
 .app-view {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Make app views fill available space within app-section */
-    min-height: 0; /* Important for scrollable content */
-    overflow-y: auto; /* Allow scrolling within the specific view content if it truly overflows */
-    padding: 0; /* Views don't need their own padding, app-section provides it */
-    gap: 20px; /* Default gap between elements within a view */
+    flex-grow: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0;
+    gap: 20px;
 }
 
 /* Specific view adjustments */
 #routineDashboardView .exercise-list,
 #routineBuilderView .exercise-list,
 #friendsView .friends-list {
-    flex-grow: 1; /* Lists should fill available space */
-    min-height: 100px; /* Ensure lists are visible */
+    flex-grow: 1;
+    min-height: 100px;
 }
 
 .dashboard-actions {
     display: flex;
-    flex-direction: row; /* Changed to row for side-by-side buttons */
-    flex-wrap: wrap; /* Allow buttons to wrap to next line if space is tight */
-    justify-content: space-around; /* Distribute space around items */
-    gap: 10px; /* Space between dashboard buttons */
-    margin-top: auto; /* Push buttons to the bottom of the dashboard view if content is short */
-    padding-top: 10px; /* Add some padding at the top */
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separator */
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hidden {
@@ -180,16 +182,16 @@ input::placeholder {
 
 /* Buttons */
 button {
-    padding: 15px 20px;
+    padding: 12px 18px; /* Adjusted padding */
     border: 1px solid #666;
     border-radius: 0;
-    font-size: 1.05rem;
+    font-size: 0.95rem; /* Adjusted font size */
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
-    width: auto; /* Changed to auto for side-by-side flex behavior */
-    flex-grow: 1; /* Allow buttons to grow and fill space, but respecting max-width */
-    min-width: 120px; /* Ensure a minimum width for readability */
-    max-width: 48%; /* Adjust based on desired layout, allows two buttons per line with gap */
+    width: auto;
+    flex-grow: 1;
+    min-width: 120px;
+    max-width: 48%;
     box-sizing: border-box;
     background-color: #222;
     color: #fff;
@@ -222,8 +224,8 @@ button:hover {
     justify-content: center;
     gap: 15px;
     border-color: #666;
-    width: 100%; /* Google button should still be full width */
-    max-width: 100%; /* Override the general button max-width */
+    width: 100%;
+    max-width: 100%;
 }
 .google-btn i {
     font-size: 1.4rem;
@@ -302,7 +304,7 @@ button:hover {
     padding: 15px;
     flex-grow: 1;
     min-height: 100px;
-    overflow-y: auto; /* Allow internal scrolling for lists if content truly overflows */
+    overflow-y: auto;
     margin-bottom: 20px;
 }
 
@@ -328,9 +330,9 @@ button:hover {
     width: auto;
     flex-shrink: 0;
     border-color: #777;
-    flex-grow: 0; /* Prevent remove button from growing */
-    max-width: none; /* Override max-width for smaller buttons */
-    min-width: 60px; /* Smallest reasonable width */
+    flex-grow: 0;
+    max-width: none;
+    min-width: 60px;
 }
 .routine-exercise-item button:hover {
     background-color: #777;
@@ -352,18 +354,18 @@ button:hover {
     padding: 10px;
 }
 
-/* NEW: Footer Navigation Styling */
+/* Footer Navigation Styling */
 .footer-nav {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Ensures vertical alignment of its direct children */
+    align-items: center;
     background-color: #0a0a0a;
     border-radius: 0;
     padding: 10px 15px;
-    margin-top: auto; /* Push footer to the bottom of app-section */
+    margin-top: auto;
     border: 1px solid rgba(255, 255, 255, 0.15);
-    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-    gap: 10px; /* Space between footer items */
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .xp-level-display {
@@ -371,37 +373,45 @@ button:hover {
     color: #fff;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Aligns the text itself to the start */
-    justify-content: center; /* NEW: Vertically centers the text lines within their container */
+    align-items: flex-start;
+    justify-content: center;
     gap: 3px;
     font-size: 0.95em;
     flex-grow: 1;
 }
 
-.footer-buttons-group { /* NEW WRAPPER STYLES */
+.footer-buttons-group {
     display: flex;
-    gap: 10px; /* Space between the footer buttons */
-    align-items: center; /* Vertically align the buttons within this group */
-    flex-wrap: wrap; /* Allow buttons to wrap if needed */
-    justify-content: flex-end; /* Push buttons to the right within their group */
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
-
 .footer-btn {
-    width: auto; /* Buttons will size to content + padding */
-    padding: 8px 12px;
-    font-size: 0.85rem;
+    padding: 6px 10px; /* Adjusted padding */
+    font-size: 0.75rem; /* Adjusted font size */
+    width: auto;
     display: flex;
     align-items: center;
     gap: 5px;
     justify-content: center;
-    flex-shrink: 0; /* Prevent buttons from squishing too much */
-    min-height: 38px; /* Ensure minimum height for consistent look */
-    box-sizing: border-box; /* Include padding in height */
+    flex-shrink: 0;
+    min-height: 32px; /* Adjusted minimum height */
+    box-sizing: border-box;
+    border: 1px solid #555; /* Ensure border is consistent with action buttons */
+    background-color: #333; /* Consistent background with action buttons */
+    color: white; /* Consistent text color */
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    font-weight: bold;
+}
+.footer-btn:hover {
+    background-color: #555;
 }
 
 .footer-btn i {
-    font-size: 1.1rem;
+    font-size: 1rem; /* Adjusted icon size */
 }
 
 .logout-btn-footer {
@@ -423,22 +433,22 @@ button:hover {
         padding: 15px;
     }
     .footer-nav {
-        flex-direction: column; /* Stack all footer items vertically on very small screens */
-        align-items: stretch; /* Stretch items to fill width */
+        flex-direction: column;
+        align-items: stretch;
     }
     .xp-level-display {
         width: 100%;
         align-items: center;
         margin-bottom: 10px;
     }
-    .footer-buttons-group { /* Make the button group also stack vertically and stretch */
+    .footer-buttons-group {
         flex-direction: column;
         width: 100%;
     }
     .footer-btn {
-        width: 100%; /* Make footer buttons full width when stacked */
+        width: 100%;
     }
     .dashboard-actions button {
-        max-width: 100%; /* Ensure full width when stacked on small screens */
+        max-width: 100%;
     }
 }
