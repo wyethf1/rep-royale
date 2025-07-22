@@ -63,7 +63,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const xpDisplay = document.getElementById('xpDisplay');
     const levelDisplay = document.getElementById('levelDisplay');
     const logoutBtn = document.getElementById('logoutBtn');
-    const gainXpBtn = document.getElementById('gainXpBtn'); // From original code, consider where this fits now. Assuming it's still intended.
+    // Removed gainXpBtn as its functionality is now handled by completeRoutineBtn
 
     // New Tab Navigation Elements
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -72,7 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const friendsTab = document.getElementById('friendsTab');
 
     // Routine Builder Tab Elements
-    const routineNameInput = document.getElementById('routineName'); // Renamed from routineName
+    const routineNameInput = document.getElementById('routineName');
     const exerciseNameInput = document.getElementById('exerciseNameInput');
     const setsSlider = document.getElementById('setsSlider');
     const setsValue = document.getElementById('setsValue');
@@ -93,14 +93,14 @@ window.addEventListener('DOMContentLoaded', () => {
     const friendsList = document.getElementById('friendsList');
 
 
-    // Initial DOM Element Check (updated for new IDs)
+    // Initial DOM Element Check (updated for new IDs, gainXpBtn removed)
     if (!authSection || !appSection || !emailInput || !passwordInput || !loginBtn ||
         !registerBtn || !googleSignInBtn || !logoutBtn || !xpDisplay ||
         !levelDisplay || !authError || !routineNameInput || !exerciseNameInput ||
         !setsSlider || !setsValue || !repsSlider || !repsValue || !addExerciseBtn ||
         !currentRoutineExercisesDiv || !saveRoutineBtn || !routineSelect ||
         !completeRoutineBtn || !selectedRoutineExercisesDiv || !friendEmailInput ||
-        !addFriendBtn || !friendsList || !dailyQuote || !gainXpBtn ||
+        !addFriendBtn || !friendsList || !dailyQuote ||
         !routineBuilderTab || !myRoutinesTab || !friendsTab || tabButtons.length === 0) {
         console.error('One or more critical DOM elements are missing. Please check index.html IDs.');
         authError.textContent = 'App failed to load: Missing UI elements. Check console for details.';
@@ -231,17 +231,7 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- XP & User Data Logic ---
-    gainXpBtn.onclick = () => {
-        if (!currentUser) {
-            authError.textContent = 'Please log in to gain XP.';
-            return;
-        }
-        xp += 10;
-        updateXpDisplay();
-        saveUserData();
-        authError.textContent = 'Gained 10 XP from workout!'; // Using authError for general messages
-    };
-
+    // The previous gainXpBtn functionality is now integrated into completeRoutineBtn
     function updateXpDisplay() {
         xpDisplay.textContent = `XP: ${xp}`;
         const level = Math.floor(xp / 100) + 1;
