@@ -10,9 +10,9 @@ body {
     background-size: cover;
     display: flex;
     justify-content: center;
-    align-items: center; /* Center the container vertically */
+    align-items: stretch; /* Allows .container to fill vertical space */
     min-height: 100vh;
-    padding: 20px;
+    padding: 20px; /* Padding around the main container */
     box-sizing: border-box;
     color: #eee; /* Light text for dark background */
 }
@@ -28,7 +28,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 25px; /* Increased gap between major sections */
-    max-height: calc(100vh - 40px);
+    height: 100%; /* Make container fill available height */
+    overflow: hidden; /* Prevent container itself from scrolling */
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -77,17 +78,14 @@ h2, h3, h4 {
     display: flex;
     flex-direction: column;
     gap: 20px; /* Increased gap within sections */
-    flex-grow: 1; /* Allow sections to grow */
-}
-
-/* Explicit background for auth-section and app-section */
-.auth-section, .app-section {
+    flex-grow: 1; /* Allow sections to grow to fill available space */
+    min-height: 0; /* Important for flex items with overflow */
+    overflow-y: auto; /* Enable scrolling for these main sections if content overflows */
     background-color: #000; /* Solid black background for active sections */
     padding: 25px; /* Increased padding */
     border: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more prominent border */
     width: 100%;
     box-sizing: border-box;
-    overflow-y: auto; /* Allow internal scrolling if content overflows */
 }
 
 .hidden {
@@ -106,7 +104,7 @@ select {
     border-radius: 0;
     font-size: 1.1rem; /* Larger font size */
     width: 100%;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Include padding in width */
 }
 input::placeholder {
     color: #777; /* Dim placeholder text */
@@ -235,14 +233,15 @@ button:hover {
     background-color: #1a1a1a; /* Dark gray for inactive tabs */
     color: #aaa; /* Lighter gray for inactive tab text */
     border-radius: 0;
-    padding: 18px 10px; /* More padding for tabs */
+    padding: 10px; /* Reduced vertical padding, rely on gap */
     font-weight: bold;
-    font-size: 1.0rem;
+    font-size: 0.9rem; /* Slightly smaller text for more space */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px; /* More space for icon/text */
+    gap: 5px; /* Reduced gap between icon/text for tighter fit */
     border: none;
+    min-width: 0; /* Allow buttons to shrink */
 }
 
 .tab-button.active {
@@ -257,18 +256,18 @@ button:hover {
 }
 
 .tab-button i {
-    font-size: 1.5rem; /* Larger tab icons */
-    margin-bottom: 5px;
+    font-size: 1.3rem; /* Slightly smaller tab icons */
+    line-height: 1; /* Ensure no extra space below icon */
 }
 
 /* Tab Content Styling - Expanded for Routine Builder */
 .tab-content {
     flex-grow: 1; /* Allows content to take up available space */
-    padding: 0; /* Remove internal padding here, sections now have it */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    /* max-height removed for tab-content as auth-section/app-section now have overflow-y auto */
-    /* Removed max-height here to allow full expansion within its parent, which now handles scrolling if needed */
+    display: flex; /* Make tab-content a flex container for its children */
+    flex-direction: column;
+    padding: 0; /* Removed internal padding here, sections now have it */
+    min-height: 0; /* Important for flex items with overflow */
+    overflow-y: auto; /* Enable scrolling for individual tab content if it overflows */
 }
 
 /* Input and Slider Group Styling */
@@ -331,7 +330,7 @@ button:hover {
     padding: 15px; /* More padding */
     flex-grow: 1; /* Allow list to grow and fill space */
     min-height: 100px; /* Minimum height for visibility */
-    overflow-y: auto;
+    overflow-y: auto; /* Enable scrolling for the list itself */
     margin-bottom: 20px; /* More margin */
 }
 
@@ -385,17 +384,19 @@ button:hover {
     }
     .container {
         padding: 15px;
-        max-height: calc(100vh - 20px);
+        /* height: calc(100vh - 20px); Allow it to stretch while leaving padding */
     }
     h1 {
         font-size: 1.8em;
     }
+    /* Tab buttons specific adjustments for smaller screens */
     .tab-button {
-        padding: 12px 8px;
-        font-size: 0.9rem;
+        padding: 8px 5px; /* Even less padding */
+        font-size: 0.8rem; /* Smaller text */
+        gap: 3px; /* Smaller gap */
     }
     .tab-button i {
-        font-size: 1.2rem;
+        font-size: 1.1rem; /* Smaller icons */
     }
     .auth-section, .app-section {
         padding: 15px;
