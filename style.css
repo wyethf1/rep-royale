@@ -440,7 +440,7 @@ select.donda-style:focus {
 /* --- XP and Level Display (fixed at bottom of main content) --- */
 .xp-level-display-bottom-fixed {
     position: fixed;
-    bottom: 60px; /* Above the bottom navigation */
+    bottom: 80px; /* Above the bottom navigation */
     left: 0;
     width: 100%;
     background-color: var(--donda-black); /* Match app background */
