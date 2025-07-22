@@ -10,45 +10,92 @@ body {
     background-size: cover;
     display: flex;
     justify-content: center;
-    align-items: stretch; /* Allows .container to fill vertical space */
+    align-items: stretch;
     min-height: 100vh;
-    padding: 20px; /* Padding around the main container */
+    padding: 20px;
     box-sizing: border-box;
-    color: #eee; /* Light text for dark background */
+    color: #eee;
+}
+
+/* Custom Scrollbar Styling (for Webkit browsers like Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the vertical scrollbar */
+    height: 8px; /* Height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent; /* Makes the track invisible */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2); /* Light transparent thumb */
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4); /* Slightly more visible on hover */
 }
 
 .container {
-    background-color: rgba(0, 0, 0, 0.9); /* More opaque dark background for the main app area */
-    padding: 30px; /* Increased padding for more comfort */
-    border-radius: 0; /* Sharp corners */
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6); /* Stronger, darker shadow */
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 25px; /* Adjusted padding for new header/footer */
+    border-radius: 0;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
     width: 100%;
-    max-width: 450px; /* Slightly wider max-width for better comfort */
+    max-width: 500px; /* Main app width */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 25px; /* Increased gap between major sections */
+    gap: 20px; /* Adjusted gap between sections */
     height: 100%; /* Make container fill available height */
-    overflow: hidden; /* Prevent container itself from scrolling */
+    overflow: hidden; /* Prevent container itself from causing scrollbar */
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-h1 {
+/* NEW: App Header Styling */
+.app-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Space between quote and mini title */
+    margin-bottom: 20px; /* Space below header */
+}
+
+.app-title-mini {
+    font-size: 1.5em; /* Smaller, integrated title */
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0; /* Remove default margin */
+}
+
+h1 { /* This H1 is no longer in HTML, but kept for general styling if needed elsewhere */
     text-align: center;
     color: #fff;
-    margin-bottom: 25px; /* More space below title */
+    margin-bottom: 25px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-size: 2.2em; /* Slightly larger title */
+    font-size: 2.2em;
 }
 
 h2, h3, h4 {
     color: #ddd;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more prominent separator */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     padding-bottom: 10px;
     margin-top: 25px;
     margin-bottom: 20px;
-    font-size: 1.3em; /* Larger section headers */
+    font-size: 1.3em;
+}
+
+.current-routine-name {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 20px;
 }
 
 /* Daily Quote Styling */
@@ -56,36 +103,62 @@ h2, h3, h4 {
     font-style: italic;
     text-align: center;
     color: #bbb;
-    margin-bottom: 25px; /* More space below quote */
-    padding: 15px; /* More padding for quote */
+    padding: 10px;
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 0;
     border: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 1.1em;
     line-height: 1.5;
+    width: 100%; /* Ensure quote takes full width */
+    box-sizing: border-box;
 }
 .daily-quote .quote-reference {
     display: block;
     margin-top: 10px;
     font-size: 0.9em;
     font-weight: bold;
-    color: #999; /* Slightly darker for reference */
+    color: #999;
 }
-
 
 /* Section Hiding */
 .auth-section, .app-section {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Increased gap within sections */
+    gap: 20px;
     flex-grow: 1; /* Allow sections to grow to fill available space */
     min-height: 0; /* Important for flex items with overflow */
-    overflow-y: auto; /* Enable scrolling for these main sections if content overflows */
-    background-color: #000; /* Solid black background for active sections */
-    padding: 25px; /* Increased padding */
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more prominent border */
+    /* overflow-y: auto; -- REMOVED: Now managed by internal views/lists and custom scrollbar styling */
+    background-color: #000;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     width: 100%;
     box-sizing: border-box;
+}
+
+/* NEW: App View Styling (for dashboard, builder, friends views) */
+.app-view {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Make app views fill available space within app-section */
+    min-height: 0; /* Important for scrollable content */
+    overflow-y: auto; /* Allow scrolling within the specific view content */
+    padding: 0; /* Views don't need their own padding, app-section provides it */
+    gap: 20px; /* Default gap between elements within a view */
+}
+
+/* Specific view adjustments */
+#routineDashboardView .exercise-list,
+#routineBuilderView .exercise-list,
+#friendsView .friends-list {
+    flex-grow: 1; /* Lists should fill available space */
+    min-height: 100px; /* Ensure lists are visible */
+}
+
+.dashboard-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between dashboard buttons */
+    margin-top: auto; /* Push buttons to the bottom of the dashboard view if content is short */
 }
 
 .hidden {
@@ -97,80 +170,67 @@ input[type="email"],
 input[type="password"],
 input[type="text"],
 select {
-    padding: 15px; /* Larger inputs */
-    border: 1px solid #444; /* Darker border */
-    background-color: #1a1a1a; /* Darker input background */
+    padding: 15px;
+    border: 1px solid #444;
+    background-color: #1a1a1a;
     color: #eee;
     border-radius: 0;
-    font-size: 1.1rem; /* Larger font size */
+    font-size: 1.1rem;
     width: 100%;
-    box-sizing: border-box; /* Include padding in width */
+    box-sizing: border-box;
 }
 input::placeholder {
-    color: #777; /* Dim placeholder text */
+    color: #777;
 }
 
 /* Buttons */
 button {
-    padding: 15px 20px; /* Larger buttons */
-    border: 1px solid #666; /* Subtle border */
+    padding: 15px 20px;
+    border: 1px solid #666;
     border-radius: 0;
-    font-size: 1.05rem; /* Slightly larger font */
+    font-size: 1.05rem;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
     width: 100%;
     box-sizing: border-box;
-    background-color: #222; /* Dark button background */
+    background-color: #222;
     color: #fff;
     text-transform: uppercase;
-    letter-spacing: 0.7px; /* Increased letter spacing */
+    letter-spacing: 0.7px;
     font-weight: bold;
 }
 
 button:hover {
-    transform: translateY(-2px); /* More pronounced lift on hover */
-    background-color: #444; /* Lighter on hover */
-    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1); /* Subtle white shadow on hover */
+    transform: translateY(-2px);
+    background-color: #444;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
 /* Specific Button Styles */
-#loginBtn, #registerBtn {
+#loginBtn, #registerBtn, .primary-button {
     background-color: #000;
     color: #fff;
     border-color: #fff;
 }
-#loginBtn:hover, #registerBtn:hover {
+#loginBtn:hover, #registerBtn:hover, .primary-button:hover {
     background-color: #111;
 }
 
 .google-btn {
-    background-color: #0a0a0a; /* Even darker for Google */
+    background-color: #0a0a0a;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px; /* More space for icon */
+    gap: 15px;
     border-color: #666;
 }
 .google-btn i {
-    font-size: 1.4rem; /* Larger icon */
+    font-size: 1.4rem;
     color: #fff;
 }
 .google-btn:hover {
     background-color: #222;
-}
-
-.logout-btn {
-    background-color: #444;
-    color: white;
-    width: auto;
-    align-self: flex-end;
-    border-color: #666;
-    padding: 10px 15px; /* Smaller logout button */
-    font-size: 0.9rem;
-}
-.logout-btn:hover {
-    background-color: #666;
 }
 
 .action-button {
@@ -182,111 +242,26 @@ button:hover {
     background-color: #555;
 }
 
-.primary-button {
-    background-color: #000;
-    color: white;
-    border-color: #fff;
-}
-.primary-button:hover {
-    background-color: #111;
-}
-
-/* Header Info (XP/Level) */
-.header-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 15px; /* More padding */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* More prominent separator */
-    flex-wrap: wrap;
-    gap: 15px; /* Increased gap */
-    font-size: 1.1em;
-}
-
-.header-info span {
-    font-weight: bold;
-    color: #fff;
-}
-
-/* Error Message */
-.error-message {
-    color: #ff6666; /* Brighter red for errors */
-    font-size: 0.95em;
-    margin-top: -15px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-/* Tab Navigation Styling */
-.tab-nav {
-    display: flex;
-    justify-content: space-around;
-    background-color: #0a0a0a; /* Very dark background for tab nav */
-    border-radius: 0;
-    overflow: hidden;
-    margin-bottom: 25px; /* More space below tabs */
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.tab-button {
-    flex-grow: 1;
-    background-color: #1a1a1a; /* Dark gray for inactive tabs */
-    color: #aaa; /* Lighter gray for inactive tab text */
-    border-radius: 0;
-    padding: 10px; /* Reduced vertical padding, rely on gap */
-    font-weight: bold;
-    font-size: 0.9rem; /* Slightly smaller text for more space */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px; /* Reduced gap between icon/text for tighter fit */
-    border: none;
-    min-width: 0; /* Allow buttons to shrink */
-}
-
-.tab-button.active {
-    background-color: #000;
-    color: #fff;
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.15); /* More prominent inner glow */
-}
-
-.tab-button:hover:not(.active) {
-    background-color: #2a2a2a; /* Lighter on hover for inactive */
-    color: #fff;
-}
-
-.tab-button i {
-    font-size: 1.3rem; /* Slightly smaller tab icons */
-    line-height: 1; /* Ensure no extra space below icon */
-}
-
-/* Tab Content Styling - Expanded for Routine Builder */
-.tab-content {
-    flex-grow: 1; /* Allows content to take up available space */
-    display: flex; /* Make tab-content a flex container for its children */
-    flex-direction: column;
-    padding: 0; /* Removed internal padding here, sections now have it */
-    min-height: 0; /* Important for flex items with overflow */
-    overflow-y: auto; /* Enable scrolling for individual tab content if it overflows */
-}
+/* REMOVED: Old header-info styles (XP/Logout moved to footer) */
+/* REMOVED: Tab Navigation styles */
 
 /* Input and Slider Group Styling */
 .input-group {
-    margin-bottom: 20px; /* Increased margin */
+    margin-bottom: 20px;
 }
 .input-group label {
     display: block;
-    margin-bottom: 10px; /* More space below label */
+    margin-bottom: 10px;
     font-weight: bold;
     color: #ddd;
     font-size: 1.0rem;
 }
 
 .slider-group {
-    margin-bottom: 25px; /* Increased margin */
+    margin-bottom: 25px;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Increased gap */
+    gap: 10px;
 }
 .slider-group label {
     font-weight: bold;
@@ -296,22 +271,22 @@ button:hover {
 .slider-group input[type="range"] {
     width: 100%;
     -webkit-appearance: none;
-    height: 10px; /* Thicker slider track */
+    height: 10px;
     background: #444;
     border-radius: 5px;
     outline: none;
-    opacity: 1; /* Fully opaque */
+    opacity: 1;
     transition: opacity .2s;
 }
 .slider-group input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px; /* Larger thumb */
-    height: 24px; /* Larger thumb */
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: #fff;
     cursor: pointer;
-    box-shadow: 0 0 8px rgba(255,255,255,0.4); /* Stronger glow */
+    box-shadow: 0 0 8px rgba(255,255,255,0.4);
 }
 .slider-group input[type="range"]::-moz-range-thumb {
     width: 24px;
@@ -322,26 +297,26 @@ button:hover {
     box-shadow: 0 0 8px rgba(255,255,255,0.4);
 }
 
-/* List Styles (Exercises, Friends) - Expanded Height */
+/* List Styles (Exercises, Friends) */
 .exercise-list, .friends-list {
-    background-color: rgba(0, 0, 0, 0.8); /* Darker list background */
+    background-color: rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 0;
-    padding: 15px; /* More padding */
-    flex-grow: 1; /* Allow list to grow and fill space */
-    min-height: 100px; /* Minimum height for visibility */
-    overflow-y: auto; /* Enable scrolling for the list itself */
-    margin-bottom: 20px; /* More margin */
+    padding: 15px;
+    flex-grow: 1;
+    min-height: 100px;
+    overflow-y: auto; /* Allow internal scrolling for lists */
+    margin-bottom: 20px;
 }
 
 .routine-exercise-item, .friend-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0; /* More padding */
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1); /* Slightly more prominent dashed separator */
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
     color: #ccc;
-    font-size: 1.0em; /* Slightly larger text */
+    font-size: 1.0em;
 }
 
 .routine-exercise-item:last-child, .friend-item:last-child {
@@ -351,7 +326,7 @@ button:hover {
 .routine-exercise-item button {
     background-color: #555;
     color: #eee;
-    padding: 8px 12px; /* Slightly larger remove button */
+    padding: 8px 12px;
     font-size: 0.85em;
     width: auto;
     flex-shrink: 0;
@@ -373,32 +348,81 @@ button:hover {
 
 /* Placeholder text for empty lists */
 .exercise-list p, .friends-list p {
-    color: #777; /* Darker dim text */
-    padding: 10px; /* Add some padding to placeholder */
+    color: #777;
+    padding: 10px;
+}
+
+/* NEW: Footer Navigation Styling */
+.footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0a0a0a;
+    border-radius: 0;
+    padding: 10px 15px;
+    margin-top: auto; /* Push footer to the bottom of app-section */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 10px; /* Space between footer items */
+}
+
+.xp-level-display {
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    flex-direction: column; /* Stack XP and Level */
+    align-items: flex-start;
+    gap: 3px;
+    font-size: 0.95em;
+    flex-grow: 1; /* Allow XP display to take space */
+}
+
+.footer-btn {
+    width: auto; /* Buttons will size to content + padding */
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    flex-shrink: 0; /* Prevent buttons from squishing too much */
+}
+
+.footer-btn i {
+    font-size: 1.1rem;
+}
+
+.logout-btn-footer {
+    background-color: #444;
+    color: white;
+    border-color: #666;
+}
+.logout-btn-footer:hover {
+    background-color: #666;
 }
 
 /* Responsive Adjustments */
-@media (max-width: 600px) {
+@media (max-width: 500px) {
     body {
-        padding: 10px; /* Less padding on very small screens */
+        padding: 10px;
     }
     .container {
+        max-width: 100%;
         padding: 15px;
-        /* height: calc(100vh - 20px); Allow it to stretch while leaving padding */
     }
-    h1 {
-        font-size: 1.8em;
+    .app-title-mini {
+        font-size: 1.2em;
     }
-    /* Tab buttons specific adjustments for smaller screens */
-    .tab-button {
-        padding: 8px 5px; /* Even less padding */
-        font-size: 0.8rem; /* Smaller text */
-        gap: 3px; /* Smaller gap */
+    .footer-nav {
+        flex-direction: column; /* Stack buttons vertically on very small screens */
+        align-items: stretch;
     }
-    .tab-button i {
-        font-size: 1.1rem; /* Smaller icons */
+    .xp-level-display {
+        width: 100%;
+        align-items: center;
+        margin-bottom: 10px;
     }
-    .auth-section, .app-section {
-        padding: 15px;
+    .footer-btn {
+        width: 100%; /* Make footer buttons full width when stacked */
     }
 }
