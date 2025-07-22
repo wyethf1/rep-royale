@@ -1,45 +1,59 @@
-/* Google Fonts Import */
-/* VT323 for general body text, Press Start 2P for headings */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+/*
+ * Donda-inspired App Styles
+ * File: style.css
+ *
+ * This file contains CSS for styling the entire app with a minimalist black and white
+ * aesthetic, featuring vibrant red accents, sleek modern fonts, and improved
+ * layout for bottom navigation.
+ */
 
-/* --- Color Palette Definitions --- */
+/*
+ * Google Fonts Import
+ * 'Inter' for sleek, modern text
+ * 'EB Garamond' for elegant, classic headings/quotes (optional, but adds a touch of sophistication)
+ * You MUST add these links in your HTML <head> section:
+ *
+ * <link rel="preconnect" href="https://fonts.googleapis.com">
+ * <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ * <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+ *
+ */
+
+/* --- Color Palette Definitions (Updated for Donda Theme) --- */
 :root {
-    /* Core Palette Colors */
-    --palette-black: #000000;
-    --palette-red-primary: #E74C3C; /* A vibrant, strong red */
-    --palette-red-dark: #C0392B;    /* A darker red for accents and hovers */
-    --palette-white: #FFFFFF;
-    --palette-dark-grey: #1A1A1A;   /* Primary background, very dark */
-    --palette-medium-grey: #2C2C2C; /* Secondary background, elements (cards, inputs) */
-    --palette-light-grey: #666666;  /* For secondary text, subtle borders, placeholders */
-    --palette-lighter-grey: #AAAAAA; /* For even lighter text, specific borders */
-    --palette-off-white: #F0F0F0;   /* Used for main text to be softer than pure white */
+    --donda-black: #000000;
+    --donda-white: #FFFFFF;
+    --donda-red-accent: #E74C3C; /* A strong, vibrant red */
+    --donda-red-dark: #C0392B;   /* A darker red for hover states */
+    --donda-light-grey: #F0F0F0; /* Off-white for softer main text */
+    --donda-medium-grey: #333333; /* For subtle shadows/backgrounds that aren't pure black */
 
-    /* Mapped Application Colors (using the core palette above) */
-    --app-bg-primary: var(--palette-dark-grey); /* Replaces --primary-bg */
-    --app-bg-secondary: var(--palette-medium-grey); /* Replaces --secondary-bg */
-    --app-text-main: var(--palette-off-white); /* Replaces --text-color */
-    --app-text-secondary: var(--palette-light-grey); /* Replaces --light-text-color */
-    --app-accent: var(--palette-red-primary); /* Replaces --accent-color (cyan) */
-    --app-button-default-bg: var(--palette-medium-grey); /* Replaces --button-bg */
-    --app-button-default-hover: var(--palette-light-grey); /* Replaces --button-hover-bg */
-    --app-border: var(--palette-medium-grey); /* Replaces --border-color */
-    --app-error: var(--palette-red-dark); /* Uses a darker red from palette for errors */
+    /* Mapped Application Colors */
+    --app-bg-primary: var(--donda-black);
+    --app-bg-secondary: var(--donda-medium-grey); /* Used for elements like cards, inputs, nav */
+    --app-text-main: var(--donda-light-grey);
+    --app-text-secondary: rgba(255, 255, 255, 0.6); /* Slightly transparent white for secondary text */
+    --app-accent: var(--donda-red-accent);
+    --app-button-default-bg: var(--donda-black);
+    --app-button-default-text: var(--donda-white);
+    --app-button-hover-bg: var(--donda-red-accent);
+    --app-button-hover-text: var(--donda-white);
+    --app-border: var(--donda-white);
+    --app-error: var(--donda-red-dark);
 
-    --border-radius: 8px; /* Consistent rounded corners */
+    --border-radius: 0px; /* Minimalist, sharp edges */
 }
 
 /* --- General Body and HTML Styling --- */
 body, html {
     margin: 0;
     padding: 0;
-    /* Primary font for overall pixel aesthetic */
-    font-family: 'VT323', monospace;
+    font-family: 'Inter', sans-serif; /* Sleek, modern font for general text */
     background-color: var(--app-bg-primary);
     color: var(--app-text-main);
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
-    line-height: 1.6; /* Ensure good readability with the pixel font */
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.6;
 }
 
 .container {
@@ -59,6 +73,7 @@ body, html {
     text-align: center;
     margin-bottom: 15px;
     font-size: 0.9em;
+    font-weight: bold;
 }
 
 /* --- App Header (Daily Quote) --- */
@@ -70,12 +85,13 @@ body, html {
 }
 
 .daily-quote {
-    background-color: var(--app-bg-secondary);
+    background-color: var(--donda-black); /* Pure black */
     padding: 20px;
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius); /* Sharp corners */
     margin: 0 auto;
-    max-width: 90%; /* Adjust as needed */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    max-width: 90%;
+    box-shadow: none; /* No shadow for minimalist look */
+    border: 1px solid var(--donda-white); /* White border */
 }
 
 .daily-quote p {
@@ -83,6 +99,8 @@ body, html {
     margin-bottom: 10px;
     color: var(--app-text-main);
     line-height: 1.5;
+    font-family: 'EB Garamond', serif; /* Elegant font for quotes */
+    font-size: 1.1em;
 }
 
 .daily-quote span {
@@ -90,6 +108,7 @@ body, html {
     text-align: right;
     font-size: 0.9em;
     color: var(--app-text-secondary);
+    font-family: 'Inter', sans-serif;
 }
 
 /* --- App Sections & Views --- */
@@ -108,9 +127,11 @@ body, html {
     color: var(--app-text-main);
     text-align: center;
     margin-bottom: 25px;
-    font-size: 1.5em;
-    /* Stronger pixel font for main view titles */
-    font-family: 'Press Start 2P', 'VT323', monospace;
+    font-size: 1.8em; /* Larger, bolder headings */
+    font-family: 'Inter', sans-serif; /* Sleek font for titles */
+    font-weight: 700; /* Bold */
+    text-transform: uppercase; /* All caps for impact */
+    letter-spacing: 2px;
 }
 
 /* --- Auth Section --- */
@@ -122,39 +143,47 @@ body, html {
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
+    background-color: var(--donda-black); /* Ensure pure black background */
 }
 
 .auth-section h1 {
-    color: var(--app-text-main);
-    font-size: 2.5em;
-    margin-bottom: 40px;
+    color: var(--donda-white); /* Pure white title */
+    font-size: 3.5em; /* Very large title */
+    margin-bottom: 60px; /* More space */
     text-align: center;
-    /* Strongest pixel font for the main title */
-    font-family: 'Press Start 2P', 'VT323', monospace;
+    font-family: 'Inter', sans-serif; /* Sleek font for main title */
+    font-weight: 900; /* Extra bold */
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    line-height: 1;
 }
 
 .google-btn {
-    background-color: var(--app-bg-primary); /* Match background, but with strong border/shadow */
-    color: var(--app-text-main);
-    border: 1px solid var(--app-border);
-    padding: 15px 30px;
-    border-radius: var(--border-radius);
-    font-size: 1.1em;
+    background-color: var(--donda-black); /* Black button */
+    color: var(--donda-white); /* White text */
+    border: 1px solid var(--donda-white); /* White border */
+    padding: 18px 40px; /* Larger padding */
+    border-radius: var(--border-radius); /* Sharp corners */
+    font-size: 1.2em;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    justify-content: center; /* Center icon and text */
+    gap: 15px; /* Wider gap */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    box-shadow: none; /* No shadow */
+    text-transform: uppercase; /* All caps */
+    font-weight: 600;
 }
 
 .google-btn:hover {
-    background-color: var(--app-bg-secondary);
-    border-color: var(--app-accent); /* Red accent on hover */
+    background-color: var(--donda-red-accent); /* Red on hover */
+    border-color: var(--donda-red-accent); /* Red border on hover */
+    color: var(--donda-white); /* Keep text white */
 }
 
 .google-btn i {
-    font-size: 1.4em;
+    font-size: 1.6em; /* Larger icon */
 }
 
 /* --- Input Group Styling --- */
@@ -167,49 +196,42 @@ body, html {
     margin-bottom: 8px;
     color: var(--app-text-secondary);
     font-size: 0.9em;
+    font-family: 'Inter', sans-serif; /* Sleek font for labels */
 }
 
 .input-group input[type="text"],
 .input-group input[type="number"],
-.input-group input[type="email"] { /* Removed select from here as it's handled by donda-style */
+.input-group input[type="email"] {
     width: calc(100% - 20px); /* Account for padding */
     padding: 12px 10px;
-    margin-bottom: 5px; /* Adjust if specific spacing needed */
-    background-color: var(--app-bg-secondary);
-    border: 1px solid var(--app-border);
-    border-radius: var(--border-radius);
-    color: var(--app-text-main);
+    margin-bottom: 5px;
+    background-color: var(--donda-black); /* Black input background */
+    border: 1px solid var(--donda-white); /* White border */
+    border-radius: var(--border-radius); /* Sharp corners */
+    color: var(--donda-white); /* White text */
     font-size: 1em;
-    box-sizing: border-box; /* Include padding in width */
-    font-family: 'VT323', monospace; /* Ensure inputs use pixel font */
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif; /* Sleek font for inputs */
 }
 
-/* --- Donda-inspired Dropdown Styling (New/Modified) --- */
-/*
- * Ensure 'Inter' font is imported in your HTML <head> section for the sleek look:
- *
- * <link rel="preconnect" href="https://fonts.googleapis.com">
- * <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- * <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
- *
- */
+/* --- Donda-inspired Dropdown Styling --- */
 select.donda-style {
-  width: calc(100% - 20px); /* Account for padding */
+  width: calc(100% - 20px);
   padding: 12px 10px;
   margin-bottom: 5px;
-  background-color: var(--palette-black); /* Pure black background */
-  color: var(--palette-white); /* Pure white text */
-  border: 1px solid var(--palette-white); /* White border */
-  border-radius: var(--border-radius); /* Use existing border-radius */
+  background-color: var(--donda-black); /* Pure black background */
+  color: var(--donda-white); /* Pure white text */
+  border: 1px solid var(--donda-white); /* White border */
+  border-radius: var(--border-radius); /* Sharp corners */
   font-family: 'Inter', sans-serif; /* Sleek, modern font for dropdowns */
-  font-size: 1em; /* Match input font size */
+  font-size: 1em;
   cursor: pointer;
-  appearance: none; /* Removes default browser styling for select */
-  -webkit-appearance: none; /* For Safari */
-  -moz-appearance: none; /* For Firefox */
-  text-align: left; /* Align text to the left */
-  box-sizing: border-box; /* Include padding in width */
-  min-width: 180px; /* Ensure a decent width */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: left;
+  box-sizing: border-box;
+  min-width: 180px;
 
   /* Custom dropdown arrow (SVG embedded) */
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="white"><polygon points="0,0 10,0 5,10"/></svg>');
@@ -218,33 +240,29 @@ select.donda-style {
   background-size: 8px;
 }
 
-/* Hide default arrow in IE/Edge for select elements */
 select.donda-style::-ms-expand {
     display: none;
 }
 
-/* Styling for dropdown options (when the dropdown is open) */
 select.donda-style option {
-  background-color: var(--palette-black); /* Black background for individual options */
-  color: var(--palette-white); /* White text for options */
-  padding: 12px 10px; /* Padding for options */
+  background-color: var(--donda-black); /* Black background for options */
+  color: var(--donda-white); /* White text for options */
+  padding: 12px 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white separator */
-  font-family: 'Inter', sans-serif; /* Keep Inter font for options */
+  font-family: 'Inter', sans-serif;
 }
 
-/* Hover effect for dropdown options (the red part!) */
 select.donda-style option:hover,
-select.donda-style option:checked { /* option:checked for selected but not opened dropdown state */
-  background-color: #ff0000; /* Vibrant Red on hover/checked */
-  color: var(--palette-white); /* Keep text white on red background */
+select.donda-style option:checked {
+  background-color: var(--donda-red-accent); /* Vibrant Red on hover/checked */
+  color: var(--donda-white);
 }
 
-/* Focus style for accessibility */
 select.donda-style:focus {
-  outline: 2px solid #ff0000; /* Red outline on focus */
+  outline: 2px solid var(--donda-red-accent); /* Red outline on focus */
   outline-offset: 2px;
-  border-color: #ff0000; /* Red border on focus */
-  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3); /* Red accent shadow on focus */
+  border-color: var(--donda-red-accent);
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3);
 }
 
 /* Original input placeholder/focus styles (kept for other input types) */
@@ -252,10 +270,10 @@ select.donda-style:focus {
     color: var(--app-text-secondary);
 }
 
-.input-group input:focus { /* This now only applies to input[type="text/number/email"] */
+.input-group input:focus {
     outline: none;
-    border-color: var(--app-accent); /* Red accent on focus */
-    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3); /* Red accent shadow on focus */
+    border-color: var(--donda-red-accent); /* Red accent on focus */
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3);
 }
 
 
@@ -270,13 +288,14 @@ select.donda-style:focus {
     width: 100%;
     text-align: left;
     margin-bottom: 5px;
+    font-family: 'Inter', sans-serif;
 }
 
 .slider-group input[type="range"] {
     width: 100%;
-    -webkit-appearance: none; /* Remove default styling */
+    -webkit-appearance: none;
     height: 8px;
-    background: var(--app-border);
+    background: rgba(255, 255, 255, 0.3); /* Lighter grey track */
     border-radius: 5px;
     outline: none;
     transition: background 0.2s;
@@ -289,51 +308,55 @@ select.donda-style:focus {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--app-accent); /* Red accent for thumb */
+    background: var(--donda-red-accent); /* Red accent for thumb */
     cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.4); /* Red accent shadow */
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.4);
 }
 
 .slider-group input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--app-accent); /* Red accent for thumb */
+    background: var(--donda-red-accent);
     cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.4); /* Red accent shadow */
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.4);
 }
 
 /* --- Buttons --- */
 .action-button, .primary-button {
-    background-color: var(--app-button-default-bg);
-    color: var(--app-text-main);
-    border: 1px solid var(--app-border);
-    padding: 12px 20px;
-    border-radius: var(--border-radius);
-    font-size: 1em;
+    background-color: var(--donda-black); /* Black background */
+    color: var(--donda-white); /* White text */
+    border: 1px solid var(--donda-white); /* White border */
+    padding: 15px 25px; /* Increased padding */
+    border-radius: var(--border-radius); /* Sharp corners */
+    font-size: 1.1em; /* Slightly larger font */
     cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    width: 100%; /* Default to full width */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    width: 100%;
     box-sizing: border-box;
-    margin-bottom: 10px; /* Spacing between stacked buttons */
-    font-family: 'VT323', monospace; /* Ensure buttons use pixel font */
+    margin-bottom: 15px; /* More spacing */
+    font-family: 'Inter', sans-serif; /* Sleek font for buttons */
+    font-weight: 600;
+    text-transform: uppercase; /* All caps */
+    letter-spacing: 1px;
 }
 
-.action-button:hover, .primary-button:hover {
-    background-color: var(--app-button-default-hover);
-    border-color: var(--app-accent); /* Red accent on hover */
+.action-button:hover {
+    background-color: var(--donda-red-accent);
+    border-color: var(--donda-red-accent);
+    color: var(--donda-white);
 }
 
 .primary-button {
-    background-color: var(--app-accent); /* Red primary button */
-    border-color: var(--app-accent); /* Red primary button */
-    color: var(--palette-black); /* Dark text on accent button */
-    font-weight: bold;
+    background-color: var(--donda-red-accent); /* Red primary button */
+    border-color: var(--donda-red-accent);
+    color: var(--donda-white); /* White text on red button */
+    font-weight: 700;
 }
 
 .primary-button:hover {
-    background-color: var(--palette-red-dark); /* Slightly darker red on hover */
-    border-color: var(--palette-red-dark);
+    background-color: var(--donda-red-dark); /* Darker red on hover */
+    border-color: var(--donda-red-dark);
 }
 
 /* --- Routine Dashboard Specifics --- */
@@ -342,71 +365,76 @@ select.donda-style:focus {
 }
 
 #routineSelect {
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* More space below select */
     width: 100%;
 }
 
 .current-routine-name {
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.3em;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     color: var(--app-text-main);
+    font-family: 'Inter', sans-serif;
 }
 
 .exercise-list {
-    background-color: var(--app-bg-secondary);
+    background-color: var(--donda-black); /* Black background for list */
     border-radius: var(--border-radius);
     padding: 15px;
-    margin-bottom: 20px;
-    min-height: 100px; /* Ensure visibility even if empty */
+    margin-bottom: 25px; /* More space */
+    min-height: 120px; /* Slightly taller */
     display: flex;
     flex-direction: column;
     gap: 10px;
+    border: 1px solid var(--donda-white); /* White border */
 }
 
 .exercise-list p {
     text-align: center;
     color: var(--app-text-secondary);
-    margin: auto; /* Center "No exercises" text vertically */
+    margin: auto;
+    font-family: 'Inter', sans-serif;
 }
 
 .routine-exercise-item {
-    background-color: var(--app-bg-primary); /* Darker background for individual items */
-    padding: 10px 15px;
+    background-color: var(--donda-black); /* Black background for individual items */
+    padding: 12px 18px; /* More padding */
     border-radius: var(--border-radius);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--app-border);
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Subtler white border */
 }
 
 .routine-exercise-item span {
     flex-grow: 1;
     color: var(--app-text-main);
+    font-family: 'Inter', sans-serif;
 }
 
 .routine-exercise-item button {
-    background-color: var(--app-error); /* Error red for delete button */
-    color: var(--palette-white);
+    background-color: var(--donda-red-accent); /* Red for delete button */
+    color: var(--donda-white);
     border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 8px 15px; /* Larger delete button */
+    border-radius: 0px; /* Sharp corners */
     cursor: pointer;
-    font-size: 0.8em;
-    margin-left: 10px;
+    font-size: 0.9em;
+    margin-left: 15px;
     transition: background-color 0.3s ease;
-    font-family: 'VT323', monospace; /* Ensure button text uses pixel font */
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
 }
 
 .routine-exercise-item button:hover {
-    background-color: var(--palette-red-dark); /* Darker error red on hover */
+    background-color: var(--donda-red-dark);
 }
 
 .dashboard-actions {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Space between action buttons */
+    gap: 15px; /* More space between buttons */
 }
 
 /* --- XP and Level Display (fixed at bottom of main content) --- */
@@ -415,82 +443,96 @@ select.donda-style:focus {
     bottom: 60px; /* Above the bottom navigation */
     left: 0;
     width: 100%;
-    background-color: var(--app-bg-primary); /* Match app background */
-    color: var(--app-text-main);
+    background-color: var(--donda-black); /* Match app background */
+    color: var(--donda-white);
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
     font-size: 0.9em;
-    border-top: 1px solid var(--app-border);
-    z-index: 999; /* Below bottomNav */
+    border-top: 1px solid var(--donda-white); /* White top border */
+    z-index: 999;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* --- Bottom Navigation --- */
+/* --- Bottom Navigation (Wider Icons) --- */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: var(--app-bg-secondary); /* Darker background for nav */
+    background-color: var(--donda-black); /* Pure black nav background */
     display: flex;
-    justify-content: center; /* Centered with gap for 3 items */
-    gap: 20px; /* Adjust gap as needed */
+    justify-content: space-around; /* Distribute items evenly with space */
+    align-items: center; /* Vertically align items */
     padding: 10px 0;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    border-top-left-radius: 15px; /* Rounded top corners */
-    border-top-right-radius: 15px; /* Rounded top corners */
+    border-top: 1px solid var(--donda-white); /* White top border */
+    border-top-left-radius: 0px; /* Sharp corners */
+    border-top-right-radius: 0px; /* Sharp corners */
 }
 
 .bottom-nav .nav-item {
     background: none;
     border: none;
-    color: var(--app-text-secondary);
+    color: rgba(255, 255, 255, 0.6); /* Lighter white for inactive */
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 0.7em;
+    font-size: 0.8em; /* Slightly larger text */
     cursor: pointer;
-    transition: color 0.3s ease;
-    padding: 5px 10px;
-    font-family: 'VT323', monospace; /* Ensure nav text uses pixel font */
+    transition: color 0.3s ease, transform 0.2s ease;
+    padding: 8px 0px; /* Adjusted padding to allow full width distribution */
+    flex-grow: 1; /* Allow items to grow and take available space */
+    max-width: 150px; /* Prevent items from becoming too wide on large screens */
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .bottom-nav .nav-item.active {
-    color: var(--app-accent); /* Red accent for active item */
+    color: var(--donda-red-accent); /* Red accent for active item */
+    font-weight: 700;
+    transform: translateY(-2px); /* Subtle lift */
 }
 
 .bottom-nav .nav-item:hover {
-    color: var(--app-text-main);
+    color: var(--donda-white); /* Pure white on hover */
+    transform: translateY(-2px); /* Subtle lift on hover */
 }
 
 .bottom-nav .nav-item i {
-    font-size: 1.5em;
-    margin-bottom: 5px;
+    font-size: 1.8em; /* Larger icons */
+    margin-bottom: 8px; /* More space below icon */
 }
 
 /* --- Friends View --- */
 .friends-list {
-    background-color: var(--app-bg-secondary);
+    background-color: var(--donda-black); /* Black background */
     border-radius: var(--border-radius);
     padding: 15px;
-    min-height: 100px;
+    min-height: 120px;
     margin-top: 20px;
+    border: 1px solid var(--donda-white);
 }
 
 .friends-list p {
     text-align: center;
     color: var(--app-text-secondary);
     margin: auto;
+    font-family: 'Inter', sans-serif;
 }
 
 .friend-item {
-    background-color: var(--app-bg-primary);
-    border: 1px solid var(--app-border);
+    background-color: var(--donda-black); /* Black background */
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: var(--border-radius);
-    padding: 10px 15px;
+    padding: 12px 18px;
     margin-bottom: 10px;
     display: flex;
     flex-direction: column;
@@ -507,11 +549,13 @@ select.donda-style:focus {
     align-items: center;
     color: var(--app-text-main);
     font-weight: bold;
+    font-family: 'Inter', sans-serif;
 }
 
 .friend-stats {
     font-size: 0.85em;
     color: var(--app-text-secondary);
+    font-family: 'Inter', sans-serif;
 }
 
 .friend-workouts {
@@ -519,31 +563,33 @@ select.donda-style:focus {
 }
 
 .friend-workouts .view-workouts-btn {
-    background-color: var(--app-button-default-bg);
-    color: var(--app-accent); /* Red accent for this specific button text */
-    border: 1px solid var(--app-accent); /* Red accent border */
-    padding: 8px 15px;
+    background-color: var(--donda-black);
+    color: var(--donda-red-accent);
+    border: 1px solid var(--donda-red-accent);
+    padding: 10px 18px; /* Larger button */
     border-radius: var(--border-radius);
-    font-size: 0.85em;
+    font-size: 0.9em;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
     width: auto;
-    display: block; /* Make it take full width of container */
-    margin-top: 5px;
-    font-family: 'VT323', monospace; /* Ensure button text uses pixel font */
+    display: block;
+    margin-top: 8px;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
 .friend-workouts .view-workouts-btn:hover {
-    background-color: var(--app-accent); /* Red accent on hover */
-    color: var(--palette-black); /* Dark text on red hover */
+    background-color: var(--donda-red-accent);
+    color: var(--donda-white);
 }
 
 .friend-workout-list {
     list-style: none;
     padding: 0;
     margin-top: 10px;
-    background-color: var(--app-bg-primary);
-    border: 1px solid var(--app-border);
+    background-color: var(--donda-black);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: var(--border-radius);
     padding: 10px;
     font-size: 0.9em;
@@ -551,8 +597,9 @@ select.donda-style:focus {
 
 .friend-workout-list li {
     padding: 5px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--app-text-secondary);
+    font-family: 'Inter', sans-serif;
 }
 
 .friend-workout-list li:last-child {
@@ -561,10 +608,11 @@ select.donda-style:focus {
 
 /* --- Settings View --- */
 .setting-group {
-    background-color: var(--app-bg-secondary);
+    background-color: var(--donda-black); /* Black background */
     border-radius: var(--border-radius);
     padding: 15px;
     margin-bottom: 20px;
+    border: 1px solid var(--donda-white);
 }
 
 .setting-group label {
@@ -572,53 +620,60 @@ select.donda-style:focus {
     margin-bottom: 10px;
     color: var(--app-text-main);
     font-size: 1em;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Logout button in settings */
 .setting-group.logout-setting {
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2); /* Subtler border */
     text-align: center;
+    border: none; /* Remove side borders if only top is desired */
+    background-color: transparent; /* Make background transparent to match layout */
 }
 
 .setting-group .logout-button {
-    background-color: var(--app-error); /* Error red for logout */
-    color: var(--palette-white);
-    border: none;
-    padding: 12px 25px;
+    background-color: var(--donda-red-accent); /* Red for logout */
+    color: var(--donda-white);
+    border: none; /* No border, color is enough */
+    padding: 15px 30px; /* Larger padding */
     border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1.1em;
     display: inline-flex;
     align-items: center;
     gap: 10px;
     transition: background-color 0.3s ease;
-    font-family: 'VT323', monospace; /* Ensure button text uses pixel font */
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
 .setting-group .logout-button:hover {
-    background-color: var(--palette-red-dark); /* Darker red on hover */
+    background-color: var(--donda-red-dark);
 }
 
 .setting-group .logout-button i {
-    font-size: 1.2em;
+    font-size: 1.4em;
 }
 
-/* --- Media Queries for Responsiveness (Optional, but good practice) --- */
+/* --- Media Queries for Responsiveness --- */
 @media (min-width: 600px) {
     .container {
-        max-width: 500px; /* Limit width on larger screens */
+        max-width: 500px;
         margin: 0 auto;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Add shadow to container */
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); /* Subtle white shadow for container */
+        border-left: 1px solid var(--donda-white); /* White borders for container */
+        border-right: 1px solid var(--donda-white);
     }
 
     .bottom-nav {
         left: 50%;
         transform: translateX(-50%);
-        max-width: 500px; /* Match container width */
-        border-bottom-left-radius: 15px; /* Ensure rounded corners persist if element itself isn't full width */
-        border-bottom-right-radius: 15px;
+        max-width: 500px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
     }
 
     .xp-level-display-bottom-fixed {
@@ -628,21 +683,21 @@ select.donda-style:focus {
     }
 
     .google-btn {
-        width: auto; /* Allow button to size to content */
-        min-width: 250px; /* Give it a minimum width */
+        width: auto;
+        min-width: 300px; /* Wider button */
     }
 
     .dashboard-actions {
-        flex-direction: row; /* Buttons side-by-side on larger screens */
-        flex-wrap: wrap; /* Allow wrapping if too many buttons */
+        flex-direction: row;
+        flex-wrap: wrap;
         justify-content: center;
-        gap: 15px;
+        gap: 20px; /* More space */
     }
 
     .dashboard-actions .action-button,
     .dashboard-actions .primary-button {
-        width: auto; /* Buttons will size based on content or flex properties */
-        flex-basis: 30%; /* Example: allow 3 buttons per row */
-        max-width: 200px; /* Prevent stretching too wide */
+        width: auto;
+        flex-basis: 45%; /* Two buttons per row */
+        max-width: 250px;
     }
 }
