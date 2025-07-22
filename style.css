@@ -40,7 +40,7 @@ body {
 
 .container {
     background-color: rgba(0, 0, 0, 0.9);
-    padding: 25px;
+    padding: 25px; /* Inner padding for content */
     border-radius: 0;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
     width: 100%;
@@ -51,7 +51,7 @@ body {
     gap: 20px;
     height: 100%;
     overflow: hidden; /* Prevent container itself from causing scrollbar */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* REMOVED: border: 1px solid rgba(255, 255, 255, 0.1); */ /* This border is now gone */
 }
 
 /* App Header Styling */
@@ -122,8 +122,8 @@ h2, h3, h4 {
     flex-grow: 1;
     min-height: 0;
     background-color: #000;
-    padding: 20px; /* Reduced padding */
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 20px; /* Inner padding for content */
+    /* REMOVED: border: 1px solid rgba(255, 255, 255, 0.15); */ /* This border is now gone */
     width: 100%;
     box-sizing: border-box;
 }
@@ -245,7 +245,7 @@ button:hover {
     border-color: #999;
 }
 
-/* --- NEW / MODIFIED: Specific styles for buttons inside .dashboard-actions --- */
+/* Specific styles for buttons inside .dashboard-actions */
 .dashboard-actions button {
     padding: 6px 8px; /* Significantly smaller padding */
     font-size: 0.7rem; /* Smaller font size */
@@ -264,7 +264,6 @@ button:hover {
     transform: translateY(-1px); /* Less dramatic lift for smaller buttons */
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* Smaller shadow */
 }
-/* --- END NEW / MODIFIED --- */
 
 
 /* Input and Slider Group Styling */
@@ -377,7 +376,7 @@ button:hover {
     padding: 10px;
 }
 
-/* NEW: XP/Level Display at Bottom of Main Content */
+/* XP/Level Display at Bottom of Main Content */
 .xp-level-display-bottom-fixed {
     background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent background */
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -396,7 +395,7 @@ button:hover {
     display: inline-block; /* Keep them inline for side-by-side */
 }
 
-/* NEW: FIXED BOTTOM NAVIGATION BAR (Spotify-like) */
+/* FIXED BOTTOM NAVIGATION BAR (Spotify-like) */
 .bottom-nav {
     position: fixed; /* Fix to viewport */
     bottom: 0;
@@ -466,7 +465,7 @@ button:hover {
         max-width: 700px; /* Wider for tablets/desktops */
     }
     body {
-        padding-top: 20px; /* Add some top padding back for desktop for better aesthetics */
+        /* REMOVED: padding-top: 20px; */ /* Removed to ensure edge-to-edge even on desktop */
         padding-bottom: 70px; /* Keep fixed nav padding */
     }
 }
