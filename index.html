@@ -1,111 +1,428 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rep Royale</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Rep Royale</h1>
+/* General Body and Container Styling */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('https://images.unsplash.com/photo-1519681393782-ad6fe6a03dd2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc5MzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwd2F0ZXIlMjBhYnN0cmFjdHxlbnwwfHx8fDE3MjE1MjcwNjV8MA&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #eee;
+}
 
-        <div id="dailyQuote" class="daily-quote">
-            <p id="quoteText"></p>
-            <p id="quoteReference" class="quote-reference"></p>
-        </div>
+/* Custom Scrollbar Styling (for Webkit browsers like Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the vertical scrollbar */
+    height: 8px; /* Height of the horizontal scrollbar */
+}
 
-        <div id="authSection" class="auth-section">
-            <h2>Login / Register</h2>
-            <input type="email" id="emailInput" placeholder="Email">
-            <input type="password" id="passwordInput" placeholder="Password">
-            <p id="authError" class="error-message"></p>
-            <button id="loginBtn" class="primary-button">Login</button>
-            <button id="registerBtn" class="primary-button">Register</button>
-            <button id="googleSignInBtn" class="google-btn"><i class="fab fa-google"></i> Sign In with Google</button>
-        </div>
+::-webkit-scrollbar-track {
+    background: transparent; /* Makes the track invisible */
+    border-radius: 10px;
+}
 
-        <div id="appSection" class="app-section hidden">
-            <div class="header-info">
-                <span id="xpDisplay">XP: 0</span>
-                <span id="levelDisplay">Level: 1 — Novice</span>
-                <button id="logoutBtn" class="logout-btn">Logout</button>
-            </div>
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2); /* Light transparent thumb */
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
 
-            <nav class="tab-nav">
-                <button class="tab-button active" data-target="routineBuilderTab">
-                    <i class="fas fa-dumbbell"></i>
-                    <span>Routine Builder</span>
-                </button>
-                <button class="tab-button" data-target="myRoutinesTab">
-                    <i class="fas fa-list"></i>
-                    <span>My Routines</span>
-                </button>
-                <button class="tab-button" data-target="friendsTab">
-                    <i class="fas fa-users"></i>
-                    <span>Friends</span>
-                </button>
-            </nav>
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4); /* Slightly more visible on hover */
+}
 
-            <div id="routineBuilderTab" class="tab-content">
-                <h3>Build New Routine</h3>
-                <div class="input-group">
-                    <label for="routineName">Routine Name:</label>
-                    <input type="text" id="routineName" placeholder="e.g., Upper Body Blast">
-                </div>
+.container {
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 25px; /* Adjusted padding for new header/footer */
+    border-radius: 0;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
+    width: 100%;
+    max-width: 500px; /* Main app width */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Adjusted gap between sections */
+    height: 100%; /* Make container fill available height */
+    overflow: hidden; /* Prevent container itself from causing scrollbar */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
-                <h3>Add Exercise</h3>
-                <div class="input-group">
-                    <input type="text" id="exerciseNameInput" placeholder="Exercise Name">
-                </div>
-                <div class="slider-group">
-                    <label for="setsSlider">Sets: <span id="setsValue">3</span></label>
-                    <input type="range" id="setsSlider" min="1" max="10" value="3">
-                </div>
-                <div class="slider-group">
-                    <label for="repsSlider">Reps: <span id="repsValue">10</span></label>
-                    <input type="range" id="repsSlider" min="1" max="30" value="10">
-                </div>
-                <button id="addExerciseBtn" class="action-button">Add Exercise to Routine</button>
+/* NEW: App Header Styling */
+.app-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Space between quote and mini title */
+    margin-bottom: 20px; /* Space below header */
+}
 
-                <h3>Current Routine Exercises</h3>
-                <div id="currentRoutineExercises" class="exercise-list">
-                    <p style="text-align: center; color: #777;">No exercises added yet.</p>
-                </div>
-                <button id="saveRoutineBtn" class="primary-button">Save Routine</button>
-            </div>
+.app-title-mini {
+    font-size: 1.5em; /* Smaller, integrated title */
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0; /* Remove default margin */
+}
 
-            <div id="myRoutinesTab" class="tab-content hidden">
-                <h3>Select a Routine</h3>
-                <div class="input-group">
-                    <label for="routineSelect">Your Saved Routines:</label>
-                    <select id="routineSelect">
-                        <option value="">-- Select Routine --</option>
-                    </select>
-                </div>
-                <h3>Selected Routine Exercises</h3>
-                <div id="selectedRoutineExercises" class="exercise-list">
-                    <p style="text-align: center; color: #777;">Select a routine to see exercises.</p>
-                </div>
-                <button id="completeRoutineBtn" class="primary-button" disabled>Complete Routine (Gain 50 XP)</button>
-            </div>
+h1 { /* This H1 is no longer in HTML, but kept for general styling if needed elsewhere */
+    text-align: center;
+    color: #fff;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 2.2em;
+}
 
-            <div id="friendsTab" class="tab-content hidden">
-                <h3>Add Friend</h3>
-                <div class="input-group">
-                    <input type="email" id="friendEmailInput" placeholder="Friend's Email">
-                </div>
-                <button id="addFriendBtn" class="action-button">Add Friend</button>
+h2, h3, h4 {
+    color: #ddd;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 10px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+}
 
-                <h3>Your Friends</h3>
-                <div id="friendsList" class="friends-list">
-                    <p style="text-align: center; color: #777;">No friends added yet.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+.current-routine-name {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
 
-    <script src="main.js" type="module"></script>
-</body>
-</html>
+/* Daily Quote Styling */
+.daily-quote {
+    font-style: italic;
+    text-align: center;
+    color: #bbb;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 1.1em;
+    line-height: 1.5;
+    width: 100%; /* Ensure quote takes full width */
+    box-sizing: border-box;
+}
+.daily-quote .quote-reference {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #999;
+}
+
+/* Section Hiding */
+.auth-section, .app-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-grow: 1; /* Allow sections to grow to fill available space */
+    min-height: 0; /* Important for flex items with overflow */
+    /* overflow-y: auto; -- REMOVED: Now managed by internal views/lists and custom scrollbar styling */
+    background-color: #000;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* NEW: App View Styling (for dashboard, builder, friends views) */
+.app-view {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Make app views fill available space within app-section */
+    min-height: 0; /* Important for scrollable content */
+    overflow-y: auto; /* Allow scrolling within the specific view content */
+    padding: 0; /* Views don't need their own padding, app-section provides it */
+    gap: 20px; /* Default gap between elements within a view */
+}
+
+/* Specific view adjustments */
+#routineDashboardView .exercise-list,
+#routineBuilderView .exercise-list,
+#friendsView .friends-list {
+    flex-grow: 1; /* Lists should fill available space */
+    min-height: 100px; /* Ensure lists are visible */
+}
+
+.dashboard-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between dashboard buttons */
+    margin-top: auto; /* Push buttons to the bottom of the dashboard view if content is short */
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Input Fields */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+select {
+    padding: 15px;
+    border: 1px solid #444;
+    background-color: #1a1a1a;
+    color: #eee;
+    border-radius: 0;
+    font-size: 1.1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+input::placeholder {
+    color: #777;
+}
+
+/* Buttons */
+button {
+    padding: 15px 20px;
+    border: 1px solid #666;
+    border-radius: 0;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #222;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    font-weight: bold;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    background-color: #444;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+
+/* Specific Button Styles */
+#loginBtn, #registerBtn, .primary-button {
+    background-color: #000;
+    color: #fff;
+    border-color: #fff;
+}
+#loginBtn:hover, #registerBtn:hover, .primary-button:hover {
+    background-color: #111;
+}
+
+.google-btn {
+    background-color: #0a0a0a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    border-color: #666;
+}
+.google-btn i {
+    font-size: 1.4rem;
+    color: #fff;
+}
+.google-btn:hover {
+    background-color: #222;
+}
+
+.action-button {
+    background-color: #333;
+    color: white;
+    border-color: #555;
+}
+.action-button:hover {
+    background-color: #555;
+}
+
+/* REMOVED: Old header-info styles (XP/Logout moved to footer) */
+/* REMOVED: Tab Navigation styles */
+
+/* Input and Slider Group Styling */
+.input-group {
+    margin-bottom: 20px;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #ddd;
+    font-size: 1.0rem;
+}
+
+.slider-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.slider-group label {
+    font-weight: bold;
+    color: #ddd;
+    font-size: 1.0rem;
+}
+.slider-group input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 10px;
+    background: #444;
+    border-radius: 5px;
+    outline: none;
+    opacity: 1;
+    transition: opacity .2s;
+}
+.slider-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+.slider-group input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+
+/* List Styles (Exercises, Friends) */
+.exercise-list, .friends-list {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0;
+    padding: 15px;
+    flex-grow: 1;
+    min-height: 100px;
+    overflow-y: auto; /* Allow internal scrolling for lists */
+    margin-bottom: 20px;
+}
+
+.routine-exercise-item, .friend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    font-size: 1.0em;
+}
+
+.routine-exercise-item:last-child, .friend-item:last-child {
+    border-bottom: none;
+}
+
+.routine-exercise-item button {
+    background-color: #555;
+    color: #eee;
+    padding: 8px 12px;
+    font-size: 0.85em;
+    width: auto;
+    flex-shrink: 0;
+    border-color: #777;
+}
+.routine-exercise-item button:hover {
+    background-color: #777;
+}
+
+.friend-item {
+    font-weight: bold;
+    color: #fff;
+}
+
+.friend-item span {
+    color: #ccc;
+    font-weight: normal;
+}
+
+/* Placeholder text for empty lists */
+.exercise-list p, .friends-list p {
+    color: #777;
+    padding: 10px;
+}
+
+/* NEW: Footer Navigation Styling */
+.footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0a0a0a;
+    border-radius: 0;
+    padding: 10px 15px;
+    margin-top: auto; /* Push footer to the bottom of app-section */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 10px; /* Space between footer items */
+}
+
+.xp-level-display {
+    font-weight: bold;
+    color: #fff;
+    display: flex;
+    flex-direction: column; /* Stack XP and Level */
+    align-items: flex-start;
+    gap: 3px;
+    font-size: 0.95em;
+    flex-grow: 1; /* Allow XP display to take space */
+}
+
+.footer-btn {
+    width: auto; /* Buttons will size to content + padding */
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    flex-shrink: 0; /* Prevent buttons from squishing too much */
+}
+
+.footer-btn i {
+    font-size: 1.1rem;
+}
+
+.logout-btn-footer {
+    background-color: #444;
+    color: white;
+    border-color: #666;
+}
+.logout-btn-footer:hover {
+    background-color: #666;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 500px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        max-width: 100%;
+        padding: 15px;
+    }
+    .app-title-mini {
+        font-size: 1.2em;
+    }
+    .footer-nav {
+        flex-direction: column; /* Stack buttons vertically on very small screens */
+        align-items: stretch;
+    }
+    .xp-level-display {
+        width: 100%;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .footer-btn {
+        width: 100%; /* Make footer buttons full width when stacked */
+    }
+}
