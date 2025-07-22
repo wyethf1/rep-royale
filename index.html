@@ -11,100 +11,101 @@
     <div class="container">
         <h1>Rep Royale</h1>
 
-       <div id="dailyQuote" class="daily-quote">
-        <p id="quoteText"></p>
-        <p id="quoteReference" class="quote-reference"></p>
-    </div>
+        <div id="dailyQuote" class="daily-quote">
+            <p id="quoteText"></p>
+            <p id="quoteReference" class="quote-reference"></p>
+        </div>
 
-        <section id="authSection" class="auth-section">
-            <h2>Welcome</h2>
+        <div id="authSection" class="auth-section">
+            <h2>Login / Register</h2>
             <input type="email" id="emailInput" placeholder="Email">
             <input type="password" id="passwordInput" placeholder="Password">
-            <button id="loginBtn">Login</button>
-            <button id="registerBtn">Register</button>
-            <button id="googleSignInBtn" class="google-btn"><i class="fab fa-google"></i> Sign in with Google</button>
             <p id="authError" class="error-message"></p>
-        </section>
+            <button id="loginBtn" class="primary-button">Login</button>
+            <button id="registerBtn" class="primary-button">Register</button>
+            <button id="googleSignInBtn" class="google-btn"><i class="fab fa-google"></i> Sign In with Google</button>
+        </div>
 
-        <section id="appSection" class="app-section hidden">
+        <div id="appSection" class="app-section hidden">
             <div class="header-info">
                 <span id="xpDisplay">XP: 0</span>
                 <span id="levelDisplay">Level: 1 — Novice</span>
                 <button id="logoutBtn" class="logout-btn">Logout</button>
             </div>
 
-            <div class="tab-nav">
-                <button class="tab-button active" data-target="routineBuilderTab"><i class="fas fa-plus"></i> Build</button>
-                <button class="tab-button" data-target="myRoutinesTab"><i class="fas fa-list"></i> My Routines</button>
-                <button class="tab-button" data-target="friendsTab"><i class="fas fa-users"></i> Friends</button>
-            </div>
+            <nav class="tab-nav">
+                <button class="tab-button active" data-target="routineBuilderTab">
+                    <i class="fas fa-dumbbell"></i>
+                    <span>Routine Builder</span>
+                </button>
+                <button class="tab-button" data-target="myRoutinesTab">
+                    <i class="fas fa-list"></i>
+                    <span>My Routines</span>
+                </button>
+                <button class="tab-button" data-target="friendsTab">
+                    <i class="fas fa-users"></i>
+                    <span>Friends</span>
+                </button>
+            </nav>
 
             <div id="routineBuilderTab" class="tab-content">
-                <h2>Build New Routine</h2>
+                <h3>Build New Routine</h3>
                 <div class="input-group">
                     <label for="routineName">Routine Name:</label>
-                    <input type="text" id="routineName" placeholder="e.g., Upper Body Day">
+                    <input type="text" id="routineName" placeholder="e.g., Upper Body Blast">
                 </div>
 
                 <h3>Add Exercise</h3>
                 <div class="input-group">
-                    <label for="exerciseNameInput">Exercise Name:</label>
-                    <input type="text" id="exerciseNameInput" placeholder="e.g., Bench Press">
+                    <input type="text" id="exerciseNameInput" placeholder="Exercise Name">
                 </div>
-
                 <div class="slider-group">
                     <label for="setsSlider">Sets: <span id="setsValue">3</span></label>
                     <input type="range" id="setsSlider" min="1" max="10" value="3">
                 </div>
-
                 <div class="slider-group">
-                    <label for="repsSlider">Reps: <span id="repsValue">8</span></label>
-                    <input type="range" id="repsSlider" min="1" max="30" value="8">
+                    <label for="repsSlider">Reps: <span id="repsValue">10</span></label>
+                    <input type="range" id="repsSlider" min="1" max="30" value="10">
                 </div>
+                <button id="addExerciseBtn" class="action-button">Add Exercise to Routine</button>
 
-                <button id="addExerciseBtn" class="action-button">Add Exercise</button>
-
-                <h4>Current Routine Exercises:</h4>
+                <h3>Current Routine Exercises</h3>
                 <div id="currentRoutineExercises" class="exercise-list">
-                    <p style="text-align: center; color: #666;">No exercises added yet.</p>
+                    <p style="text-align: center; color: #777;">No exercises added yet.</p>
                 </div>
-
                 <button id="saveRoutineBtn" class="primary-button">Save Routine</button>
             </div>
 
             <div id="myRoutinesTab" class="tab-content hidden">
-                <h2>My Saved Routines</h2>
+                <h3>Select a Routine</h3>
                 <div class="input-group">
-                    <label for="routineSelect">Select a Routine:</label>
+                    <label for="routineSelect">Your Saved Routines:</label>
                     <select id="routineSelect">
                         <option value="">-- Select Routine --</option>
                     </select>
                 </div>
-                <button id="completeRoutineBtn" class="action-button">Complete Selected Routine (+50 XP)</button>
-
-                <h3>Exercises in Selected Routine:</h3>
+                <h3>Selected Routine Exercises</h3>
                 <div id="selectedRoutineExercises" class="exercise-list">
-                    <p style="text-align: center; color: #666;">Select a routine to see exercises.</p>
+                    <p style="text-align: center; color: #777;">Select a routine to see exercises.</p>
                 </div>
+                <button id="completeRoutineBtn" class="primary-button" disabled>Complete Routine (Gain 50 XP)</button>
             </div>
 
             <div id="friendsTab" class="tab-content hidden">
-                <h2>Friends</h2>
+                <h3>Add Friend</h3>
                 <div class="input-group">
-                    <label for="friendEmailInput">Friend's Email:</label>
-                    <input type="email" id="friendEmailInput" placeholder="friend@example.com">
+                    <input type="email" id="friendEmailInput" placeholder="Friend's Email">
                 </div>
                 <button id="addFriendBtn" class="action-button">Add Friend</button>
 
-                <h3>My Friends:</h3>
+                <h3>Your Friends</h3>
                 <div id="friendsList" class="friends-list">
-                    <p style="text-align: center; color: #666;">No friends added yet.</p>
+                    <p style="text-align: center; color: #777;">No friends added yet.</p>
                 </div>
-                </div>
-
-        </section>
+            </div>
+        </div>
     </div>
 
-    <script type="module" src="main.js"></script>
+    <script src="main.js" type="module"></script>
 </body>
 </html>
