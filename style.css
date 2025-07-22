@@ -45,7 +45,7 @@ body {
     border-radius: 0;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
     width: 100%;
-    max-width: 500px; /* Main app width */
+    max-width: 500px; /* Default max-width for smaller screens */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -64,7 +64,7 @@ body {
     margin-bottom: 15px; /* Reduced margin */
 }
 
-h1 { /* This H1 is no longer in HTML (for "Rep Royale" at top), but kept for general styling if needed elsewhere */
+h1 { /* This H1 is for "REP ROYALE" on the login screen */
     text-align: center;
     color: #fff;
     margin-bottom: 25px;
@@ -184,18 +184,18 @@ input::placeholder {
 
 /* General Buttons */
 button {
-    padding: 10px 15px; /* Reduced padding */
-    border: 1px solid #666;
+    padding: 8px 12px; /* Further reduced padding */
+    border: 1px solid #444; /* Darker border */
     border-radius: 0;
-    font-size: 0.9rem; /* Reduced font size */
+    font-size: 0.85rem; /* Further reduced font size */
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
     width: auto;
     flex-grow: 1;
-    min-width: 100px; /* Adjusted min-width */
+    min-width: 90px; /* Adjusted min-width */
     max-width: 49%; /* Allows two buttons per line with gap */
     box-sizing: border-box;
-    background-color: #222;
+    background-color: #1a1a1a; /* Darker background */
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 0.7px;
@@ -204,7 +204,7 @@ button {
 
 button:hover {
     transform: translateY(-2px);
-    background-color: #444;
+    background-color: #2a2a2a; /* Darker hover */
     box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
@@ -238,12 +238,12 @@ button:hover {
 }
 
 .action-button {
-    background-color: #333;
+    background-color: #1a1a1a; /* Darker background */
     color: white;
-    border-color: #555;
+    border-color: #444; /* Darker border */
 }
 .action-button:hover {
-    background-color: #555;
+    background-color: #2a2a2a; /* Darker hover */
 }
 
 /* Input and Slider Group Styling */
@@ -325,19 +325,19 @@ button:hover {
 }
 
 .routine-exercise-item button {
-    background-color: #555;
+    background-color: #1a1a1a; /* Darker button */
     color: #eee;
     padding: 6px 10px; /* Reduced padding */
-    font-size: 0.8em; /* Reduced font size */
+    font-size: 0.75em; /* Reduced font size */
     width: auto;
     flex-shrink: 0;
-    border-color: #777;
+    border-color: #444; /* Darker border */
     flex-grow: 0;
     max-width: none;
     min-width: 50px; /* Adjusted min-width */
 }
 .routine-exercise-item button:hover {
-    background-color: #777;
+    background-color: #2a2a2a; /* Darker hover */
 }
 
 .friend-item {
@@ -389,6 +389,7 @@ button:hover {
     height: 60px; /* Fixed height */
     z-index: 1000; /* Ensure it stays on top */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow at top */
+    transition: opacity 0.3s ease; /* Smooth transition for showing/hiding */
 }
 
 .nav-item {
@@ -425,15 +426,31 @@ button:hover {
     color: #ffaaaa;
 }
 
-/* Responsive Adjustments */
+/* Responsive Adjustments & Widescreen */
 @media (max-width: 500px) {
     body {
         padding: 10px;
-        padding-bottom: 70px; /* Ensure this remains for fixed nav */
+        padding-bottom: 70px; /* Ensure this remains for fixed nav on mobile */
     }
     .container {
         max-width: 100%;
         padding: 15px;
     }
-    /* Removed old footer responsive styles as they are replaced by bottom-nav */
+}
+
+/* Widescreen adjustments for larger screens */
+@media (min-width: 768px) {
+    .container {
+        max-width: 700px; /* Wider for tablets/desktops */
+    }
+    body {
+        padding-top: 50px; /* Add some top padding for desktop if desired */
+        padding-bottom: 70px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 900px; /* Even wider for large desktops */
+    }
 }
