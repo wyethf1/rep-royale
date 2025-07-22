@@ -74,7 +74,7 @@ h1 { /* This H1 is for "REP ROYALE" on the login screen */
 
 h2, h3, h4 {
     color: #ddd;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: none; /* REMOVED THIS BORDER */
     padding-bottom: 10px;
     margin-top: 20px; /* Reduced margin */
     margin-bottom: 15px; /* Reduced margin */
@@ -156,7 +156,7 @@ h2, h3, h4 {
     gap: 10px; /* Gap between buttons */
     margin-top: auto;
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none; /* REMOVED THIS BORDER for dashboard actions top line */
 }
 
 .hidden {
@@ -169,7 +169,7 @@ input[type="password"],
 input[type="text"],
 select {
     padding: 12px; /* Reduced padding */
-    border: 1px solid #444; /* KEEPING this border as it provides visual separation for inputs */
+    border: none; /* REMOVED THIS BORDER */
     background-color: #1a1a1a;
     color: #eee;
     border-radius: 0;
@@ -184,7 +184,7 @@ input::placeholder {
 /* --- General Button Styles --- */
 button {
     padding: 10px 15px; /* Default larger padding */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* General button border */
+    border: none; /* REMOVED THIS BORDER */
     border-radius: 0;
     font-size: 0.85rem; /* Default larger font size */
     cursor: pointer;
@@ -212,7 +212,7 @@ button:hover {
 #loginBtn, #registerBtn, .primary-button {
     background-color: #000;
     color: #fff;
-    border-color: #fff;
+    border-color: #fff; /* Keeping this border for primary buttons if you want them distinct */
     box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 #loginBtn:hover, #registerBtn:hover, .primary-button:hover {
@@ -232,7 +232,7 @@ button:hover {
     align-items: center;
     justify-content: center;
     gap: 15px;
-    border-color: #666;
+    border: none; /* REMOVED THIS BORDER */
     width: 100%;
     max-width: 100%;
 }
@@ -335,7 +335,7 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0; /* Reduced padding */
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1); /* Keeping this for list item separation */
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1); /* Keeping this for visual separation of list items */
     color: #ccc;
     font-size: 0.95em; /* Slightly reduced */
 }
@@ -351,7 +351,7 @@ button:hover {
     font-size: 0.75em; /* Reduced font size */
     width: auto;
     flex-shrink: 0;
-    border-color: #444; /* Darker border */
+    border: none; /* REMOVED THIS BORDER */
     flex-grow: 0;
     max-width: none;
     min-width: 50px; /* Adjusted min-width */
@@ -405,7 +405,7 @@ button:hover {
     justify-content: space-around; /* Distribute items evenly */
     align-items: center;
     background-color: #000; /* Dark background */
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Keeping this for visual separation from content */
+    border-top: none; /* REMOVED THIS BORDER to blend with content above */
     height: 60px; /* Fixed height */
     z-index: 1000; /* Ensure it stays on top */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow at top */
