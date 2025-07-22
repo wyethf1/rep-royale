@@ -1,5 +1,32 @@
 // main.js - This file now handles ALL Firebase imports and initialization.
+// ... (previous imports and firebaseConfig)
 
+// ... (DOM elements declarations, ensure quoteText and quoteReference are present)
+    const quoteText = document.getElementById('quoteText'); // New
+    const quoteReference = document.getElementById('quoteReference'); // New
+// ...
+
+    const bibleQuotes = [
+        { text: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" },
+        { text: "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God, not a result of works, so that no one may boast.", reference: "Ephesians 2:8-9" },
+        { text: "Be strong and courageous. Do not be frightened, and do not be dismayed, for the Lord your God is with you wherever you go.", reference: "Joshua 1:9" },
+        { text: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.", reference: "Isaiah 40:31" },
+        { text: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.", reference: "Romans 12:2" },
+        { text: "The Lord is my strength and my shield; in him my heart trusts, and I am helped; my heart exults, and with my song I give thanks to him.", reference: "Psalm 28:7" },
+        { text: "For God gave us a spirit not of fear but of power and love and self-control.", reference: "2 Timothy 1:7" },
+        { text: "Therefore, my beloved brothers, be steadfast, immovable, always abounding in the work of the Lord, knowing that in the Lord your labor is not in vain.", reference: "1 Corinthians 15:58" },
+        { text: "Trust in the Lord with all your heart, and do not lean on your own understanding.", reference: "Proverbs 3:5" },
+        { text: "And whatever you do, in word or deed, do everything in the name of the Lord Jesus, giving thanks to God the Father through him.", reference: "Colossians 3:17" }
+    ];
+
+    function displayRandomQuote() {
+        const randomIndex = Math.floor(Math.random() * bibleQuotes.length);
+        const selectedQuote = bibleQuotes[randomIndex];
+        quoteText.textContent = `"${selectedQuote.text}"`;
+        quoteReference.textContent = `- ${selectedQuote.reference}`;
+    }
+    displayRandomQuote(); // Call this function on app load
+// ... (rest of your main.js)
 // ALL Firebase imports come from here now
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js';
 import {
