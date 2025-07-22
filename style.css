@@ -1,25 +1,45 @@
-/* General Body and HTML Styling */
+/* Google Fonts Import */
+/* VT323 for general body text, Press Start 2P for headings */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+/* --- Color Palette Definitions --- */
 :root {
-    --primary-bg: #121212; /* Very dark background */
-    --secondary-bg: #1a1a1a; /* Slightly lighter dark background for cards/containers */
-    --text-color: #f0f0f0; /* Off-white for main text */
-    --light-text-color: #aaa; /* Lighter gray for placeholders, secondary text */
-    --accent-color: #00bcd4; /* Vibrant cyan/light blue for active states/highlights */
-    --button-bg: #333; /* Dark gray for most buttons */
-    --button-hover-bg: #555; /* Darker gray on button hover */
-    --border-color: #444; /* Subtle dark border */
-    --error-color: #dc3545; /* Red for errors and logout button */
+    /* Core Palette Colors */
+    --palette-black: #000000;
+    --palette-red-primary: #E74C3C; /* A vibrant, strong red */
+    --palette-red-dark: #C0392B;    /* A darker red for accents and hovers */
+    --palette-white: #FFFFFF;
+    --palette-dark-grey: #1A1A1A;   /* Primary background, very dark */
+    --palette-medium-grey: #2C2C2C; /* Secondary background, elements (cards, inputs) */
+    --palette-light-grey: #666666;  /* For secondary text, subtle borders, placeholders */
+    --palette-lighter-grey: #AAAAAA; /* For even lighter text, specific borders */
+    --palette-off-white: #F0F0F0;   /* Used for main text to be softer than pure white */
+
+    /* Mapped Application Colors (using the core palette above) */
+    --app-bg-primary: var(--palette-dark-grey); /* Replaces --primary-bg */
+    --app-bg-secondary: var(--palette-medium-grey); /* Replaces --secondary-bg */
+    --app-text-main: var(--palette-off-white); /* Replaces --text-color */
+    --app-text-secondary: var(--palette-light-grey); /* Replaces --light-text-color */
+    --app-accent: var(--palette-red-primary); /* Replaces --accent-color (cyan) */
+    --app-button-default-bg: var(--palette-medium-grey); /* Replaces --button-bg */
+    --app-button-default-hover: var(--palette-light-grey); /* Replaces --button-hover-bg */
+    --app-border: var(--palette-medium-grey); /* Replaces --border-color */
+    --app-error: var(--palette-red-dark); /* Uses a darker red from palette for errors */
+
     --border-radius: 8px; /* Consistent rounded corners */
 }
 
+/* --- General Body and HTML Styling --- */
 body, html {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-    background-color: var(--primary-bg);
-    color: var(--text-color);
+    /* Primary font for overall pixel aesthetic */
+    font-family: 'VT323', monospace;
+    background-color: var(--app-bg-primary);
+    color: var(--app-text-main);
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    line-height: 1.6; /* Ensure good readability with the pixel font */
 }
 
 .container {
@@ -29,19 +49,19 @@ body, html {
     padding-bottom: 70px; /* Space for the fixed bottom nav */
 }
 
-/* Utility Classes */
+/* --- Utility Classes --- */
 .hidden {
     display: none !important;
 }
 
 .error-message {
-    color: var(--error-color);
+    color: var(--app-error);
     text-align: center;
     margin-bottom: 15px;
     font-size: 0.9em;
 }
 
-/* App Header (Daily Quote) */
+/* --- App Header (Daily Quote) --- */
 .app-header {
     width: 100%;
     padding: 20px;
@@ -50,7 +70,7 @@ body, html {
 }
 
 .daily-quote {
-    background-color: var(--secondary-bg);
+    background-color: var(--app-bg-secondary);
     padding: 20px;
     border-radius: var(--border-radius);
     margin: 0 auto;
@@ -61,7 +81,7 @@ body, html {
 .daily-quote p {
     font-style: italic;
     margin-bottom: 10px;
-    color: var(--text-color);
+    color: var(--app-text-main);
     line-height: 1.5;
 }
 
@@ -69,10 +89,10 @@ body, html {
     display: block;
     text-align: right;
     font-size: 0.9em;
-    color: var(--light-text-color);
+    color: var(--app-text-secondary);
 }
 
-/* App Sections & Views */
+/* --- App Sections & Views --- */
 .app-section {
     flex-grow: 1;
     display: flex;
@@ -85,13 +105,15 @@ body, html {
 }
 
 .app-view h2 {
-    color: var(--text-color);
+    color: var(--app-text-main);
     text-align: center;
     margin-bottom: 25px;
     font-size: 1.5em;
+    /* Stronger pixel font for main view titles */
+    font-family: 'Press Start 2P', 'VT323', monospace;
 }
 
-/* Auth Section */
+/* --- Auth Section --- */
 .auth-section {
     display: flex;
     flex-direction: column;
@@ -103,16 +125,18 @@ body, html {
 }
 
 .auth-section h1 {
-    color: var(--text-color);
+    color: var(--app-text-main);
     font-size: 2.5em;
     margin-bottom: 40px;
     text-align: center;
+    /* Strongest pixel font for the main title */
+    font-family: 'Press Start 2P', 'VT323', monospace;
 }
 
 .google-btn {
-    background-color: var(--primary-bg); /* Match background, but with strong border/shadow */
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    background-color: var(--app-bg-primary); /* Match background, but with strong border/shadow */
+    color: var(--app-text-main);
+    border: 1px solid var(--app-border);
     padding: 15px 30px;
     border-radius: var(--border-radius);
     font-size: 1.1em;
@@ -125,15 +149,15 @@ body, html {
 }
 
 .google-btn:hover {
-    background-color: var(--secondary-bg);
-    border-color: var(--accent-color);
+    background-color: var(--app-bg-secondary);
+    border-color: var(--app-accent); /* Red accent on hover */
 }
 
 .google-btn i {
     font-size: 1.4em;
 }
 
-/* Input Group Styling */
+/* --- Input Group Styling --- */
 .input-group {
     margin-bottom: 20px;
 }
@@ -141,7 +165,7 @@ body, html {
 .input-group label {
     display: block;
     margin-bottom: 8px;
-    color: var(--light-text-color);
+    color: var(--app-text-secondary);
     font-size: 0.9em;
 }
 
@@ -152,12 +176,13 @@ body, html {
     width: calc(100% - 20px); /* Account for padding */
     padding: 12px 10px;
     margin-bottom: 5px; /* Adjust if specific spacing needed */
-    background-color: var(--secondary-bg);
-    border: 1px solid var(--border-color);
+    background-color: var(--app-bg-secondary);
+    border: 1px solid var(--app-border);
     border-radius: var(--border-radius);
-    color: var(--text-color);
+    color: var(--app-text-main);
     font-size: 1em;
     box-sizing: border-box; /* Include padding in width */
+    font-family: 'VT323', monospace; /* Ensure inputs use pixel font */
 }
 
 /* Styling for select dropdown arrow */
@@ -165,25 +190,25 @@ body, html {
     -webkit-appearance: none; /* Remove default arrow */
     -moz-appearance: none;
     appearance: none;
-    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20fill%3D%22%23aaa%22%20d%3D%22M9.293%2012.95l1.414%201.414L15%2010.414l-4.293-4.293-1.414%201.414L12.586%2010z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+    /* Custom arrow color changed from #aaa (light-text-color) to a grey from the palette */
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20fill%3D%22%23666666%22%20d%3D%22M9.293%2012.95l1.414%201.414L15%2010.414l-4.293-4.293-1.414%201.414L12.586%2010z%22%2F%3E%3C%2Fsvg%3E');
     background-repeat: no-repeat;
     background-position: right 10px center;
     padding-right: 30px; /* Space for arrow */
 }
 
-
 .input-group input::placeholder {
-    color: var(--light-text-color);
+    color: var(--app-text-secondary);
 }
 
 .input-group input:focus,
 .input-group select:focus {
     outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.3); /* Accent shadow on focus */
+    border-color: var(--app-accent); /* Red accent on focus */
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3); /* Red accent shadow on focus */
 }
 
-/* Slider Specific Styles */
+/* --- Slider Specific Styles --- */
 .slider-group {
     display: flex;
     flex-direction: column;
@@ -200,7 +225,7 @@ body, html {
     width: 100%;
     -webkit-appearance: none; /* Remove default styling */
     height: 8px;
-    background: var(--border-color);
+    background: var(--app-border);
     border-radius: 5px;
     outline: none;
     transition: background 0.2s;
@@ -213,25 +238,25 @@ body, html {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: var(--app-accent); /* Red accent for thumb */
     cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.4);
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.4); /* Red accent shadow */
 }
 
 .slider-group input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: var(--app-accent); /* Red accent for thumb */
     cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.4);
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.4); /* Red accent shadow */
 }
 
-/* Buttons */
+/* --- Buttons --- */
 .action-button, .primary-button {
-    background-color: var(--button-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    background-color: var(--app-button-default-bg);
+    color: var(--app-text-main);
+    border: 1px solid var(--app-border);
     padding: 12px 20px;
     border-radius: var(--border-radius);
     font-size: 1em;
@@ -240,26 +265,27 @@ body, html {
     width: 100%; /* Default to full width */
     box-sizing: border-box;
     margin-bottom: 10px; /* Spacing between stacked buttons */
+    font-family: 'VT323', monospace; /* Ensure buttons use pixel font */
 }
 
 .action-button:hover, .primary-button:hover {
-    background-color: var(--button-hover-bg);
-    border-color: var(--accent-color);
+    background-color: var(--app-button-default-hover);
+    border-color: var(--app-accent); /* Red accent on hover */
 }
 
 .primary-button {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
-    color: var(--primary-bg); /* Dark text on accent button */
+    background-color: var(--app-accent); /* Red primary button */
+    border-color: var(--app-accent); /* Red primary button */
+    color: var(--palette-black); /* Dark text on accent button */
     font-weight: bold;
 }
 
 .primary-button:hover {
-    background-color: #008c9e; /* Slightly darker accent on hover */
-    border-color: #008c9e;
+    background-color: var(--palette-red-dark); /* Slightly darker red on hover */
+    border-color: var(--palette-red-dark);
 }
 
-/* Routine Dashboard Specifics */
+/* --- Routine Dashboard Specifics --- */
 .routine-dashboard-view h2 {
     margin-top: 0;
 }
@@ -274,11 +300,11 @@ body, html {
     font-size: 1.2em;
     font-weight: bold;
     margin-bottom: 20px;
-    color: var(--text-color);
+    color: var(--app-text-main);
 }
 
 .exercise-list {
-    background-color: var(--secondary-bg);
+    background-color: var(--app-bg-secondary);
     border-radius: var(--border-radius);
     padding: 15px;
     margin-bottom: 20px;
@@ -290,28 +316,28 @@ body, html {
 
 .exercise-list p {
     text-align: center;
-    color: var(--light-text-color);
+    color: var(--app-text-secondary);
     margin: auto; /* Center "No exercises" text vertically */
 }
 
 .routine-exercise-item {
-    background-color: var(--primary-bg); /* Darker background for individual items */
+    background-color: var(--app-bg-primary); /* Darker background for individual items */
     padding: 10px 15px;
     border-radius: var(--border-radius);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--app-border);
 }
 
 .routine-exercise-item span {
     flex-grow: 1;
-    color: var(--text-color);
+    color: var(--app-text-main);
 }
 
 .routine-exercise-item button {
-    background-color: var(--error-color);
-    color: white;
+    background-color: var(--app-error); /* Error red for delete button */
+    color: var(--palette-white);
     border: none;
     padding: 5px 10px;
     border-radius: 5px;
@@ -319,10 +345,11 @@ body, html {
     font-size: 0.8em;
     margin-left: 10px;
     transition: background-color 0.3s ease;
+    font-family: 'VT323', monospace; /* Ensure button text uses pixel font */
 }
 
 .routine-exercise-item button:hover {
-    background-color: #a72d3b;
+    background-color: var(--palette-red-dark); /* Darker error red on hover */
 }
 
 .dashboard-actions {
@@ -331,32 +358,31 @@ body, html {
     gap: 10px; /* Space between action buttons */
 }
 
-/* XP and Level Display (fixed at bottom of main content) */
+/* --- XP and Level Display (fixed at bottom of main content) --- */
 .xp-level-display-bottom-fixed {
     position: fixed;
     bottom: 60px; /* Above the bottom navigation */
     left: 0;
     width: 100%;
-    background-color: var(--primary-bg); /* Match app background */
-    color: var(--text-color);
+    background-color: var(--app-bg-primary); /* Match app background */
+    color: var(--app-text-main);
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
     font-size: 0.9em;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--app-border);
     z-index: 999; /* Below bottomNav */
 }
 
-
-/* Bottom Navigation */
+/* --- Bottom Navigation --- */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: var(--secondary-bg); /* Darker background for nav */
+    background-color: var(--app-bg-secondary); /* Darker background for nav */
     display: flex;
     justify-content: center; /* Centered with gap for 3 items */
     gap: 20px; /* Adjust gap as needed */
@@ -370,7 +396,7 @@ body, html {
 .bottom-nav .nav-item {
     background: none;
     border: none;
-    color: var(--light-text-color);
+    color: var(--app-text-secondary);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -378,14 +404,15 @@ body, html {
     cursor: pointer;
     transition: color 0.3s ease;
     padding: 5px 10px;
+    font-family: 'VT323', monospace; /* Ensure nav text uses pixel font */
 }
 
 .bottom-nav .nav-item.active {
-    color: var(--accent-color);
+    color: var(--app-accent); /* Red accent for active item */
 }
 
 .bottom-nav .nav-item:hover {
-    color: var(--text-color);
+    color: var(--app-text-main);
 }
 
 .bottom-nav .nav-item i {
@@ -393,9 +420,9 @@ body, html {
     margin-bottom: 5px;
 }
 
-/* Friends View */
+/* --- Friends View --- */
 .friends-list {
-    background-color: var(--secondary-bg);
+    background-color: var(--app-bg-secondary);
     border-radius: var(--border-radius);
     padding: 15px;
     min-height: 100px;
@@ -404,13 +431,13 @@ body, html {
 
 .friends-list p {
     text-align: center;
-    color: var(--light-text-color);
+    color: var(--app-text-secondary);
     margin: auto;
 }
 
 .friend-item {
-    background-color: var(--primary-bg);
-    border: 1px solid var(--border-color);
+    background-color: var(--app-bg-primary);
+    border: 1px solid var(--app-border);
     border-radius: var(--border-radius);
     padding: 10px 15px;
     margin-bottom: 10px;
@@ -427,13 +454,13 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-color);
+    color: var(--app-text-main);
     font-weight: bold;
 }
 
 .friend-stats {
     font-size: 0.85em;
-    color: var(--light-text-color);
+    color: var(--app-text-secondary);
 }
 
 .friend-workouts {
@@ -441,9 +468,9 @@ body, html {
 }
 
 .friend-workouts .view-workouts-btn {
-    background-color: var(--button-bg);
-    color: var(--accent-color); /* Lighter accent for this specific button */
-    border: 1px solid var(--accent-color);
+    background-color: var(--app-button-default-bg);
+    color: var(--app-accent); /* Red accent for this specific button text */
+    border: 1px solid var(--app-accent); /* Red accent border */
     padding: 8px 15px;
     border-radius: var(--border-radius);
     font-size: 0.85em;
@@ -452,19 +479,20 @@ body, html {
     width: auto;
     display: block; /* Make it take full width of container */
     margin-top: 5px;
+    font-family: 'VT323', monospace; /* Ensure button text uses pixel font */
 }
 
 .friend-workouts .view-workouts-btn:hover {
-    background-color: var(--accent-color);
-    color: var(--primary-bg);
+    background-color: var(--app-accent); /* Red accent on hover */
+    color: var(--palette-black); /* Dark text on red hover */
 }
 
 .friend-workout-list {
     list-style: none;
     padding: 0;
     margin-top: 10px;
-    background-color: var(--primary-bg);
-    border: 1px solid var(--border-color);
+    background-color: var(--app-bg-primary);
+    border: 1px solid var(--app-border);
     border-radius: var(--border-radius);
     padding: 10px;
     font-size: 0.9em;
@@ -473,16 +501,16 @@ body, html {
 .friend-workout-list li {
     padding: 5px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--light-text-color);
+    color: var(--app-text-secondary);
 }
 
 .friend-workout-list li:last-child {
     border-bottom: none;
 }
 
-/* Settings View */
+/* --- Settings View --- */
 .setting-group {
-    background-color: var(--secondary-bg);
+    background-color: var(--app-bg-secondary);
     border-radius: var(--border-radius);
     padding: 15px;
     margin-bottom: 20px;
@@ -491,7 +519,7 @@ body, html {
 .setting-group label {
     display: block;
     margin-bottom: 10px;
-    color: var(--text-color);
+    color: var(--app-text-main);
     font-size: 1em;
 }
 
@@ -504,8 +532,8 @@ body, html {
 }
 
 .setting-group .logout-button {
-    background-color: var(--error-color); /* Red color for logout */
-    color: white;
+    background-color: var(--app-error); /* Error red for logout */
+    color: var(--palette-white);
     border: none;
     padding: 12px 25px;
     border-radius: var(--border-radius);
@@ -515,18 +543,18 @@ body, html {
     align-items: center;
     gap: 10px;
     transition: background-color 0.3s ease;
+    font-family: 'VT323', monospace; /* Ensure button text uses pixel font */
 }
 
 .setting-group .logout-button:hover {
-    background-color: #c82333; /* Darker red on hover */
+    background-color: var(--palette-red-dark); /* Darker red on hover */
 }
 
 .setting-group .logout-button i {
     font-size: 1.2em;
 }
 
-
-/* Media Queries for Responsiveness (Optional, but good practice) */
+/* --- Media Queries for Responsiveness (Optional, but good practice) --- */
 @media (min-width: 600px) {
     .container {
         max-width: 500px; /* Limit width on larger screens */
