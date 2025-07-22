@@ -154,7 +154,7 @@ h2, h3, h4 {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    gap: 8px; /* Reduced gap */
+    gap: 10px; /* Increased gap for better spacing between buttons */
     margin-top: auto;
     padding-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -182,40 +182,54 @@ input::placeholder {
     color: #777;
 }
 
-/* General Buttons */
+/* --- MODIFIED BUTTON STYLES START --- */
 button {
-    padding: 8px 12px; /* Further reduced padding */
-    border: 1px solid #444; /* Darker border */
+    padding: 10px 15px; /* Slightly increased padding for better touch targets */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Very subtle white border */
     border-radius: 0;
-    font-size: 0.85rem; /* Further reduced font size */
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease, border-color 0.3s ease;
     width: auto;
     flex-grow: 1;
-    min-width: 90px; /* Adjusted min-width */
+    min-width: 90px;
     max-width: 49%; /* Allows two buttons per line with gap */
     box-sizing: border-box;
-    background-color: #1a1a1a; /* Darker background */
-    color: #fff;
+    background-color: #0d0d0d; /* Very dark background */
+    color: #fff; /* White text for contrast */
     text-transform: uppercase;
-    letter-spacing: 0.7px;
+    letter-spacing: 0.5px; /* Consistent with bottom nav */
     font-weight: bold;
 }
 
 button:hover {
     transform: translateY(-2px);
-    background-color: #2a2a2a; /* Darker hover */
-    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+    background-color: #1a1a1a; /* Slightly lighter on hover */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Darker shadow for lift effect */
+    border-color: rgba(255, 255, 255, 0.3); /* Border brightens on hover */
 }
 
-/* Specific Button Styles */
+/* Specific Button Styles - Adjusting for consistency */
+/* The 'primary-button' style can remain for high-emphasis actions if needed */
 #loginBtn, #registerBtn, .primary-button {
     background-color: #000;
     color: #fff;
     border-color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2); /* More prominent shadow for primary */
 }
 #loginBtn:hover, #registerBtn:hover, .primary-button:hover {
     background-color: #111;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+}
+
+/* .action-button now inherits more from the base button and adds less */
+.action-button {
+    /* These styles are now largely covered by the base 'button' style above.
+       If you want them to be distinct, you'd add specific overrides here.
+       Currently, they'll look like the new default button. */
+}
+.action-button:hover {
+    /* Also inherits from the base 'button:hover' */
 }
 
 .google-btn {
@@ -225,7 +239,7 @@ button:hover {
     align-items: center;
     justify-content: center;
     gap: 15px;
-    border-color: #666;
+    border-color: #666; /* Kept a distinct border for Google button */
     width: 100%;
     max-width: 100%;
 }
@@ -235,16 +249,10 @@ button:hover {
 }
 .google-btn:hover {
     background-color: #222;
+    border-color: #999; /* Brighten border on hover */
 }
 
-.action-button {
-    background-color: #1a1a1a; /* Darker background */
-    color: white;
-    border-color: #444; /* Darker border */
-}
-.action-button:hover {
-    background-color: #2a2a2a; /* Darker hover */
-}
+/* --- MODIFIED BUTTON STYLES END --- */
 
 /* Input and Slider Group Styling */
 .input-group {
@@ -325,7 +333,7 @@ button:hover {
 }
 
 .routine-exercise-item button {
-    background-color: #1a1a1a; /* Darker button */
+    background-color: #1a1a1a; /* Darker button for 'Remove' */
     color: #eee;
     padding: 6px 10px; /* Reduced padding */
     font-size: 0.75em; /* Reduced font size */
