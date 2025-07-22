@@ -1,303 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rep Royale Web App</title>
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <style>
-    /* Global Styles for Donda Theme */
-    body {
-      margin: 0; padding: 20px; background: #000; color: #eee;
-      font-family: 'Arial Black', sans-serif; /* Bold, minimal font */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      box-sizing: border-box;
-    }
-    h1 {
-      font-weight: 900; letter-spacing: 5px; text-align: center;
-      text-transform: uppercase;
-      color: #fff;
-      margin-bottom: 10px;
-    }
-    h2 {
-      font-weight: 900; letter-spacing: 3px; text-align: center;
-      text-transform: uppercase;
-      color: #fff;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-    }
-    #dailyQuote {
-      font-family: 'Georgia', serif;
-      font-style: italic;
-      text-align: center;
-      color: #bbb;
-      margin-bottom: 30px;
-      font-size: 0.9em;
-      line-height: 1.5;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    input, button, textarea, select {
-      font-size: 1rem; border-radius: 0;
-      border: 1px solid #333;
-      padding: 12px; margin: 8px 0; background: #111; color: #eee;
-      width: 100%;
-      box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
-    }
-    button {
-      cursor: pointer; font-weight: bold;
-      letter-spacing: 2px;
-      background: #222;
-      color: #fff;
-      transition: background 0.3s ease, color 0.3s ease;
-      text-transform: uppercase;
-    }
-    button:hover {
-      background: #444;
-      color: #fff;
-    }
-    .container {
-      max-width: 450px; margin: auto;
-      padding: 30px;
-      background: #000;
-      box-shadow: none;
-      border: none;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .hidden {
-      display: none;
-    }
-    .section {
-      margin-bottom: 2.5rem;
-    }
-    .friend {
-      padding: 10px; border-bottom: 1px solid #222;
-    }
-    .friend > span {
-      display: block; font-weight: bold;
-      font-size: 1.1em;
-    }
-    textarea {
-      resize: vertical;
-    }
-    label {
-      font-weight: bold;
-      margin-bottom: 5px;
-      display: block;
-      text-transform: uppercase;
-    }
-    .error {
-      color: #f33;
-      margin: 8px 0;
-      font-weight: bold;
-    }
-    small {
-      color: #666;
-      font-style: italic;
-    }
-    /* Specific button styling */
-    #googleSignInBtn {
-        background: #4285F4;
-        color: white;
-        text-transform: none;
-        font-weight: normal;
-        letter-spacing: normal;
-    }
-    #googleSignInBtn:hover {
-        background: #3367D6;
-    }
-    #logoutBtn {
-        background: #883333;
-    }
-    #logoutBtn:hover {
-        background: #AA5959;
-    }
-
-    /* New Styles for Routine Builder */
-    .exercise-input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px; /* Space between input elements */
-        margin-bottom: 15px;
-        padding: 15px;
-        border: 1px solid #333;
-        background: #0a0a0a;
-    }
-    .slider-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 5px;
-    }
-    .slider-group label {
-        flex-shrink: 0;
-        width: 60px; /* Fixed width for labels */
-        text-align: right;
-        margin-bottom: 0; /* Override default label margin */
-    }
-    .slider-group input[type="range"] {
-        flex-grow: 1; /* Slider takes remaining space */
-        margin: 0;
-        padding: 0;
-        -webkit-appearance: none; /* Remove default slider styles */
-        appearance: none;
-        height: 8px; /* Height of the slider track */
-        background: #333; /* Track color */
-        outline: none;
-        opacity: 0.7;
-        transition: opacity .2s;
-    }
-    .slider-group input[type="range"]:hover {
-        opacity: 1;
-    }
-    .slider-group input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px; /* Size of the slider handle */
-        height: 20px;
-        border-radius: 50%; /* Round handle */
-        background: #fff; /* Handle color */
-        cursor: pointer;
-        border: 1px solid #555;
-    }
-    .slider-group input[type="range"]::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #fff;
-        cursor: pointer;
-        border: 1px solid #555;
-    }
-    .slider-group span {
-        flex-shrink: 0;
-        width: 30px; /* Space for current value */
-        text-align: center;
-        font-weight: bold;
-        color: #fff;
-    }
-    #addExerciseBtn {
-        background: #3a3a3a; /* Different shade for add exercise */
-    }
-    #addExerciseBtn:hover {
-        background: #5a5a5a;
-    }
-    #currentRoutineExercises {
-        margin-top: 15px;
-        border: 1px solid #333;
-        background: #0a0a0a;
-        padding: 15px;
-        min-height: 50px; /* Ensure visibility even when empty */
-    }
-    .routine-exercise-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px dashed #222;
-    }
-    .routine-exercise-item:last-child {
-        border-bottom: none;
-    }
-    .routine-exercise-item span {
-        font-weight: bold;
-        color: #fff;
-    }
-    .routine-exercise-item button {
-        width: auto;
-        padding: 5px 10px;
-        font-size: 0.8em;
-        background: #883333;
-        margin: 0;
-    }
-    .routine-exercise-item button:hover {
-        background: #AA5959;
-    }
-    /* Removed #log styling as the element is removed */
-  </style>
-
-  <script type="module" src="main.js"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rep Royale</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Rep Royale</h1>
-    <div id="dailyQuote"></div>
+    <div class="container">
+        <h1>Rep Royale</h1>
 
-    <section id="authSection" class="section">
-      <input type="email" id="emailInput" placeholder="Email" autocomplete="username" />
-      <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" />
-      <button id="loginBtn">Login</button>
-      <button id="registerBtn">Register</button>
-      <button id="googleSignInBtn">Sign in with Google</button>
-      <div id="authError" class="error"></div>
-    </section>
+        <div id="dailyQuote" class="daily-quote"></div>
 
-    <section id="appSection" class="section hidden">
-      <div>
-        <button id="logoutBtn">Logout</button>
-      </div>
+        <section id="authSection" class="auth-section">
+            <h2>Welcome</h2>
+            <input type="email" id="emailInput" placeholder="Email">
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button id="loginBtn">Login</button>
+            <button id="registerBtn">Register</button>
+            <button id="googleSignInBtn" class="google-btn"><i class="fab fa-google"></i> Sign in with Google</button>
+            <p id="authError" class="error-message"></p>
+        </section>
 
-      <div>
-        <h2>Your XP & Level</h2>
-        <div id="xpDisplay">XP: 0</div>
-        <div id="levelDisplay">Level: 1 — Novice</div>
-        <button id="gainXpBtn">Gain 10 XP (Simulate Workout)</button>
-      </div>
-
-      <div style="margin-top: 2rem;">
-        <h2>Create Routine</h2>
-        <label for="routineName">Routine Name</label>
-        <input type="text" id="routineName" placeholder="e.g. Push Day" />
-
-        <div class="exercise-input-group">
-            <label for="exerciseNameInput">Exercise Name</label>
-            <input type="text" id="exerciseNameInput" placeholder="e.g. Bench Press" />
-
-            <div class="slider-group">
-                <label for="setsSlider">Sets:</label>
-                <input type="range" id="setsSlider" min="1" max="10" value="3">
-                <span id="setsValue">3</span>
+        <section id="appSection" class="app-section hidden">
+            <div class="header-info">
+                <span id="xpDisplay">XP: 0</span>
+                <span id="levelDisplay">Level: 1 — Novice</span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
             </div>
 
-            <div class="slider-group">
-                <label for="repsSlider">Reps:</label>
-                <input type="range" id="repsSlider" min="1" max="30" value="8">
-                <span id="repsValue">8</span>
+            <div class="tab-nav">
+                <button class="tab-button active" data-target="routineBuilderTab"><i class="fas fa-plus"></i> Build</button>
+                <button class="tab-button" data-target="myRoutinesTab"><i class="fas fa-list"></i> My Routines</button>
+                <button class="tab-button" data-target="friendsTab"><i class="fas fa-users"></i> Friends</button>
             </div>
 
-            <button id="addExerciseBtn">Add Exercise</button>
-        </div>
+            <div id="routineBuilderTab" class="tab-content">
+                <h2>Build New Routine</h2>
+                <div class="input-group">
+                    <label for="routineName">Routine Name:</label>
+                    <input type="text" id="routineName" placeholder="e.g., Upper Body Day">
+                </div>
 
-        <div id="currentRoutineExercises">
-            <!-- Exercises added dynamically here -->
-            <p style="text-align: center; color: #666;">No exercises added yet.</p>
-        </div>
+                <h3>Add Exercise</h3>
+                <div class="input-group">
+                    <label for="exerciseNameInput">Exercise Name:</label>
+                    <input type="text" id="exerciseNameInput" placeholder="e.g., Bench Press">
+                </div>
 
-        <button id="saveRoutineBtn">Save Routine</button>
-      </div>
+                <div class="slider-group">
+                    <label for="setsSlider">Sets: <span id="setsValue">3</span></label>
+                    <input type="range" id="setsSlider" min="1" max="10" value="3">
+                </div>
 
-      <div style="margin-top: 2rem;">
-        <h2>Routines</h2>
-        <label for="routineSelect">Select Routine</label>
-        <select id="routineSelect"><option value="">-- Select Routine --</option></select>
-        <button id="completeRoutineBtn">Complete Routine (+XP)</button>
-      </div>
+                <div class="slider-group">
+                    <label for="repsSlider">Reps: <span id="repsValue">8</span></label>
+                    <input type="range" id="repsSlider" min="1" max="30" value="8">
+                </div>
 
-      <div style="margin-top: 2rem;">
-        <h2>Friends</h2>
-        <input type="email" id="friendEmailInput" placeholder="Friend's Email" />
-        <button id="addFriendBtn">Add Friend</button>
-        <div id="friendsList" style="margin-top: 1rem;"></div>
-      </div>
-    </section>
-  </div>
+                <button id="addExerciseBtn" class="action-button">Add Exercise</button>
+
+                <h4>Current Routine Exercises:</h4>
+                <div id="currentRoutineExercises" class="exercise-list">
+                    <p style="text-align: center; color: #666;">No exercises added yet.</p>
+                </div>
+
+                <button id="saveRoutineBtn" class="primary-button">Save Routine</button>
+            </div>
+
+            <div id="myRoutinesTab" class="tab-content hidden">
+                <h2>My Saved Routines</h2>
+                <div class="input-group">
+                    <label for="routineSelect">Select a Routine:</label>
+                    <select id="routineSelect">
+                        <option value="">-- Select Routine --</option>
+                    </select>
+                </div>
+                <button id="completeRoutineBtn" class="action-button">Complete Selected Routine (+50 XP)</button>
+
+                <h3>Exercises in Selected Routine:</h3>
+                <div id="selectedRoutineExercises" class="exercise-list">
+                    <p style="text-align: center; color: #666;">Select a routine to see exercises.</p>
+                </div>
+            </div>
+
+            <div id="friendsTab" class="tab-content hidden">
+                <h2>Friends</h2>
+                <div class="input-group">
+                    <label for="friendEmailInput">Friend's Email:</label>
+                    <input type="email" id="friendEmailInput" placeholder="friend@example.com">
+                </div>
+                <button id="addFriendBtn" class="action-button">Add Friend</button>
+
+                <h3>My Friends:</h3>
+                <div id="friendsList" class="friends-list">
+                    <p style="text-align: center; color: #666;">No friends added yet.</p>
+                </div>
+                </div>
+
+        </section>
+    </div>
+
+    <script type="module" src="main.js"></script>
 </body>
 </html>
