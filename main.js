@@ -30,21 +30,21 @@ const googleProvider = new GoogleAuthProvider();
 // General App Sections
 const authSection = document.getElementById('authSection');
 const appSection = document.getElementById('appSection');
-const bottomNav = document.getElementById('bottomNav'); // MODIFIED: Corrected to use ID
+const bottomNav = document.getElementById('bottomNav');
 
 // Header Elements
 const dailyQuoteElement = document.getElementById('dailyQuote');
 const quoteReferenceElement = document.getElementById('quoteReference');
 
 // Auth Section Elements
-const authError = document.getElementById('authError'); // ADDED: For error messages
+const authError = document.getElementById('authError');
 const googleSignInBtn = document.getElementById('googleSignInBtn');
 
 // Footer Navigation Elements
 const friendsNavItem = document.getElementById('friendsNavItem');
 const routinesNavItem = document.getElementById('routinesNavItem');
 const settingsNavItem = document.getElementById('settingsNavItem');
-const logoutNavItem = document.getElementById('logoutNavItem');
+const logoutNavItem = document.getElementById('logoutNavItem'); // This still works, as the ID is the same
 const xpDisplay = document.getElementById('xpDisplay');
 const levelDisplay = document.getElementById('levelDisplay');
 
@@ -66,17 +66,17 @@ const createRoutineBtn = document.getElementById('createRoutineBtn');
 // Routine Builder View Elements
 const builderRoutineNameInput = document.getElementById('routineName');
 const exerciseNameInput = document.getElementById('exerciseName');
-const setsInput = document.getElementById('sets'); // MODIFIED: Now refers to range input
-const setsValueDisplay = document.getElementById('setsValue'); // NEW: For sets slider value display
-const repsInput = document.getElementById('reps'); // MODIFIED: Now refers to range input
-const repsValueDisplay = document.getElementById('repsValue'); // NEW: For reps slider value display
-const weightInput = document.getElementById('weight'); // NEW: Weight input for weightlifting
-const exerciseTypeSelect = document.getElementById('exerciseType'); // NEW: Exercise Type Select
-const weightliftingInputs = document.getElementById('weightliftingInputs'); // NEW: Container for weightlifting inputs
-const cardioInputs = document.getElementById('cardioInputs'); // NEW: Container for cardio inputs
-const durationInput = document.getElementById('duration'); // NEW: Duration input for cardio
-const distanceInput = document.getElementById('distance'); // NEW: Distance input for cardio
-const cardioNotesInput = document.getElementById('cardioNotes'); // NEW: Notes input for cardio
+const setsInput = document.getElementById('sets');
+const setsValueDisplay = document.getElementById('setsValue');
+const repsInput = document.getElementById('reps');
+const repsValueDisplay = document.getElementById('repsValue');
+const weightInput = document.getElementById('weight');
+const exerciseTypeSelect = document.getElementById('exerciseType');
+const weightliftingInputs = document.getElementById('weightliftingInputs');
+const cardioInputs = document.getElementById('cardioInputs');
+const durationInput = document.getElementById('duration');
+const distanceInput = document.getElementById('distance');
+const cardioNotesInput = document.getElementById('cardioNotes');
 
 const addExerciseBtn = document.getElementById('addExerciseBtn');
 const currentRoutineExercises = document.getElementById('builderExerciseList');
@@ -98,15 +98,15 @@ let currentRoutine = { name: '', exercises: [] };
 let userXP = 0;
 let userLevel = 1;
 let userRoutines = [];
-let userFriends = []; // Store friend UIDs here (as { email, uid })
-let friendsData = {}; // Stores friend UID -> { email, xp, level, workoutLogs } for display
+let userFriends = [];
+let friendsData = {};
 
 // --- Quote Data ---
 const bibleQuotes = [
     { quote: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" },
     { quote: "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God, not a result of works, so that no one may boast.", reference: "Ephesians 2:8-9" },
     { quote: "Be strong and courageous. Do not be frightened, and do not be dismayed, for the Lord your God is with you wherever you go.", reference: "Joshua 1:9" },
-    { quote: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.", reference: "Isaiah 40:31" },
+    { quote: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.", "reference": "Isaiah 40:31" },
     { quote: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.", reference: "Romans 12:2" },
     { quote: "The Lord is my strength and my shield; in him my heart trusts, and I am helped; my heart exults, and with my song I give thanks to him.", reference: "Psalm 28:7" },
     { quote: "For God gave us a spirit not of fear but of power and love and self-control.", reference: "2 Timothy 1:7" },
@@ -152,7 +152,7 @@ function showView(viewId) {
         friendsNavItem.classList.add('active');
     } else if (viewId === 'settingsView') {
         settingsNavItem.classList.add('active');
-    } else if (viewId === 'routineBuilderView') { // Ensure correct inputs are shown when builder view is shown
+    } else if (viewId === 'routineBuilderView') {
         toggleExerciseInputs();
     }
 }
@@ -216,7 +216,7 @@ async function getUserData() {
 
                 updateXPDisplay();
                 loadRoutinesIntoSelect();
-                displayFriends(); // Call displayFriends after userFriends is updated
+                displayFriends();
 
                 if (quoteTypeSelect) {
                     quoteTypeSelect.value = currentQuoteType;
@@ -237,7 +237,7 @@ async function getUserData() {
                     level: 1,
                     routines: [],
                     friends: [],
-                    workoutLogs: [], // Initialize workoutLogs for new users
+                    workoutLogs: [],
                     email: currentUser.email,
                     quoteType: currentQuoteType
                 });
@@ -271,7 +271,6 @@ function getLevelName(level) {
     return "Master";
 }
 
-// MODIFIED: displayRoutine to show cardio/weight details
 function displayRoutine(routineName, exercises) {
     dashboardRoutineName.textContent = routineName || 'No Routine Loaded';
     dashboardExercises.innerHTML = '';
@@ -293,7 +292,7 @@ function displayRoutine(routineName, exercises) {
                 if (exercise.notes) {
                     exerciseDetails += ` (${exercise.notes})`;
                 }
-            } else { // Fallback for old routines without a 'type' property
+            } else {
                 exerciseDetails = `${exercise.sets} sets of ${exercise.reps} reps`;
             }
             item.innerHTML = `
@@ -308,7 +307,6 @@ function displayRoutine(routineName, exercises) {
     }
 }
 
-// MODIFIED: populateCurrentRoutineExercises to show cardio/weight details
 function populateCurrentRoutineExercises(exercises) {
     currentRoutineExercises.innerHTML = '';
     if (exercises && exercises.length > 0) {
@@ -329,7 +327,7 @@ function populateCurrentRoutineExercises(exercises) {
                 if (exercise.notes) {
                     exerciseDetails += ` (${exercise.notes})`;
                 }
-            } else { // Fallback for old routines without a 'type' property
+            } else {
                 exerciseDetails = `${exercise.sets} sets of ${exercise.reps} reps`;
             }
             item.innerHTML = `
@@ -354,15 +352,13 @@ function loadRoutinesIntoSelect() {
     });
 }
 
-// MODIFIED: displayFriends to fetch and show friend details
 async function displayFriends() {
     friendsList.innerHTML = '';
-    friendsData = {}; // Clear previous friend data
+    friendsData = {};
 
     if (userFriends && userFriends.length > 0) {
         const friendPromises = userFriends.map(async (friend) => {
             try {
-                // Ensure friend.uid exists. For older friends added by email only, this might be missing.
                 if (!friend.uid) {
                     console.warn(`Friend ${friend.email} has no UID. Skipping data fetch.`);
                     return;
@@ -423,7 +419,6 @@ async function displayFriends() {
     }
 }
 
-// NEW: Function to toggle and display friend's daily workouts
 function toggleFriendWorkouts(friendUID) {
     const friendDetails = friendsData[friendUID];
     const workoutContainer = document.getElementById(`workouts-${friendUID}`);
@@ -479,7 +474,6 @@ function toggleFriendWorkouts(friendUID) {
 
 // --- Core App Logic ---
 
-// MODIFIED: addExerciseToCurrentRoutine to handle different types and read from sliders/inputs
 function addExerciseToCurrentRoutine() {
     const name = exerciseNameInput.value.trim();
     const type = exerciseTypeSelect.value;
@@ -516,12 +510,11 @@ function addExerciseToCurrentRoutine() {
     currentRoutine.exercises.push(newExercise);
     populateCurrentRoutineExercises(currentRoutine.exercises);
 
-    // Clear inputs and reset sliders to default values
     exerciseNameInput.value = '';
-    setsInput.value = 3; // Reset sets slider
-    setsValueDisplay.textContent = 3; // Update sets display
-    repsInput.value = 10; // Reset reps slider
-    repsValueDisplay.textContent = 10; // Update reps display
+    setsInput.value = 3;
+    setsValueDisplay.textContent = 3;
+    repsInput.value = 10;
+    repsValueDisplay.textContent = 10;
     weightInput.value = 0;
     durationInput.value = 30;
     distanceInput.value = 5;
@@ -567,7 +560,6 @@ async function saveRoutine() {
     populateCurrentRoutineExercises([]);
 }
 
-// MODIFIED: completeRoutine to log workouts
 async function completeRoutine() {
     if (!currentRoutine || !currentRoutine.name) {
         alert("Please select a routine to complete.");
@@ -576,18 +568,18 @@ async function completeRoutine() {
     userXP += 50;
     userLevel = Math.floor(userXP / 100) + 1;
 
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
     const workoutLog = {
         routineName: currentRoutine.name,
         date: today,
-        exercises: currentRoutine.exercises // Store full exercise details for comprehensive log
+        exercises: currentRoutine.exercises
     };
 
     try {
         await updateDoc(userDocRef, {
             xp: userXP,
             level: userLevel,
-            workoutLogs: arrayUnion(workoutLog) // Use arrayUnion to append new logs
+            workoutLogs: arrayUnion(workoutLog)
         });
         console.log("Workout logged successfully!");
     } catch (error) {
@@ -598,7 +590,6 @@ async function completeRoutine() {
     alert(`Routine "${currentRoutine.name}" completed! You gained 50 XP!`);
 }
 
-// MODIFIED: addFriend to find UID and store it
 async function addFriend() {
     const friendEmail = addFriendInput.value.trim();
     if (!friendEmail || friendEmail === currentUser.email) {
@@ -623,11 +614,11 @@ async function addFriend() {
 
         let friendUID = null;
         querySnapshot.forEach(doc => {
-            friendUID = doc.id; // Get the UID of the friend
+            friendUID = doc.id;
         });
 
         if (friendUID) {
-            userFriends.push({ email: friendEmail, uid: friendUID }); // Store UID along with email
+            userFriends.push({ email: friendEmail, uid: friendUID });
             await updateUserData({ friends: userFriends });
             displayFriends();
             addFriendInput.value = '';
@@ -642,7 +633,6 @@ async function addFriend() {
     }
 }
 
-// NEW: Function to toggle exercise specific inputs
 function toggleExerciseInputs() {
     if (exerciseTypeSelect.value === 'weightlifting') {
         weightliftingInputs.classList.remove('hidden');
@@ -665,6 +655,7 @@ googleSignInBtn.addEventListener('click', async () => {
     }
 });
 
+// The logout button listener will now correctly target the button in settings
 logoutNavItem.addEventListener('click', async () => {
     try {
         await signOut(auth);
@@ -675,7 +666,6 @@ logoutNavItem.addEventListener('click', async () => {
 
 // --- Event Listeners ---
 
-// NEW: Add event listeners for the sets and reps sliders
 setsInput.addEventListener('input', () => {
     setsValueDisplay.textContent = setsInput.value;
 });
@@ -684,7 +674,6 @@ repsInput.addEventListener('input', () => {
     repsValueDisplay.textContent = repsInput.value;
 });
 
-// NEW: Listener for exercise type selection
 exerciseTypeSelect.addEventListener('change', toggleExerciseInputs);
 
 addExerciseBtn.addEventListener('click', addExerciseToCurrentRoutine);
@@ -698,7 +687,6 @@ friendsNavItem.addEventListener('click', () => showView('friendsView'));
 routinesNavItem.addEventListener('click', () => showView('routineDashboardView'));
 settingsNavItem.addEventListener('click', () => showView('settingsView'));
 
-// MODIFIED: createRoutineBtn to reset all new fields and sliders
 createRoutineBtn.addEventListener('click', () => {
     currentRoutine = { name: '', exercises: [] };
     builderRoutineNameInput.value = '';
@@ -706,7 +694,6 @@ createRoutineBtn.addEventListener('click', () => {
     showView('routineBuilderView');
     deleteRoutineBtn.classList.add('hidden');
 
-    // Reset all exercise input fields and their displays
     exerciseNameInput.value = '';
     setsInput.value = 3;
     setsValueDisplay.textContent = 3;
@@ -716,11 +703,10 @@ createRoutineBtn.addEventListener('click', () => {
     durationInput.value = 30;
     distanceInput.value = 5;
     cardioNotesInput.value = '';
-    exerciseTypeSelect.value = 'weightlifting'; // Default to weightlifting
-    toggleExerciseInputs(); // Ensure correct inputs are shown
+    exerciseTypeSelect.value = 'weightlifting';
+    toggleExerciseInputs();
 });
 
-// MODIFIED: editRoutineBtn to correctly populate all fields and sliders
 editRoutineBtn.addEventListener('click', () => {
     const selectedRoutineName = routineSelect.value;
     if (selectedRoutineName) {
@@ -732,7 +718,6 @@ editRoutineBtn.addEventListener('click', () => {
             showView('routineBuilderView');
             deleteRoutineBtn.classList.remove('hidden');
 
-            // Reset inputs first to ensure clean state, then populate if exercises exist
             exerciseNameInput.value = '';
             setsInput.value = 3; setsValueDisplay.textContent = 3;
             repsInput.value = 10; repsValueDisplay.textContent = 10;
@@ -741,11 +726,10 @@ editRoutineBtn.addEventListener('click', () => {
             distanceInput.value = 5;
             cardioNotesInput.value = '';
 
-            // Set exercise type and populate fields for the first exercise if it exists
             if (currentRoutine.exercises.length > 0) {
                 const firstExercise = currentRoutine.exercises[0];
                 exerciseNameInput.value = firstExercise.name || '';
-                const firstExerciseType = firstExercise.type || 'weightlifting'; // Default for old routines
+                const firstExerciseType = firstExercise.type || 'weightlifting';
                 exerciseTypeSelect.value = firstExerciseType;
 
                 if (firstExerciseType === 'weightlifting') {
@@ -754,7 +738,7 @@ editRoutineBtn.addEventListener('click', () => {
                     repsInput.value = firstExercise.reps || 10;
                     repsValueDisplay.textContent = repsInput.value;
                     weightInput.value = firstExercise.weight || 0;
-                } else { // It's cardio
+                } else {
                     durationInput.value = firstExercise.duration || 30;
                     distanceInput.value = firstExercise.distance || 5;
                     cardioNotesInput.value = firstExercise.notes || '';
@@ -762,7 +746,7 @@ editRoutineBtn.addEventListener('click', () => {
             } else {
                 exerciseTypeSelect.value = 'weightlifting';
             }
-            toggleExerciseInputs(); // Show/hide fields based on type
+            toggleExerciseInputs();
         } else {
             alert('Selected routine not found.');
         }
@@ -781,12 +765,11 @@ deleteRoutineBtn.addEventListener('click', async () => {
     userRoutines = userRoutines.filter(r => r.name !== routineName);
     await updateUserData({ routines: userRoutines });
     loadRoutinesIntoSelect();
-    showView('routineDashboardView'); // Go back to dashboard
-    currentRoutine = { name: '', exercises: [] }; // Clear builder state
+    showView('routineDashboardView');
+    currentRoutine = { name: '', exercises: [] };
     builderRoutineNameInput.value = '';
-    populateCurrentRoutineExercises([]); // Clear builder list
+    populateCurrentRoutineExercises([]);
     alert(`Routine "${routineName}" deleted!`);
-    // After deletion, refresh the dashboard display, potentially showing the first routine or empty state
     if (userRoutines.length > 0) {
         const firstRoutine = userRoutines[0];
         displayRoutine(firstRoutine.name, firstRoutine.exercises);
@@ -794,7 +777,7 @@ deleteRoutineBtn.addEventListener('click', async () => {
         currentRoutine = { ...firstRoutine };
     } else {
         displayRoutine('', []);
-        routineSelect.value = ''; // Clear selection
+        routineSelect.value = '';
     }
 });
 
@@ -837,14 +820,13 @@ onAuthStateChanged(auth, async (user) => {
         appSection.classList.remove('hidden');
         bottomNav.classList.remove('hidden');
         await getUserData();
-        showView('routineDashboardView'); // Default to dashboard after login, which will then trigger updateDailyQuoteDisplay
+        showView('routineDashboardView');
     } else {
         currentUser = null;
         userDocRef = null;
         authSection.classList.remove('hidden');
         appSection.classList.add('hidden');
         bottomNav.classList.add('hidden');
-        // Clear any app data displays on logout
         xpDisplay.textContent = 'XP: 0';
         levelDisplay.textContent = 'Level: 1 — Novice';
         routineSelect.innerHTML = '<option value="">-- Select Routine --</option>';
@@ -855,7 +837,6 @@ onAuthStateChanged(auth, async (user) => {
         currentRoutineExercises.innerHTML = '<p style="text-align: center; color: #777;">No exercises added yet.</p>';
         friendsList.innerHTML = '<p style="text-align: center; color: #777;">No friends added yet.</p>';
         currentRoutine = { name: '', exercises: [] };
-        // Reset builder input states fully
         exerciseNameInput.value = '';
         setsInput.value = 3; setsValueDisplay.textContent = 3;
         repsInput.value = 10; repsValueDisplay.textContent = 10;
@@ -868,9 +849,8 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// Initial setup for slider displays and input toggling when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     setsValueDisplay.textContent = setsInput.value;
     repsValueDisplay.textContent = repsInput.value;
-    toggleExerciseInputs(); // Ensure correct inputs are shown initially
+    toggleExerciseInputs();
 });
