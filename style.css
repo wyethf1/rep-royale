@@ -452,7 +452,7 @@ select.donda-style:focus {
     box-sizing: border-box;
     font-size: 0.9em;
     border-top: 1px solid var(--donda-white); /* White top border */
-    z-index: 999;
+    z-index: 1001;
     font-family: 'Inter', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.5px;
