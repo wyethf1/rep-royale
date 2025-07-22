@@ -1,133 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rep Royale</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<div id="routineBuilderView" class="app-view hidden">
+    <h2>Routine Builder</h2>
+    <div class="input-group">
+        <label for="routineName">Routine Name:</label>
+        <input type="text" id="routineName" placeholder="Enter routine name">
+    </div>
+    <h3>Add Exercise</h3>
+    <div class="input-group">
+        <label for="exerciseName">Exercise Name:</label>
+        <input type="text" id="exerciseName" placeholder="Bench Press, Running, etc.">
+    </div>
 
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Rep Royale">
+    <div class="input-group">
+        <label for="exerciseType">Exercise Type:</label>
+        <select id="exerciseType">
+            <option value="weightlifting">Weightlifting</option>
+            <option value="cardio">Cardio</option>
+        </select>
+    </div>
 
-    <link rel="apple-touch-icon" href="/icons/icon-180x180.png" sizes="180x180">
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192">
-    <link rel="icon" type="image/png" href="/icons/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/icons/favicon-16x16.png" sizes="16x16">
-
-    <link rel="manifest" href="/manifest.json">
-
-</head>
-<body>
-    <div class="container">
-        <div id="authSection" class="auth-section">
-            <h1>REP ROYALE</h1>
-            <span id="authError" class="error-message"></span> <button id="googleSignInBtn" class="google-btn"><i class="fab fa-google"></i> SIGN IN WITH GOOGLE</button>
+    <div id="weightliftingInputs">
+        <div class="input-group slider-group">
+            <label for="sets">Sets: <span id="setsValue">3</span></label>
+            <input type="range" id="sets" min="1" max="10" value="3">
         </div>
-
-        <div id="appSection" class="app-section hidden">
-            <div class="app-header">
-                <div class="daily-quote">
-                    <p id="dailyQuote">"The only way to do great work is to love what you do."</p>
-                    <span id="quoteReference">- Steve Jobs</span>
-                </div>
-            </div>
-
-            <div id="routineDashboardView" class="app-view">
-                <h2>Your Routines</h2>
-                <select id="routineSelect"></select>
-                <div class="current-routine-name" id="currentRoutineDisplay"></div>
-                <div class="exercise-list" id="dashboardExerciseList">
-                    <p>No routine selected or exercises found.</p>
-                </div>
-                <div class="dashboard-actions">
-                    <button id="completeRoutineBtn" class="action-button">COMPLETE ROUTINE (GAIN 50 XP)</button>
-                    <button id="editRoutineBtn" class="action-button">EDIT SELECTED ROUTINE</button>
-                    <button id="createRoutineBtn" class="action-button">CREATE NEW ROUTINE</button>
-                </div>
-            </div>
-
-            <div id="routineBuilderView" class="app-view hidden">
-                <h2>Routine Builder</h2>
-                <div class="input-group">
-                    <label for="routineName">Routine Name:</label>
-                    <input type="text" id="routineName" placeholder="Enter routine name">
-                </div>
-                <h3>Add Exercise</h3>
-                <div class="input-group">
-                    <label for="exerciseName">Exercise Name:</label>
-                    <input type="text" id="exerciseName" placeholder="Bench Press">
-                </div>
-                <div class="input-group">
-                    <label for="sets">Sets:</label>
-                    <input type="number" id="sets" value="3" min="1">
-                </div>
-                <div class="input-group">
-                    <label for="reps">Reps:</label>
-                    <input type="number" id="reps" value="10" min="1">
-                </div>
-                <button id="addExerciseBtn" class="action-button">Add Exercise</button>
-
-                <h3>Exercises in Routine</h3>
-                <div class="exercise-list" id="builderExerciseList">
-                    <p>No exercises added yet.</p>
-                </div>
-
-                <button id="saveRoutineBtn" class="primary-button">Save Routine</button>
-                <button id="deleteRoutineBtn" class="action-button hidden">Delete Routine</button>
-            </div>
-
-            <div id="friendsView" class="app-view hidden">
-                <h2>Friends</h2>
-                <div class="input-group">
-                    <label for="addFriendInput">Add Friend by Email:</label>
-                    <input type="email" id="addFriendInput" placeholder="friend@example.com">
-                    <button id="addFriendBtn" class="action-button">Add Friend</button>
-                </div>
-                <h3>My Friends</h3>
-                <div class="friends-list" id="myFriendsList">
-                    <p>No friends added yet.</p>
-                </div>
-            </div>
-
-            <div id="settingsView" class="app-view hidden">
-                <h2>Settings</h2>
-                <div class="setting-group">
-                    <label for="quoteType">Daily Quote Type:</label>
-                    <select id="quoteType">
-                        <option value="bible">Bible Quotes</option>
-                        <option value="inspirational">Inspirational Quotes</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="xp-level-display-bottom-fixed">
-                <span id="xpDisplay">XP: 0</span>
-                <span id="levelDisplay">Level: 1 - Novice</span>
-            </div>
+        <div class="input-group slider-group">
+            <label for="reps">Reps: <span id="repsValue">10</span></label>
+            <input type="range" id="reps" min="1" max="40" value="10"> </div>
+        <div class="input-group">
+            <label for="weight">Weight (kg/lbs):</label>
+            <input type="number" id="weight" value="0" min="0" placeholder="e.g., 50">
         </div>
     </div>
 
-    <div id="bottomNav" class="bottom-nav hidden">
-        <button class="nav-item" id="friendsNavItem">
-            <i class="fas fa-users"></i>
-            <span>Friends</span>
-        </button>
-        <button class="nav-item active" id="routinesNavItem">
-            <i class="fas fa-dumbbell"></i>
-            <span>Routines</span>
-        </button>
-        <button class="nav-item" id="settingsNavItem">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </button>
-        <button class="nav-item logout-nav-item" id="logoutNavItem">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
-        </button>
+    <div id="cardioInputs" class="hidden">
+        <div class="input-group">
+            <label for="duration">Duration (minutes):</label>
+            <input type="number" id="duration" value="30" min="1">
+        </div>
+        <div class="input-group">
+            <label for="distance">Distance (km/miles):</label>
+            <input type="number" id="distance" value="5" min="0" step="0.1" placeholder="e.g., 5.5">
+        </div>
+        <div class="input-group">
+            <label for="cardioNotes">Notes:</label>
+            <input type="text" id="cardioNotes" placeholder="e.g., High intensity, outdoor run">
+        </div>
     </div>
 
-    <script src="main.js" type="module"></script>
-</body>
-</html>
+    <button id="addExerciseBtn" class="action-button">Add Exercise</button>
+
+    <h3>Exercises in Routine</h3>
+    <div class="exercise-list" id="builderExerciseList">
+        <p>No exercises added yet.</p>
+    </div>
+
+    <button id="saveRoutineBtn" class="primary-button">Save Routine</button>
+    <button id="deleteRoutineBtn" class="action-button hidden">Delete Routine</button>
+</div>
