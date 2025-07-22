@@ -171,8 +171,7 @@ body, html {
 
 .input-group input[type="text"],
 .input-group input[type="number"],
-.input-group input[type="email"],
-.input-group select {
+.input-group input[type="email"] { /* Removed select from here as it's handled by donda-style */
     width: calc(100% - 20px); /* Account for padding */
     padding: 12px 10px;
     margin-bottom: 5px; /* Adjust if specific spacing needed */
@@ -185,28 +184,80 @@ body, html {
     font-family: 'VT323', monospace; /* Ensure inputs use pixel font */
 }
 
-/* Styling for select dropdown arrow */
-.input-group select {
-    -webkit-appearance: none; /* Remove default arrow */
-    -moz-appearance: none;
-    appearance: none;
-    /* Custom arrow color changed from #aaa (light-text-color) to a grey from the palette */
-    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20fill%3D%22%23666666%22%20d%3D%22M9.293%2012.95l1.414%201.414L15%2010.414l-4.293-4.293-1.414%201.414L12.586%2010z%22%2F%3E%3C%2Fsvg%3E');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    padding-right: 30px; /* Space for arrow */
+/* --- Donda-inspired Dropdown Styling (New/Modified) --- */
+/*
+ * Ensure 'Inter' font is imported in your HTML <head> section for the sleek look:
+ *
+ * <link rel="preconnect" href="https://fonts.googleapis.com">
+ * <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ * <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+ *
+ */
+select.donda-style {
+  width: calc(100% - 20px); /* Account for padding */
+  padding: 12px 10px;
+  margin-bottom: 5px;
+  background-color: var(--palette-black); /* Pure black background */
+  color: var(--palette-white); /* Pure white text */
+  border: 1px solid var(--palette-white); /* White border */
+  border-radius: var(--border-radius); /* Use existing border-radius */
+  font-family: 'Inter', sans-serif; /* Sleek, modern font for dropdowns */
+  font-size: 1em; /* Match input font size */
+  cursor: pointer;
+  appearance: none; /* Removes default browser styling for select */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
+  text-align: left; /* Align text to the left */
+  box-sizing: border-box; /* Include padding in width */
+  min-width: 180px; /* Ensure a decent width */
+
+  /* Custom dropdown arrow (SVG embedded) */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="white"><polygon points="0,0 10,0 5,10"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 8px;
 }
 
+/* Hide default arrow in IE/Edge for select elements */
+select.donda-style::-ms-expand {
+    display: none;
+}
+
+/* Styling for dropdown options (when the dropdown is open) */
+select.donda-style option {
+  background-color: var(--palette-black); /* Black background for individual options */
+  color: var(--palette-white); /* White text for options */
+  padding: 12px 10px; /* Padding for options */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white separator */
+  font-family: 'Inter', sans-serif; /* Keep Inter font for options */
+}
+
+/* Hover effect for dropdown options (the red part!) */
+select.donda-style option:hover,
+select.donda-style option:checked { /* option:checked for selected but not opened dropdown state */
+  background-color: #ff0000; /* Vibrant Red on hover/checked */
+  color: var(--palette-white); /* Keep text white on red background */
+}
+
+/* Focus style for accessibility */
+select.donda-style:focus {
+  outline: 2px solid #ff0000; /* Red outline on focus */
+  outline-offset: 2px;
+  border-color: #ff0000; /* Red border on focus */
+  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.3); /* Red accent shadow on focus */
+}
+
+/* Original input placeholder/focus styles (kept for other input types) */
 .input-group input::placeholder {
     color: var(--app-text-secondary);
 }
 
-.input-group input:focus,
-.input-group select:focus {
+.input-group input:focus { /* This now only applies to input[type="text/number/email"] */
     outline: none;
     border-color: var(--app-accent); /* Red accent on focus */
     box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.3); /* Red accent shadow on focus */
 }
+
 
 /* --- Slider Specific Styles --- */
 .slider-group {
