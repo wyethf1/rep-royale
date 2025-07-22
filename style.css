@@ -61,15 +61,18 @@ body {
     align-items: center;
     gap: 15px; /* Space between quote and mini title */
     margin-bottom: 20px; /* Space below header */
+    /* Adjust margin-bottom if needed to pull content up */
 }
 
-.app-title-mini {
-    font-size: 1.5em; /* Smaller, integrated title */
+/* Removed app-title-mini styling as the element is removed from HTML */
+/* .app-title-mini {
+    font-size: 1.5em;
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    margin: 0; /* Remove default margin */
-}
+    margin: 0;
+} */
+
 
 h1 { /* This H1 is no longer in HTML, but kept for general styling if needed elsewhere */
     text-align: center;
@@ -127,7 +130,6 @@ h2, h3, h4 {
     gap: 20px;
     flex-grow: 1; /* Allow sections to grow to fill available space */
     min-height: 0; /* Important for flex items with overflow */
-    /* overflow-y: auto; -- REMOVED: Now managed by internal views/lists and custom scrollbar styling */
     background-color: #000;
     padding: 25px;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -141,7 +143,7 @@ h2, h3, h4 {
     flex-direction: column;
     flex-grow: 1; /* Make app views fill available space within app-section */
     min-height: 0; /* Important for scrollable content */
-    overflow-y: auto; /* Allow scrolling within the specific view content */
+    overflow-y: auto; /* Allow scrolling within the specific view content if it truly overflows */
     padding: 0; /* Views don't need their own padding, app-section provides it */
     gap: 20px; /* Default gap between elements within a view */
 }
@@ -156,9 +158,13 @@ h2, h3, h4 {
 
 .dashboard-actions {
     display: flex;
-    flex-direction: column;
-    gap: 15px; /* Space between dashboard buttons */
+    flex-direction: row; /* Changed to row for side-by-side buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap to next line if space is tight */
+    justify-content: space-around; /* Distribute space around items */
+    gap: 10px; /* Space between dashboard buttons */
     margin-top: auto; /* Push buttons to the bottom of the dashboard view if content is short */
+    padding-top: 10px; /* Add some padding at the top */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separator */
 }
 
 .hidden {
@@ -191,7 +197,10 @@ button {
     font-size: 1.05rem;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
-    width: 100%;
+    width: auto; /* Changed to auto for side-by-side flex behavior */
+    flex-grow: 1; /* Allow buttons to grow and fill space, but respecting max-width */
+    min-width: 120px; /* Ensure a minimum width for readability */
+    max-width: 48%; /* Adjust based on desired layout, allows two buttons per line with gap */
     box-sizing: border-box;
     background-color: #222;
     color: #fff;
@@ -224,6 +233,8 @@ button:hover {
     justify-content: center;
     gap: 15px;
     border-color: #666;
+    width: 100%; /* Google button should still be full width */
+    max-width: 100%; /* Override the general button max-width */
 }
 .google-btn i {
     font-size: 1.4rem;
@@ -241,9 +252,6 @@ button:hover {
 .action-button:hover {
     background-color: #555;
 }
-
-/* REMOVED: Old header-info styles (XP/Logout moved to footer) */
-/* REMOVED: Tab Navigation styles */
 
 /* Input and Slider Group Styling */
 .input-group {
@@ -305,7 +313,7 @@ button:hover {
     padding: 15px;
     flex-grow: 1;
     min-height: 100px;
-    overflow-y: auto; /* Allow internal scrolling for lists */
+    overflow-y: auto; /* Allow internal scrolling for lists if content truly overflows */
     margin-bottom: 20px;
 }
 
@@ -331,6 +339,9 @@ button:hover {
     width: auto;
     flex-shrink: 0;
     border-color: #777;
+    flex-grow: 0; /* Prevent remove button from growing */
+    max-width: none; /* Override max-width for smaller buttons */
+    min-width: 60px; /* Smallest reasonable width */
 }
 .routine-exercise-item button:hover {
     background-color: #777;
@@ -410,9 +421,7 @@ button:hover {
         max-width: 100%;
         padding: 15px;
     }
-    .app-title-mini {
-        font-size: 1.2em;
-    }
+    /* Removed app-title-mini media query */
     .footer-nav {
         flex-direction: column; /* Stack buttons vertically on very small screens */
         align-items: stretch;
@@ -424,5 +433,8 @@ button:hover {
     }
     .footer-btn {
         width: 100%; /* Make footer buttons full width when stacked */
+    }
+    .dashboard-actions button {
+        max-width: 100%; /* Ensure full width when stacked on small screens */
     }
 }
