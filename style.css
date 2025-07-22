@@ -51,7 +51,7 @@ body {
     gap: 20px;
     height: 100%;
     overflow: hidden; /* Prevent container itself from causing scrollbar */
-    /* REMOVED: border: 1px solid rgba(255, 255, 255, 0.1); */ /* This border is now gone */
+    border: none; /* REMOVED THIS BORDER */
 }
 
 /* App Header Styling */
@@ -98,7 +98,7 @@ h2, h3, h4 {
     padding: 8px; /* Further reduced padding */
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 0;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: none; /* REMOVED THIS BORDER */
     font-size: 0.9em; /* Significantly reduced font size */
     line-height: 1.3; /* Adjusted line height for compactness */
     width: 100%;
@@ -123,7 +123,7 @@ h2, h3, h4 {
     min-height: 0;
     background-color: #000;
     padding: 20px; /* Inner padding for content */
-    /* REMOVED: border: 1px solid rgba(255, 255, 255, 0.15); */ /* This border is now gone */
+    border: none; /* REMOVED THIS BORDER */
     width: 100%;
     box-sizing: border-box;
 }
@@ -169,7 +169,7 @@ input[type="password"],
 input[type="text"],
 select {
     padding: 12px; /* Reduced padding */
-    border: 1px solid #444;
+    border: 1px solid #444; /* KEEPING this border as it provides visual separation for inputs */
     background-color: #1a1a1a;
     color: #eee;
     border-radius: 0;
@@ -184,7 +184,7 @@ input::placeholder {
 /* --- General Button Styles --- */
 button {
     padding: 10px 15px; /* Default larger padding */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* General button border */
     border-radius: 0;
     font-size: 0.85rem; /* Default larger font size */
     cursor: pointer;
@@ -261,8 +261,8 @@ button:hover {
 
 /* Adjust hover for these smaller buttons */
 .dashboard-actions button:hover {
-    transform: translateY(-1px); /* Less dramatic lift for smaller buttons */
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* Smaller shadow */
+    transform: translateY(-1px);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -321,7 +321,7 @@ button:hover {
 /* List Styles (Exercises, Friends) */
 .exercise-list, .friends-list {
     background-color: rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: none; /* REMOVED THIS BORDER */
     border-radius: 0;
     padding: 15px;
     flex-grow: 1;
@@ -335,7 +335,7 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0; /* Reduced padding */
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1); /* Keeping this for list item separation */
     color: #ccc;
     font-size: 0.95em; /* Slightly reduced */
 }
@@ -379,7 +379,7 @@ button:hover {
 /* XP/Level Display at Bottom of Main Content */
 .xp-level-display-bottom-fixed {
     background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent background */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: none; /* REMOVED THIS BORDER */
     border-radius: 0;
     padding: 10px 15px;
     margin-top: 15px; /* Space above it */
@@ -405,7 +405,7 @@ button:hover {
     justify-content: space-around; /* Distribute items evenly */
     align-items: center;
     background-color: #000; /* Dark background */
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Keeping this for visual separation from content */
     height: 60px; /* Fixed height */
     z-index: 1000; /* Ensure it stays on top */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow at top */
@@ -465,7 +465,6 @@ button:hover {
         max-width: 700px; /* Wider for tablets/desktops */
     }
     body {
-        /* REMOVED: padding-top: 20px; */ /* Removed to ensure edge-to-edge even on desktop */
         padding-bottom: 70px; /* Keep fixed nav padding */
     }
 }
