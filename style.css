@@ -1,67 +1,93 @@
 /* General Body and Container Styling */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: url('https://images.unsplash.com/photo-1519681393782-ad6fe6a03dd2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1ODc5MzF8MHwxfHNlYXJjaHwzfHxkYXJrJTIwd2F0ZXIlMjBhYnN0cmFjdHxlbnwwfHx8fDE3MjE1MjcwNjV8MA&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center center fixed;
     background-size: cover;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center; /* Center the container vertically */
     min-height: 100vh;
-    margin: 0;
     padding: 20px;
     box-sizing: border-box;
     color: #eee; /* Light text for dark background */
 }
 
 .container {
-    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent dark background */
-    padding: 25px;
-    border-radius: 0; /* Sharp corners, no bubbly feel */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Stronger, darker shadow */
+    background-color: rgba(0, 0, 0, 0.9); /* More opaque dark background for the main app area */
+    padding: 30px; /* Increased padding for more comfort */
+    border-radius: 0; /* Sharp corners */
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6); /* Stronger, darker shadow */
     width: 100%;
-    max-width: 400px;
+    max-width: 450px; /* Slightly wider max-width for better comfort */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    overflow: hidden;
+    gap: 25px; /* Increased gap between major sections */
     max-height: calc(100vh - 40px);
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 h1 {
     text-align: center;
-    color: #fff; /* Pure white for main title */
-    margin-bottom: 20px;
+    color: #fff;
+    margin-bottom: 25px; /* More space below title */
     text-transform: uppercase;
     letter-spacing: 2px;
+    font-size: 2.2em; /* Slightly larger title */
 }
 
 h2, h3, h4 {
-    color: #ddd; /* Slightly off-white for headers */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
-    padding-bottom: 8px;
-    margin-top: 20px;
-    margin-bottom: 15px;
+    color: #ddd;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more prominent separator */
+    padding-bottom: 10px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    font-size: 1.3em; /* Larger section headers */
 }
 
 /* Daily Quote Styling */
 .daily-quote {
     font-style: italic;
     text-align: center;
-    color: #bbb; /* Lighter gray for quotes */
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.05); /* Very subtle light background */
-    border-radius: 0; /* No rounded corners */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border */
+    color: #bbb;
+    margin-bottom: 25px; /* More space below quote */
+    padding: 15px; /* More padding for quote */
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 1.1em;
+    line-height: 1.5;
 }
+.daily-quote .quote-reference {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #999; /* Slightly darker for reference */
+}
+
 
 /* Section Hiding */
 .auth-section, .app-section {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px; /* Increased gap within sections */
+    flex-grow: 1; /* Allow sections to grow */
+}
+
+/* Explicit background for auth-section and app-section */
+.auth-section, .app-section {
+    background-color: #000; /* Solid black background for active sections */
+    padding: 25px; /* Increased padding */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more prominent border */
+    width: 100%;
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow internal scrolling if content overflows */
 }
 
 .hidden {
@@ -73,95 +99,98 @@ input[type="email"],
 input[type="password"],
 input[type="text"],
 select {
-    padding: 12px;
-    border: 1px solid #555; /* Darker border for inputs */
-    background-color: #222; /* Dark input background */
-    color: #eee; /* Light text in inputs */
-    border-radius: 0; /* No rounded corners */
-    font-size: 1rem;
+    padding: 15px; /* Larger inputs */
+    border: 1px solid #444; /* Darker border */
+    background-color: #1a1a1a; /* Darker input background */
+    color: #eee;
+    border-radius: 0;
+    font-size: 1.1rem; /* Larger font size */
     width: 100%;
     box-sizing: border-box;
 }
 input::placeholder {
-    color: #888; /* Dim placeholder text */
+    color: #777; /* Dim placeholder text */
 }
 
 /* Buttons */
 button {
-    padding: 12px 18px;
-    border: 1px solid #777; /* Subtle border for buttons */
-    border-radius: 0; /* No rounded corners */
-    font-size: 1rem;
+    padding: 15px 20px; /* Larger buttons */
+    border: 1px solid #666; /* Subtle border */
+    border-radius: 0;
+    font-size: 1.05rem; /* Slightly larger font */
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.1s ease;
     width: 100%;
     box-sizing: border-box;
-    background-color: #333; /* Dark button background */
-    color: #fff; /* White text on buttons */
+    background-color: #222; /* Dark button background */
+    color: #fff;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.7px; /* Increased letter spacing */
+    font-weight: bold;
 }
 
 button:hover {
-    transform: translateY(-1px);
-    background-color: #555; /* Lighter on hover */
-    color: #fff;
+    transform: translateY(-2px); /* More pronounced lift on hover */
+    background-color: #444; /* Lighter on hover */
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1); /* Subtle white shadow on hover */
 }
 
 /* Specific Button Styles */
 #loginBtn, #registerBtn {
-    background-color: #000; /* Pure black for auth buttons */
+    background-color: #000;
     color: #fff;
-    border-color: #fff; /* White border */
+    border-color: #fff;
 }
 #loginBtn:hover, #registerBtn:hover {
-    background-color: #222;
+    background-color: #111;
 }
 
 .google-btn {
-    background-color: #111; /* Darker background for Google */
+    background-color: #0a0a0a; /* Even darker for Google */
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    border-color: #888;
+    gap: 15px; /* More space for icon */
+    border-color: #666;
 }
 .google-btn i {
-    font-size: 1.2rem;
+    font-size: 1.4rem; /* Larger icon */
     color: #fff;
 }
 .google-btn:hover {
-    background-color: #333;
+    background-color: #222;
 }
 
 .logout-btn {
-    background-color: #555; /* Dark gray for logout */
+    background-color: #444;
     color: white;
     width: auto;
     align-self: flex-end;
-    border-color: #777;
+    border-color: #666;
+    padding: 10px 15px; /* Smaller logout button */
+    font-size: 0.9rem;
 }
 .logout-btn:hover {
-    background-color: #777;
-}
-
-.action-button {
-    background-color: #444; /* Medium gray for action buttons */
-    color: white;
-    border-color: #666;
-}
-.action-button:hover {
     background-color: #666;
 }
 
+.action-button {
+    background-color: #333;
+    color: white;
+    border-color: #555;
+}
+.action-button:hover {
+    background-color: #555;
+}
+
 .primary-button {
-    background-color: #000; /* Primary action is stark black */
+    background-color: #000;
     color: white;
     border-color: #fff;
 }
 .primary-button:hover {
-    background-color: #222;
+    background-color: #111;
 }
 
 /* Header Info (XP/Level) */
@@ -169,23 +198,24 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px; /* More padding */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* More prominent separator */
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px; /* Increased gap */
+    font-size: 1.1em;
 }
 
 .header-info span {
     font-weight: bold;
-    color: #fff; /* Pure white for important info */
+    color: #fff;
 }
 
 /* Error Message */
 .error-message {
-    color: #ff8888; /* Soft red for errors */
-    font-size: 0.9em;
-    margin-top: -10px;
-    margin-bottom: 10px;
+    color: #ff6666; /* Brighter red for errors */
+    font-size: 0.95em;
+    margin-top: -15px;
+    margin-bottom: 15px;
     text-align: center;
 }
 
@@ -193,124 +223,126 @@ button:hover {
 .tab-nav {
     display: flex;
     justify-content: space-around;
-    background-color: #111; /* Darker background for tab nav */
+    background-color: #0a0a0a; /* Very dark background for tab nav */
     border-radius: 0;
     overflow: hidden;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px; /* More space below tabs */
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .tab-button {
     flex-grow: 1;
-    background-color: #222; /* Dark gray for inactive tabs */
-    color: #bbb; /* Light gray for inactive tab text */
+    background-color: #1a1a1a; /* Dark gray for inactive tabs */
+    color: #aaa; /* Lighter gray for inactive tab text */
     border-radius: 0;
-    padding: 15px 10px;
+    padding: 18px 10px; /* More padding for tabs */
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: 1.0rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
-    border: none; /* No individual button borders within tab nav */
+    gap: 8px; /* More space for icon/text */
+    border: none;
 }
 
 .tab-button.active {
-    background-color: #000; /* Active tab is pure black */
-    color: #fff; /* Active tab text is pure white */
-    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1); /* Subtle inner glow */
+    background-color: #000;
+    color: #fff;
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.15); /* More prominent inner glow */
 }
 
 .tab-button:hover:not(.active) {
-    background-color: #333; /* Lighter on hover for inactive */
+    background-color: #2a2a2a; /* Lighter on hover for inactive */
     color: #fff;
 }
 
 .tab-button i {
-    font-size: 1.3rem;
+    font-size: 1.5rem; /* Larger tab icons */
     margin-bottom: 5px;
 }
 
-/* Tab Content Styling */
+/* Tab Content Styling - Expanded for Routine Builder */
 .tab-content {
-    flex-grow: 1;
-    padding: 5px 0;
+    flex-grow: 1; /* Allows content to take up available space */
+    padding: 0; /* Remove internal padding here, sections now have it */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    max-height: calc(100vh - 280px); /* Adjust based on header/footer/tab-nav height */
+    /* max-height removed for tab-content as auth-section/app-section now have overflow-y auto */
+    /* Removed max-height here to allow full expansion within its parent, which now handles scrolling if needed */
 }
 
 /* Input and Slider Group Styling */
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Increased margin */
 }
 .input-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px; /* More space below label */
     font-weight: bold;
     color: #ddd;
-    font-size: 0.95rem;
+    font-size: 1.0rem;
 }
 
 .slider-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* Increased margin */
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px; /* Increased gap */
 }
 .slider-group label {
     font-weight: bold;
     color: #ddd;
-    font-size: 0.95rem;
+    font-size: 1.0rem;
 }
 .slider-group input[type="range"] {
     width: 100%;
     -webkit-appearance: none;
-    height: 8px;
-    background: #555; /* Darker track for slider */
+    height: 10px; /* Thicker slider track */
+    background: #444;
     border-radius: 5px;
     outline: none;
-    opacity: 0.9;
+    opacity: 1; /* Fully opaque */
     transition: opacity .2s;
 }
 .slider-group input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #fff; /* White thumb */
-    cursor: pointer;
-    box-shadow: 0 0 5px rgba(255,255,255,0.3); /* Subtle glow */
-}
-.slider-group input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 24px; /* Larger thumb */
+    height: 24px; /* Larger thumb */
     border-radius: 50%;
     background: #fff;
     cursor: pointer;
-    box-shadow: 0 0 5px rgba(255,255,255,0.3);
+    box-shadow: 0 0 8px rgba(255,255,255,0.4); /* Stronger glow */
+}
+.slider-group input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,255,255,0.4);
 }
 
-/* List Styles (Exercises, Friends) */
+/* List Styles (Exercises, Friends) - Expanded Height */
 .exercise-list, .friends-list {
-    background-color: rgba(0, 0, 0, 0.7); /* Slightly transparent dark list background */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.8); /* Darker list background */
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 0;
-    padding: 10px;
-    max-height: 200px;
+    padding: 15px; /* More padding */
+    flex-grow: 1; /* Allow list to grow and fill space */
+    min-height: 100px; /* Minimum height for visibility */
     overflow-y: auto;
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* More margin */
 }
 
 .routine-exercise-item, .friend-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.08); /* Subtle dashed separator */
-    color: #ccc; /* Lighter text for list items */
-    font-size: 0.95rem;
+    padding: 12px 0; /* More padding */
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1); /* Slightly more prominent dashed separator */
+    color: #ccc;
+    font-size: 1.0em; /* Slightly larger text */
 }
 
 .routine-exercise-item:last-child, .friend-item:last-child {
@@ -318,29 +350,54 @@ button:hover {
 }
 
 .routine-exercise-item button {
-    background-color: #666; /* Darker remove button */
+    background-color: #555;
     color: #eee;
-    padding: 6px 10px;
-    font-size: 0.8em;
+    padding: 8px 12px; /* Slightly larger remove button */
+    font-size: 0.85em;
     width: auto;
     flex-shrink: 0;
-    border-color: #888;
+    border-color: #777;
 }
 .routine-exercise-item button:hover {
-    background-color: #888;
+    background-color: #777;
 }
 
 .friend-item {
     font-weight: bold;
-    color: #fff; /* White for friend email */
+    color: #fff;
 }
 
 .friend-item span {
-    color: #ccc; /* Lighter for XP value */
+    color: #ccc;
     font-weight: normal;
 }
 
 /* Placeholder text for empty lists */
 .exercise-list p, .friends-list p {
-    color: #888; /* Dim for placeholder text */
+    color: #777; /* Darker dim text */
+    padding: 10px; /* Add some padding to placeholder */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Less padding on very small screens */
+    }
+    .container {
+        padding: 15px;
+        max-height: calc(100vh - 20px);
+    }
+    h1 {
+        font-size: 1.8em;
+    }
+    .tab-button {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+    }
+    .tab-button i {
+        font-size: 1.2rem;
+    }
+    .auth-section, .app-section {
+        padding: 15px;
+    }
 }
