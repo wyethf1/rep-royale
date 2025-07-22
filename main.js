@@ -2,7 +2,7 @@
 
 // Firebase Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"; // Removed EmailAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword
+import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
 // Your Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
@@ -25,84 +25,102 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
-// --- DOM Elements (UPDATED FOR NEW UI STRUCTURE) ---
+// --- DOM Elements ---
 
 // General App Sections
 const authSection = document.getElementById('authSection');
 const appSection = document.getElementById('appSection');
-const bottomNav = document.getElementById('bottomNav'); // NEW: Get reference to the bottom navigation
+const bottomNav = document.getElementById('bottomNav');
 
 // Header Elements
-const quoteText = document.getElementById('quoteText');
-const quoteReference = document.getElementById('quoteReference');
+const dailyQuoteElement = document.getElementById('dailyQuote'); // Renamed from quoteText for consistency
+const quoteReferenceElement = document.getElementById('quoteReference'); // Renamed from quoteReference
 
 // Auth Section Elements
-// const emailInput = document.getElementById('emailInput'); // Removed
-// const passwordInput = document.getElementById('passwordInput'); // Removed
 const authError = document.getElementById('authError');
-// const loginBtn = document.getElementById('loginBtn'); // Removed // THIS WAS THE PROBLEM LINE IF IT WAS STILL PRESENT
-// const registerBtn = document.getElementById('registerBtn'); // Removed // THIS WAS THE PROBLEM LINE IF IT WAS STILL PRESENT
 const googleSignInBtn = document.getElementById('googleSignInBtn');
 
-// Footer Navigation Elements
+// Footer Navigation Elements (renamed to match index.html buttons if they are for nav)
+const friendsNavItem = document.getElementById('friendsNavItem'); // Changed from showFriendsBtn
+const routinesNavItem = document.getElementById('routinesNavItem'); // Changed from showRoutinesBtn
+const settingsNavItem = document.getElementById('settingsNavItem'); // NEW: Settings nav item
+const logoutNavItem = document.getElementById('logoutNavItem'); // Changed from logoutBtn
 const xpDisplay = document.getElementById('xpDisplay');
 const levelDisplay = document.getElementById('levelDisplay');
-const logoutBtn = document.getElementById('logoutBtn'); // Now in footer
-const showFriendsBtn = document.getElementById('showFriendsBtn');
-const showRoutinesBtn = document.getElementById('showRoutinesBtn');
 
-// Views (New UI concept)
+
+// Views
 const routineDashboardView = document.getElementById('routineDashboardView');
 const routineBuilderView = document.getElementById('routineBuilderView');
 const friendsView = document.getElementById('friendsView');
+const settingsView = document.getElementById('settingsView'); // NEW: Settings View
 
 // Routine Dashboard View Elements
-const routineSelect = document.getElementById('routineSelect'); // For selecting saved routines
-const dashboardRoutineName = document.getElementById('dashboardRoutineName');
-const dashboardExercises = document.getElementById('dashboardExercises');
+const routineSelect = document.getElementById('routineSelect');
+const dashboardRoutineName = document.getElementById('currentRoutineDisplay'); // Adjusted to match current index.html
+const dashboardExercises = document.getElementById('dashboardExerciseList'); // Adjusted to match current index.html
 const completeRoutineBtn = document.getElementById('completeRoutineBtn');
 const editRoutineBtn = document.getElementById('editRoutineBtn');
 const createRoutineBtn = document.getElementById('createRoutineBtn');
 
 // Routine Builder View Elements
-const builderRoutineNameInput = document.getElementById('builderRoutineName'); // Input for current routine name
-const exerciseNameInput = document.getElementById('exerciseNameInput');
-const setsSlider = document.getElementById('setsSlider');
-const setsValue = document.getElementById('setsValue');
-const repsSlider = document.getElementById('repsSlider');
-const repsValue = document.getElementById('repsValue');
+const builderRoutineNameInput = document.getElementById('routineName'); // Adjusted to match current index.html
+const exerciseNameInput = document.getElementById('exerciseName'); // Adjusted to match current index.html
+const setsInput = document.getElementById('sets'); // Changed from setsSlider
+const repsInput = document.getElementById('reps'); // Changed from repsSlider
 const addExerciseBtn = document.getElementById('addExerciseBtn');
-const currentRoutineExercises = document.getElementById('currentRoutineExercises'); // List for exercises being built
+const currentRoutineExercises = document.getElementById('builderExerciseList'); // Adjusted to match current index.html
 const saveRoutineBtn = document.getElementById('saveRoutineBtn');
-const backToDashboardBtn = document.getElementById('backToDashboardBtn');
+const deleteRoutineBtn = document.getElementById('deleteRoutineBtn'); // Added from index.html (if you plan to implement)
 
 // Friends View Elements
-const friendEmailInput = document.getElementById('friendEmailInput');
+const addFriendInput = document.getElementById('addFriendInput'); // Changed from friendEmailInput
 const addFriendBtn = document.getElementById('addFriendBtn');
-const friendsList = document.getElementById('friendsList');
+const friendsList = document.getElementById('myFriendsList'); // Changed from friendsList
+
+// Settings Elements
+const quoteTypeSelect = document.getElementById('quoteType'); // NEW: Quote type select dropdown
 
 // --- Global Variables ---
 let currentUser = null;
 let userDocRef = null;
-let currentRoutine = { name: '', exercises: [] }; // The routine currently loaded in builder or dashboard
+let currentRoutine = { name: '', exercises: [] };
 let userXP = 0;
 let userLevel = 1;
 let userRoutines = [];
-let userFriends = []; // Stores user's friends (e.g., their emails)
+let userFriends = [];
 
-// Dummy Bible Quotes (for daily display, as a fallback or for development)
+// --- Quote Data ---
+// Dummy Bible Quotes (used as fallback or when API is not preferred)
 const bibleQuotes = [
-    { text: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" },
-    { text: "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God, not a result of works, so that no one may boast.", reference: "Ephesians 2:8-9" },
-    { text: "Be strong and courageous. Do not be frightened, and do not be dismayed, for the Lord your God is with you wherever you go.", reference: "Joshua 1:9" },
-    { text: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.", reference: "Isaiah 40:31" },
-    { text: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.", reference: "Romans 12:2" },
-    { text: "The Lord is my strength and my shield; in him my heart trusts, and I am helped; my heart exults, and with my song I give thanks to him.", reference: "Psalm 28:7" },
-    { text: "For God gave us a spirit not of fear but of power and love and self-control.", reference: "2 Timothy 1:7" },
-    { text: "Therefore, my beloved brothers, be steadfast, immovable, always abounding in the work of the Lord, knowing that in the Lord your labor is not in vain.", reference: "1 Corinthians 15:58" },
-    { text: "Trust in the Lord with all your heart, and do not lean on your own understanding.", reference: "Proverbs 3:5" },
-    { text: "And whatever you do, in word or deed, do everything in the name of the Lord Jesus, giving thanks to God the Father through him.", reference: "Colossians 3:17" }
+    { quote: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" },
+    { quote: "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God, not a result of works, so that no one may boast.", reference: "Ephesians 2:8-9" },
+    { quote: "Be strong and courageous. Do not be frightened, and do not be dismayed, for the Lord your God is with you wherever you go.", reference: "Joshua 1:9" },
+    { quote: "But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.", reference: "Isaiah 40:31" },
+    { quote: "Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.", reference: "Romans 12:2" },
+    { quote: "The Lord is my strength and my shield; in him my heart trusts, and I am helped; my heart exults, and with my song I give thanks to him.", reference: "Psalm 28:7" },
+    { quote: "For God gave us a spirit not of fear but of power and love and self-control.", reference: "2 Timothy 1:7" },
+    { quote: "Therefore, my beloved brothers, be steadfast, immovable, always abounding in the work of the Lord, knowing that in the Lord your labor is not in vain.", reference: "1 Corinthians 15:58" },
+    { quote: "Trust in the Lord with all your heart, and do not lean on your own understanding.", reference: "Proverbs 3:5" },
+    { quote: "And whatever you do, in word or deed, do everything in the name of the Lord Jesus, giving thanks to God the Father through him.", reference: "Colossians 3:17" }
 ];
+
+// NEW: Inspirational Quotes
+const inspirationalQuotes = [
+    { quote: "The only way to do great work is to love what you do.", reference: "Steve Jobs" },
+    { quote: "Believe you can and you're halfway there.", reference: "Theodore Roosevelt" },
+    { quote: "The future belongs to those who believe in the beauty of their dreams.", reference: "Eleanor Roosevelt" },
+    { quote: "Strive not to be a success, but rather to be of value.", reference: "Albert Einstein" },
+    { quote: "The best way to predict the future is to create it.", reference: "Peter Drucker" },
+    { quote: "Success is not final, failure is not fatal: It is the courage to continue that counts.", reference: "Winston Churchill" },
+    { quote: "The mind is everything. What you think you become.", reference: "Buddha" },
+    { quote: "It always seems impossible until it's done.", reference: "Nelson Mandela" },
+    { quote: "The expert in anything was once a beginner.", reference: "Helen Hayes" },
+    { quote: "Your time is limited, so don't waste it living someone else's life.", reference: "Steve Jobs" }
+];
+
+// NEW: Current quote type preference, loaded from localStorage or defaults to 'bible'
+let currentQuoteType = localStorage.getItem('quoteType') || 'bible';
 
 
 // --- UI / View Management Functions ---
@@ -112,37 +130,61 @@ function showView(viewId) {
     routineDashboardView.classList.add('hidden');
     routineBuilderView.classList.add('hidden');
     friendsView.classList.add('hidden');
+    settingsView.classList.add('hidden'); // NEW: Hide settings view
 
     document.getElementById(viewId).classList.remove('hidden');
+
+    // Update active state of nav items
+    friendsNavItem.classList.remove('active');
+    routinesNavItem.classList.remove('active');
+    settingsNavItem.classList.remove('active'); // NEW: Remove active from settings
+
+    if (viewId === 'routineDashboardView') {
+        routinesNavItem.classList.add('active');
+        updateDailyQuoteDisplay(); // Call new function to display quote
+    } else if (viewId === 'friendsView') {
+        friendsNavItem.classList.add('active');
+    } else if (viewId === 'settingsView') { // NEW: Handle settings view active state
+        settingsNavItem.classList.add('active');
+    }
+    // No active state for builder view as it's typically accessed from dashboard
 }
 
-// --- Data Functions (Firebase Interaction) ---
-
-// Function to fetch daily Bible quote (using external API as discussed)
-async function fetchDailyQuote() {
-    try {
-        const response = await fetch('https://beta.ourmanna.com/api/v1/get?format=json&order=daily');
-        const data = await response.json();
-        if (data.results && data.results.verses && data.results.verses.length > 0) {
-            const verse = data.results.verses[0];
-            quoteText.textContent = `"${verse.text}"`;
-            quoteReference.textContent = `- ${verse.book.name} ${verse.chapter}.${verse.verse}`;
-        } else {
-            // Fallback to local quotes if API fails
+// NEW: Function to update the daily quote display based on selected type
+async function updateDailyQuoteDisplay() {
+    if (currentQuoteType === 'bible') {
+        try {
+            const response = await fetch('https://beta.ourmanna.com/api/v1/get?format=json&order=daily');
+            const data = await response.json();
+            if (data.results && data.results.verses && data.results.verses.length > 0) {
+                const verse = data.results.verses[0];
+                dailyQuoteElement.textContent = `"${verse.text}"`;
+                quoteReferenceElement.textContent = `- ${verse.book.name} ${verse.chapter}.${verse.verse}`;
+            } else {
+                // Fallback to local bible quotes if API fails
+                const randomIndex = Math.floor(Math.random() * bibleQuotes.length);
+                const selectedQuote = bibleQuotes[randomIndex];
+                dailyQuoteElement.textContent = `"${selectedQuote.quote}"`; // Use .quote here for consistency
+                quoteReferenceElement.textContent = `- ${selectedQuote.reference}`;
+            }
+        } catch (error) {
+            console.error("Error fetching daily Bible quote from API:", error);
+            // Fallback to local bible quotes on error
             const randomIndex = Math.floor(Math.random() * bibleQuotes.length);
             const selectedQuote = bibleQuotes[randomIndex];
-            quoteText.textContent = `"${selectedQuote.text}"`;
-            quoteReference.textContent = `- ${selectedQuote.reference}`;
+            dailyQuoteElement.textContent = `"${selectedQuote.quote}"`; // Use .quote here for consistency
+            quoteReferenceElement.textContent = `- ${selectedQuote.reference}`;
         }
-    } catch (error) {
-        console.error("Error fetching daily quote:", error);
-        // Fallback to local quotes on error
-        const randomIndex = Math.floor(Math.random() * bibleQuotes.length);
-        const selectedQuote = bibleQuotes[randomIndex];
-        quoteText.textContent = `"${selectedQuote.text}"`;
-        quoteReference.textContent = `- ${selectedQuote.reference}`;
+    } else if (currentQuoteType === 'inspirational') {
+        const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
+        const selectedQuote = inspirationalQuotes[randomIndex];
+        dailyQuoteElement.textContent = `"${selectedQuote.quote}"`;
+        quoteReferenceElement.textContent = `- ${selectedQuote.reference}`;
     }
 }
+
+
+// --- Data Functions (Firebase Interaction) ---
 
 // Function to update user data in Firestore
 async function updateUserData(data) {
@@ -167,38 +209,47 @@ async function getUserData() {
                 userLevel = data.level || 1;
                 userRoutines = data.routines || [];
                 userFriends = data.friends || [];
+                // NEW: Load quote type from user data or use existing localStorage value
+                currentQuoteType = data.quoteType || localStorage.getItem('quoteType') || 'bible';
+                localStorage.setItem('quoteType', currentQuoteType); // Ensure localStorage is in sync
+
                 updateXPDisplay();
-                loadRoutinesIntoSelect(); // Populate routines in dashboard dropdown
-                displayFriends(); // Populate friends list
+                loadRoutinesIntoSelect();
+                displayFriends();
+
+                // Initialize the quoteTypeSelect with the loaded preference
+                if (quoteTypeSelect) {
+                    quoteTypeSelect.value = currentQuoteType;
+                }
 
                 // If no routine is selected, try to load the first available routine into the dashboard
                 if (userRoutines.length > 0 && !routineSelect.value) {
                     const firstRoutine = userRoutines[0];
                     displayRoutine(firstRoutine.name, firstRoutine.exercises);
-                    routineSelect.value = firstRoutine.name; // Set the dropdown to the loaded routine
-                    currentRoutine = { ...firstRoutine }; // Also set currentRoutine for dashboard
+                    routineSelect.value = firstRoutine.name;
+                    currentRoutine = { ...firstRoutine };
                 } else if (userRoutines.length === 0) {
-                     // If no routines exist, clear dashboard display
                      displayRoutine('', []);
                 }
 
 
             } else {
                 console.log("No user data found, creating new profile.");
-                // Initialize new user data in Firestore
+                // Initialize new user data in Firestore including default quoteType
                 await setDoc(userDocRef, {
                     xp: 0,
                     level: 1,
                     routines: [],
                     friends: [],
-                    email: currentUser.email // Save email for friend lookup
+                    email: currentUser.email,
+                    quoteType: currentQuoteType // Save default quote type
                 });
                 userXP = 0;
                 userLevel = 1;
                 userRoutines = [];
                 userFriends = [];
                 updateXPDisplay();
-                displayRoutine('', []); // Clear dashboard display for new user
+                displayRoutine('', []);
             }
         } catch (error) {
             console.error("Error getting user data:", error);
@@ -276,7 +327,7 @@ function displayFriends() {
         userFriends.forEach(friend => {
             const item = document.createElement('div');
             item.classList.add('friend-item');
-            item.innerHTML = `<span>${friend.email}</span>`; // Assuming friend is just email for now
+            item.innerHTML = `<span>${friend.email}</span>`;
             friendsList.appendChild(item);
         });
     } else {
@@ -289,17 +340,15 @@ function displayFriends() {
 // Routine Management
 function addExerciseToCurrentRoutine() {
     const name = exerciseNameInput.value.trim();
-    const sets = parseInt(setsSlider.value);
-    const reps = parseInt(repsSlider.value);
+    const sets = parseInt(setsInput.value); // Use .value for input type="number"
+    const reps = parseInt(repsInput.value); // Use .value for input type="number"
 
     if (name && sets > 0 && reps > 0) {
         currentRoutine.exercises.push({ name, sets, reps });
         populateCurrentRoutineExercises(currentRoutine.exercises);
         exerciseNameInput.value = ''; // Clear input
-        setsSlider.value = 3; // Reset sliders
-        repsSlider.value = 10;
-        setsValue.textContent = 3;
-        repsValue.textContent = 10;
+        setsInput.value = 3; // Reset inputs
+        repsInput.value = 10;
     } else {
         alert('Please enter exercise name, sets, and reps.');
     }
@@ -323,24 +372,23 @@ async function saveRoutine() {
 
     const newRoutine = { name: routineName, exercises: currentRoutine.exercises };
 
-    // Check if routine already exists (for editing)
     const existingIndex = userRoutines.findIndex(r => r.name === routineName);
     if (existingIndex !== -1) {
-        userRoutines[existingIndex] = newRoutine; // Update existing
+        userRoutines[existingIndex] = newRoutine;
         alert(`Routine "${routineName}" updated!`);
     } else {
-        userRoutines.push(newRoutine); // Add new
+        userRoutines.push(newRoutine);
         alert(`Routine "${routineName}" saved!`);
     }
 
     await updateUserData({ routines: userRoutines });
-    loadRoutinesIntoSelect(); // Reload dashboard select
-    displayRoutine(newRoutine.name, newRoutine.exercises); // Show the saved routine on dashboard
-    routineSelect.value = newRoutine.name; // Select the newly saved routine in the dropdown
-    showView('routineDashboardView'); // Go back to dashboard
-    currentRoutine = { name: '', exercises: [] }; // Clear builder state
+    loadRoutinesIntoSelect();
+    displayRoutine(newRoutine.name, newRoutine.exercises);
+    routineSelect.value = newRoutine.name;
+    showView('routineDashboardView');
+    currentRoutine = { name: '', exercises: [] };
     builderRoutineNameInput.value = '';
-    populateCurrentRoutineExercises([]); // Clear builder list
+    populateCurrentRoutineExercises([]);
 }
 
 async function completeRoutine() {
@@ -348,9 +396,8 @@ async function completeRoutine() {
         alert("Please select a routine to complete.");
         return;
     }
-    userXP += 50; // Example XP gain
-    // Level calculation (adjust as needed for desired progression)
-    userLevel = Math.floor(userXP / 100) + 1; // 100 XP per level
+    userXP += 50;
+    userLevel = Math.floor(userXP / 100) + 1;
 
     await updateUserData({ xp: userXP, level: userLevel });
     updateXPDisplay();
@@ -359,7 +406,7 @@ async function completeRoutine() {
 
 // Friend Management
 async function addFriend() {
-    const friendEmail = friendEmailInput.value.trim();
+    const friendEmail = addFriendInput.value.trim(); // Use addFriendInput
     if (!friendEmail || friendEmail === currentUser.email) {
         alert('Please enter a valid friend email.');
         return;
@@ -370,20 +417,15 @@ async function addFriend() {
         return;
     }
 
-    // In a real app, you'd check if this email exists as a user in your database
-    // For now, we'll just add it to the current user's friend list.
-    userFriends.push({ email: friendEmail }); // Store friend's email
+    userFriends.push({ email: friendEmail });
     await updateUserData({ friends: userFriends });
     displayFriends();
-    friendEmailInput.value = '';
+    addFriendInput.value = '';
     alert(`${friendEmail} added to your friends!`);
 }
 
 
 // --- Authentication Handlers ---
-
-// Removed email/password login and register event listeners
-
 
 googleSignInBtn.addEventListener('click', async () => {
     authError.textContent = '';
@@ -394,7 +436,7 @@ googleSignInBtn.addEventListener('click', async () => {
     }
 });
 
-logoutBtn.addEventListener('click', async () => {
+logoutNavItem.addEventListener('click', async () => { // Changed from logoutBtn
     try {
         await signOut(auth);
     } catch (error) {
@@ -402,15 +444,11 @@ logoutBtn.addEventListener('click', async () => {
     }
 });
 
-// --- Event Listeners for NEW UI Elements ---
+// --- Event Listeners ---
 
-setsSlider.addEventListener('input', () => {
-    setsValue.textContent = setsSlider.value;
-});
-
-repsSlider.addEventListener('input', () => {
-    repsValue.textContent = repsSlider.value;
-});
+// Input and Slider Event Listeners (using input type="number" now)
+// Removed setsSlider and repsSlider listeners as they are now number inputs
+// You can add validation or min/max logic directly to HTML or via JS if needed
 
 addExerciseBtn.addEventListener('click', addExerciseToCurrentRoutine);
 saveRoutineBtn.addEventListener('click', saveRoutine);
@@ -418,20 +456,22 @@ addFriendBtn.addEventListener('click', addFriend);
 completeRoutineBtn.addEventListener('click', completeRoutine);
 
 
-// View Navigation Buttons
-showFriendsBtn.addEventListener('click', () => showView('friendsView'));
-showRoutinesBtn.addEventListener('click', () => showView('routineDashboardView')); // This will show dashboard
-backToDashboardBtn.addEventListener('click', () => showView('routineDashboardView'));
+// View Navigation Buttons (Adjusted to use Nav Item IDs)
+friendsNavItem.addEventListener('click', () => showView('friendsView'));
+routinesNavItem.addEventListener('click', () => showView('routineDashboardView'));
+settingsNavItem.addEventListener('click', () => showView('settingsView')); // NEW: Settings nav item event
 
+// Builder specific actions
 editRoutineBtn.addEventListener('click', () => {
     const selectedRoutineName = routineSelect.value;
     if (selectedRoutineName) {
         const routineToEdit = userRoutines.find(r => r.name === selectedRoutineName);
         if (routineToEdit) {
-            currentRoutine = { ...routineToEdit }; // Clone to avoid direct mutation
+            currentRoutine = { ...routineToEdit };
             builderRoutineNameInput.value = currentRoutine.name;
             populateCurrentRoutineExercises(currentRoutine.exercises);
             showView('routineBuilderView');
+            deleteRoutineBtn.classList.remove('hidden'); // Show delete button when editing
         } else {
             alert('Selected routine not found.');
         }
@@ -441,27 +481,67 @@ editRoutineBtn.addEventListener('click', () => {
 });
 
 createRoutineBtn.addEventListener('click', () => {
-    currentRoutine = { name: '', exercises: [] }; // Reset for new routine
+    currentRoutine = { name: '', exercises: [] };
     builderRoutineNameInput.value = '';
     populateCurrentRoutineExercises([]);
     showView('routineBuilderView');
+    deleteRoutineBtn.classList.add('hidden'); // Hide delete button for new routine
 });
+
+deleteRoutineBtn.addEventListener('click', async () => {
+    const routineName = builderRoutineNameInput.value.trim();
+    if (!routineName || !confirm(`Are you sure you want to delete routine "${routineName}"?`)) {
+        return;
+    }
+
+    userRoutines = userRoutines.filter(r => r.name !== routineName);
+    await updateUserData({ routines: userRoutines });
+    loadRoutinesIntoSelect();
+    showView('routineDashboardView'); // Go back to dashboard
+    currentRoutine = { name: '', exercises: [] }; // Clear builder state
+    builderRoutineNameInput.value = '';
+    populateCurrentRoutineExercises([]); // Clear builder list
+    alert(`Routine "${routineName}" deleted!`);
+    // After deletion, refresh the dashboard display, potentially showing the first routine or empty state
+    if (userRoutines.length > 0) {
+        const firstRoutine = userRoutines[0];
+        displayRoutine(firstRoutine.name, firstRoutine.exercises);
+        routineSelect.value = firstRoutine.name;
+        currentRoutine = { ...firstRoutine };
+    } else {
+        displayRoutine('', []);
+        routineSelect.value = ''; // Clear selection
+    }
+});
+
 
 routineSelect.addEventListener('change', () => {
     const selectedRoutineName = routineSelect.value;
     if (selectedRoutineName) {
         const selectedRoutine = userRoutines.find(r => r.name === selectedRoutineName);
         if (selectedRoutine) {
-            currentRoutine = { ...selectedRoutine }; // Load into currentRoutine for dashboard display
+            currentRoutine = { ...selectedRoutine };
             displayRoutine(selectedRoutine.name, selectedRoutine.exercises);
         }
     } else {
         dashboardRoutineName.textContent = 'No Routine Loaded';
         dashboardExercises.innerHTML = '<p style="text-align: center; color: #777;">Select or create a routine to see exercises.</p>';
         completeRoutineBtn.disabled = true;
-        currentRoutine = { name: '', exercises: [] }; // Clear current routine if nothing selected
+        currentRoutine = { name: '', exercises: [] };
     }
 });
+
+// NEW: Settings specific event listener
+if (quoteTypeSelect) { // Check if element exists before adding listener
+    quoteTypeSelect.addEventListener('change', async (event) => {
+        currentQuoteType = event.target.value;
+        localStorage.setItem('quoteType', currentQuoteType); // Save preference to localStorage
+        if (currentUser) {
+            await updateUserData({ quoteType: currentQuoteType }); // Also save to Firestore
+        }
+        updateDailyQuoteDisplay(); // Update quote immediately
+    });
+}
 
 
 // --- Authentication State Observer ---
@@ -469,18 +549,18 @@ routineSelect.addEventListener('change', () => {
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         currentUser = user;
-        userDocRef = doc(db, "users", user.uid); // Reference to the user's document in Firestore
+        userDocRef = doc(db, "users", user.uid);
         authSection.classList.add('hidden');
         appSection.classList.remove('hidden');
-        bottomNav.classList.remove('hidden'); // NEW: Show bottom navigation when logged in
-        await getUserData(); // Fetch user data and populate UI
-        showView('routineDashboardView'); // Default to dashboard after login
+        bottomNav.classList.remove('hidden');
+        await getUserData(); // Fetch user data, load quoteType, and populate UI
+        showView('routineDashboardView'); // Default to dashboard after login, which will then trigger updateDailyQuoteDisplay
     } else {
         currentUser = null;
         userDocRef = null;
         authSection.classList.remove('hidden');
         appSection.classList.add('hidden');
-        bottomNav.classList.add('hidden'); // NEW: Hide bottom navigation when logged out
+        bottomNav.classList.add('hidden');
         // Clear any app data displays on logout
         xpDisplay.textContent = 'XP: 0';
         levelDisplay.textContent = 'Level: 1 — Novice';
@@ -491,10 +571,13 @@ onAuthStateChanged(auth, async (user) => {
         builderRoutineNameInput.value = '';
         currentRoutineExercises.innerHTML = '<p style="text-align: center; color: #777;">No exercises added yet.</p>';
         friendsList.innerHTML = '<p style="text-align: center; color: #777;">No friends added yet.</p>';
-        // Clear current routine state
         currentRoutine = { name: '', exercises: [] };
     }
 });
 
-// Initial load: Fetch daily quote
-fetchDailyQuote();
+// Initial load: Fetch and display daily quote
+// This will be called when `onAuthStateChanged` determines the user state
+// If a user is already logged in, showView('routineDashboardView') will trigger it.
+// If not, the quote area will remain with its default HTML content until login.
+// If you want a quote to display even before login, you'd call updateDailyQuoteDisplay() here:
+// updateDailyQuoteDisplay();
