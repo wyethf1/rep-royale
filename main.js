@@ -2,7 +2,7 @@
 
 // Firebase Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"; // Removed EmailAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword
 import { getFirestore, doc, setDoc, getDoc, collection, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
 
 // Your Firebase configuration (REPLACE WITH YOUR ACTUAL CONFIG)
@@ -36,11 +36,11 @@ const quoteText = document.getElementById('quoteText');
 const quoteReference = document.getElementById('quoteReference');
 
 // Auth Section Elements
-const emailInput = document.getElementById('emailInput');
-const passwordInput = document.getElementById('passwordInput');
+// const emailInput = document.getElementById('emailInput'); // Removed
+// const passwordInput = document.getElementById('passwordInput'); // Removed
 const authError = document.getElementById('authError');
-const loginBtn = document.getElementById('loginBtn');
-const registerBtn = document.getElementById('registerBtn');
+// const loginBtn = document.getElementById('loginBtn'); // Removed // THIS WAS THE PROBLEM LINE IF IT WAS STILL PRESENT
+// const registerBtn = document.getElementById('registerBtn'); // Removed // THIS WAS THE PROBLEM LINE IF IT WAS STILL PRESENT
 const googleSignInBtn = document.getElementById('googleSignInBtn');
 
 // Footer Navigation Elements
@@ -185,10 +185,10 @@ async function getUserData() {
             } else {
                 console.log("No user data found, creating new profile.");
                 // Initialize new user data in Firestore
-                await setDoc(userDocRef, { 
-                    xp: 0, 
-                    level: 1, 
-                    routines: [], 
+                await setDoc(userDocRef, {
+                    xp: 0,
+                    level: 1,
+                    routines: [],
                     friends: [],
                     email: currentUser.email // Save email for friend lookup
                 });
@@ -381,27 +381,8 @@ async function addFriend() {
 
 // --- Authentication Handlers ---
 
-loginBtn.addEventListener('click', async () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    authError.textContent = '';
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        authError.textContent = error.message;
-    }
-});
+// Removed email/password login and register event listeners
 
-registerBtn.addEventListener('click', async () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    authError.textContent = '';
-    try {
-        await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        authError.textContent = error.message;
-    }
-});
 
 googleSignInBtn.addEventListener('click', async () => {
     authError.textContent = '';
